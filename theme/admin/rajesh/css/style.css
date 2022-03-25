@@ -1,0 +1,68 @@
+.success_message {
+    background: #b2f1b2;
+    padding: 5px;
+    position: relative;
+}
+
+.success_message h4 {
+    font-size: 15px;
+    color: #706969;
+}
+
+.error_message {
+    background: #f3bfb9;
+    padding: 5px;
+    position: relative;
+}
+
+.error_message h4 {
+    font-size: 15px;
+    color: #706969;
+} 
+
+.clse {
+    position: absolute;
+    right: 4px;
+    top: 0;
+    color: #d91414;
+    font-weight: bold;
+}
+
+.menu_sorting ol {
+    list-style-type: none;
+}
+
+.menu_sorting ol li:hover{
+    cursor: all-scroll;
+}
+
+.menu-handle {
+    padding: 5px;
+    background: #d7d1d1;
+    border-radius: 3px;
+    border: 2px solid #8c8585;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.menu-options {
+    float: right;
+}
+
+#output {
+    color: red;
+}
+
+.menu_sorting li {
+    list-style: none;
+}
+
+table img {
+    max-height: 100px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.form-group img {
+    width: 100%;
+}
