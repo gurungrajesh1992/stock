@@ -1,10 +1,10 @@
 <head>
-    <?php
-        $site_settings = $this->session->userdata('site_settings'); 
-    ?>
+  <?php
+  $site_settings = $this->session->userdata('site_settings');
+  ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shine Traders | <?php echo ($title)? $title : 'Dashboard' ?></title>
+  <title> <?php echo $site_settings->site_name; ?> | <?php echo ($title) ? $title : 'Dashboard' ?></title>
   <link rel="icon" type="image/png" href="<?php echo $site_settings->fav; ?>">
 
   <!-- Google Font: Source Sans Pro -->
@@ -28,5 +28,5 @@
   <!-- summernote -->
   <link rel="stylesheet" href="<?php echo base_url('theme/admin/') ?>plugins/summernote/summernote-bs4.min.css">
   <!-- custome css -->
-  <link rel="stylesheet" href="<?php echo base_url('theme/admin/') ?>rajesh/css/style.css"> 
+  <link rel="stylesheet" href="<?php echo base_url('theme/admin/') ?>rajesh/css/style.css">
 </head>
