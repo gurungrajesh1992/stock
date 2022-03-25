@@ -1,0 +1,2 @@
+# stock
+Stock managent Nyatapol
