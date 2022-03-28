@@ -1,27 +1,28 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Admin extends Auth_controller {
+class Admin extends Auth_controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
 		// var_dump($this->current_user);exit;
-		$this->load->library('form_validation');   
+		$this->load->library('form_validation');
 		$this->table = 'contents';
 		$this->redirect = 'content/admin/';
 		$this->title = 'Content';
 	}
 
-	public function all($page='')
-	{ 
-		
+	public function all($page = '')
+	{
+
 		// $data['roles'] = $this->db->get_where('user_role',array('status !='=>'2'))->result(); 
 
 		// var_dump($this->uri->segment(3));exit;
 
-		$config['base_url'] = base_url($this->redirect.'all');
-		$config['total_rows'] = $this->crud_model->count_all($this->table,array('status !='=>'2'),'id');
+		$config['base_url'] = base_url($this->redirect . 'all');
+		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
 		//outside of flist that is <ul></ul>
@@ -33,7 +34,7 @@ class Admin extends Auth_controller {
 		$config['first_tag_close'] = '</li>';
 
 		//for all list outside of the a tag that is <li></li>
-		$config['num_tag_open'] = '<li class="page-item">'; 
+		$config['num_tag_open'] = '<li class="page-item">';
 		//to add class to attribute
 		$config['attributes'] = array('class' => 'page-link');
 		$config['num_tag_close'] = '</li>';
@@ -53,137 +54,139 @@ class Admin extends Auth_controller {
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 
 		$data['pagination'] = $this->pagination->create_links();
-		$data['items'] = $this->crud_model->get_where_pagination($this->table,array('status !='=>'2'),$config["per_page"], $page);
+		$data['items'] = $this->crud_model->get_where_pagination($this->table, array('status !=' => '2'), $config["per_page"], $page);
 		$data['title'] = $this->title;
-        $data['page'] = 'list';
-        $this->load->view('layouts/admin/index',$data);
+		$data['page'] = 'list';
+		$this->load->view('layouts/admin/index', $data);
 	}
-	
-	public function form($id='')
-	{ 
-		
-		$data['detail'] = $this->db->get_where($this->table,array('id'=>$id))->row();
-		if($this->input->post()){
+
+	public function form($id = '')
+	{
+
+		$data['detail'] = $this->db->get_where($this->table, array('id' => $id))->row();
+		if ($this->input->post()) {
 			$this->form_validation->set_rules('title', 'Title', 'required|trim');
-			$this->form_validation->set_rules('type', 'Type', 'required|trim'); 
-			if($this->input->post('type') == 'others'){ 
+			$this->form_validation->set_rules('type', 'Type', 'required|trim');
+			if ($this->input->post('type') == 'others') {
 				$this->form_validation->set_rules('external_url', 'External Url', 'required|trim');
 			}
-			
-			if($this->form_validation->run()){
+
+			if ($this->form_validation->run()) {
 				$data = array(
-							'title' => $this->input->post('title'),
-							'type' => $this->input->post('type'),
-							'description' => $this->input->post('description'),
-							'featured_image' => $this->input->post('featured_image'),  
-							'sub_title' => $this->input->post('sub_title'), 
-							'status' => $this->input->post('status'),
-							'parent_id' => $this->input->post('parent_id'), 
-							'order_no' => $this->input->post('order_no'),
-							'show_on_menu' => $this->input->post('show_on_menu'),
-							'show_on_footer_menu' => $this->input->post('show_on_footer_menu'),
-						);   				
-				$id = $this->input->post('id');	
-				if($this->input->post('type') == 'others'){ 
+					'title' => $this->input->post('title'),
+					'type' => $this->input->post('type'),
+					'description' => $this->input->post('description'),
+					'featured_image' => $this->input->post('featured_image'),
+					'sub_title' => $this->input->post('sub_title'),
+					'status' => $this->input->post('status'),
+					'parent_id' => $this->input->post('parent_id'),
+					'order_no' => $this->input->post('order_no'),
+					'show_on_menu' => $this->input->post('show_on_menu'),
+					'show_on_footer_menu' => $this->input->post('show_on_footer_menu'),
+				);
+				$id = $this->input->post('id');
+				if ($this->input->post('type') == 'others') {
 					$data['external_url'] = $this->input->post('external_url');
-				}	
-				if($id == ''){ 
+				}
+				if ($id == '') {
 					$slug = $this->crud_model->createUrlSlug($this->input->post('title'));
-					$check_slug = $this->crud_model->get_where_single($this->table,array('slug'=>$slug));
-					if(empty($check_slug)){
-						$data['slug'] = strtolower ($slug);
-					}else{
-						$data['slug'] = strtolower ($slug).time();
+					$check_slug = $this->crud_model->get_where_single($this->table, array('slug' => $slug));
+					if (empty($check_slug)) {
+						$data['slug'] = strtolower($slug);
+					} else {
+						$data['slug'] = strtolower($slug) . time();
 					}
-					$data['created_by'] = $this->current_user->id; 
-					$data['created'] = date('Y-m-d'); 
+					$data['created_by'] = $this->current_user->id;
+					$data['created'] = date('Y-m-d');
 					$result = $this->crud_model->insert($this->table, $data);
-					if($result==true){
-						$this->session->set_flashdata('success','Successfully Inserted.');
-						redirect($this->redirect.'all');
-					}else{
+					if ($result == true) {
+						$this->session->set_flashdata('success', 'Successfully Inserted.');
+						redirect($this->redirect . 'all');
+					} else {
 						$this->session->set_flashdata('error', 'Unable To Insert.');
-						redirect($this->redirect.'form');
+						redirect($this->redirect . 'form');
 					}
-				}else{ 
-					if($id==$data['parent_id']){
+				} else {
+					if ($id == $data['parent_id']) {
 						$data['parent_id'] = 0;
 					}
 					$data['updated'] = date('Y-m-d');
-					$data['updated_by'] = $this->current_user->id; 
-					$result = $this->crud_model->update($this->table, $data,array('id'=>$id));
-					if($result==true){
-						$this->session->set_flashdata('success','Successfully Updated.');
-						redirect($this->redirect.'all');
-					}else{
+					$data['updated_by'] = $this->current_user->id;
+					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
+					if ($result == true) {
+						$this->session->set_flashdata('success', 'Successfully Updated.');
+						redirect($this->redirect . 'all');
+					} else {
 						$this->session->set_flashdata('error', 'Unable To Update.');
-						redirect($this->redirect.'form/'.$id);
+						redirect($this->redirect . 'form/' . $id);
 					}
-				}   
+				}
 			}
-		} 
-		$data['title'] = 'Add/Edit '.$this->title;
-        $data['page'] = 'form';
-		
-		if(isset($data['detail']->parent_id)){
+		}
+		$data['title'] = 'Add/Edit ' . $this->title;
+		$data['page'] = 'form';
+
+		if (isset($data['detail']->parent_id)) {
 			$selected_parent = $data['detail']->parent_id;
-		}else{
+		} else {
 			$selected_parent = '';
 		}
 		$data['html'] = $this->get_parents_html($selected_parent);
 		// var_dump($data['html']);exit;
-        $this->load->view('layouts/admin/index',$data);
+		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function get_parents_html($selected_parent=''){   
+	public function get_parents_html($selected_parent = '')
+	{
 		$html = '<option value="NULL">Root</option>';
-		$parents = $this->db->get_where($this->table,array('status'=>'1','parent_id'=>0))->result();
-		if($parents){
-				foreach($parents as $key=>$value){
-					$html  .= '<option value="'.$value->id.'" '.(((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "").'>'.$value->title.'</option>';
-					$childs = $this->db->get_where($this->table,array('parent_id'=>$value->id ,'status'=>'1'))->result();
-					if(!empty($childs)){
-						$space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-						// var_dump($this->get_childs($html,$childs,$selected_parent,$space));exit;
-					    $html .= $this->get_childs($childs,$selected_parent,$space);
-					}
-				}
-		}
-
-		return $html;
-
-	}
-
-	public function get_childs($childs=array(), $selected_parent, $space){
-		// var_dump($html);exit;
-		$html='';
-		if(!empty($childs)){
-			foreach($childs as $key=>$value){
-				// echo "here";exit;
-				$html  .= '<option value="'.$value->id.'" '.(((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "").'>'.$space.$value->title.'</option>';
-				$new_childs = $this->db->get_where($this->table,array('parent_id'=>$value->id ,'status'=>'1'))->result();
-				if(!empty($new_childs)){
-					$space = $space.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-					$html .= $this->get_childs($new_childs,$selected_parent,$space);
+		$parents = $this->db->get_where($this->table, array('status' => '1', 'parent_id' => 0))->result();
+		if ($parents) {
+			foreach ($parents as $key => $value) {
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $value->title . '</option>';
+				$childs = $this->db->get_where($this->table, array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($childs)) {
+					$space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					// var_dump($this->get_childs($html,$childs,$selected_parent,$space));exit;
+					$html .= $this->get_childs($childs, $selected_parent, $space);
 				}
 			}
 		}
-		return $html; 
+
+		return $html;
 	}
 
-	public function soft_delete($id){
+	public function get_childs($childs = array(), $selected_parent, $space)
+	{
+		// var_dump($html);exit;
+		$html = '';
+		if (!empty($childs)) {
+			foreach ($childs as $key => $value) {
+				// echo "here";exit;
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $space . $value->title . '</option>';
+				$new_childs = $this->db->get_where($this->table, array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($new_childs)) {
+					$space = $space . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					$html .= $this->get_childs($new_childs, $selected_parent, $space);
+				}
+			}
+		}
+		return $html;
+	}
+
+	public function soft_delete($id)
+	{
 		$data = array(
 			'status' => '2',
-			'updated_by' => $this->current_user->id, 
+			'updated_by' => $this->current_user->id,
 			'updated' => date('Y-m-d'),
 		);
-		$result = $this->crud_model->update($this->table, $data,array('id'=>$id));
-		if($result==true){
-			$this->session->set_flashdata('success','Successfully Deleted.');
-			redirect($this->redirect.'all');
-		}else{
+		$result = $this->crud_model->update($this->table, $data, array('id' => $id));
+		if ($result == true) {
+			$this->session->set_flashdata('success', 'Successfully Deleted.');
+			redirect($this->redirect . 'all');
+		} else {
 			$this->session->set_flashdata('error', 'Unable To Delete.');
-			redirect($this->redirect.'all');
+			redirect($this->redirect . 'all');
 		}
 	}
 
@@ -191,162 +194,162 @@ class Admin extends Auth_controller {
 	// Rajesh Menu Part Strat
 
 	public function menuTree($parent_id = 0, $html = '')
-    {
-        // $menus = Menu::where('category_id', $parent_id)->where('delete_status', '0')->where('publish_status', '1')->where('show_on_menu', '1')->orderBy('position','asc')->get();
+	{
+		// $menus = Menu::where('category_id', $parent_id)->where('delete_status', '0')->where('publish_status', '1')->where('show_on_menu', '1')->orderBy('position','asc')->get();
 
-		$menus = $this->db->order_by('order_no', 'ASC')->get_where('contents',array('parent_id'=>$parent_id,'status'=>'1'))->result();
-        if (count($menus) > 0) { 
-            $html = '';
-            foreach ($menus as $row) {
-                // $subMenus = Menu::where('category_id', $row->id)->where('delete_status', '0')->where('publish_status', '1')->where('show_on_menu', '1')->orderBy('position','asc')->get(); 
-                $subMenus = $this->db->order_by('order_no', 'ASC')->get_where('contents',array('parent_id'=>$row->id,'status'=>'1'))->result();
-				if( count($subMenus) > 0 ){
-                    $html .='<li id="menuItem_'.$row->id.'">
+		$menus = $this->db->order_by('order_no', 'ASC')->get_where('contents', array('parent_id' => $parent_id, 'status' => '1'))->result();
+		if (count($menus) > 0) {
+			$html = '';
+			foreach ($menus as $row) {
+				// $subMenus = Menu::where('category_id', $row->id)->where('delete_status', '0')->where('publish_status', '1')->where('show_on_menu', '1')->orderBy('position','asc')->get(); 
+				$subMenus = $this->db->order_by('order_no', 'ASC')->get_where('contents', array('parent_id' => $row->id, 'status' => '1'))->result();
+				if (count($subMenus) > 0) {
+					$html .= '<li id="menuItem_' . $row->id . '">
                                 <div class="menu-handle">
-                                    <span>'.
-                                    $row->title
-                                    .'</span>
+                                    <span>' .
+						$row->title
+						. '</span>
                                     <div class="menu-options">
-                                        <a class="del_menu" id="'.$row->id.'">Delete</a>
+                                        <a class="del_menu" id="' . $row->id . '">Delete</a>
                                     </div>
                                 </div>
-                                <ol>'; 
-                    $html .= $this->menuTree($row->id);
-                    $html .=    '</ol>
-                            </li> '; 
-                }else{
-                    $html .= '
-                                <li id="menuItem_'.$row->id.'">
+                                <ol>';
+					$html .= $this->menuTree($row->id);
+					$html .=    '</ol>
+                            </li> ';
+				} else {
+					$html .= '
+                                <li id="menuItem_' . $row->id . '">
                                         <div class="menu-handle">
-                                        <span>'.
-                                        $row->title
-                                        .'</span>
+                                        <span>' .
+						$row->title
+						. '</span>
                                         <div class="menu-options">
-                                            <a class="del_menu" id="'.$row->id.'">Delete</a>
+                                            <a class="del_menu" id="' . $row->id . '">Delete</a>
                                         </div>
                                         </div>
                                 </li>';
-                } 
-            }
-        }
-        return  $html;
-    }
+				}
+			}
+		}
+		return  $html;
+	}
 
 	public function menu()
-	{ 
+	{
 		$data['menu'] = $this->menuTree();
 		$data['title'] = 'Drag And Drop And Reorder All Menu';
-        $data['page'] = 'menu';
-        $this->load->view('layouts/admin/index',$data);
+		$data['page'] = 'menu';
+		$this->load->view('layouts/admin/index', $data);
 	}
 
 	public function save_order()
-    {
-        try {
+	{
+		try {
 
-                if (!$this->input->is_ajax_request()) {
-                    exit('No direct script access allowed');
-                } else { 
-                    // echo "here";exit;
-                   
-                    $post = $this->input->post();
-                    // var_dump($post);exit;
-                    $sort = $post["sort"];  
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				// echo "here";exit;
 
-					if($sort){ 
-						parse_str($sort, $arr); 
+				$post = $this->input->post();
+				// var_dump($post);exit;
+				$sort = $post["sort"];
 
-						// var_dump($arr);exit;
+				if ($sort) {
+					parse_str($sort, $arr);
 
-						$i = 1;
-						
-						foreach($arr['menuItem'] as $key => $parent_id){
-							// dd($key,$id); 
-							// var_dump($id);exit();
-							$id = $key;
-							if($parent_id=='null'){
-								$parent_id = 0;
-							}else{
-								$parent_id = $parent_id;
-							}
+					// var_dump($arr);exit;
 
-							$data['order_no'] = $i;
-							$data['parent_id'] = $parent_id;
-							// $menu = Menu::find($key);
-							// $menu->position = $i;
-							// $menu->category_id = $id;
-							// $menu->save();
-							$this->crud_model->update($this->table, $data,array('id'=>$id));
-							$i++;
+					$i = 1;
+
+					foreach ($arr['menuItem'] as $key => $parent_id) {
+						// dd($key,$id); 
+						// var_dump($id);exit();
+						$id = $key;
+						if ($parent_id == 'null') {
+							$parent_id = 0;
+						} else {
+							$parent_id = $parent_id;
 						}
-						$response = array(
-							            'status' => 'success',
-							            'status_code' => 200,
-							            'status_message' => 'Successully Saved',  
-							        );
-					}else{
-						$response = array(
-							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Server Error',  
-						);
-					} 
-                }
-            } catch (Exception $e) {
-            $response = array(
-                'status' => 'error',
-                'status_message' => $e->getMessage()
-            );
-        }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
+
+						$data['order_no'] = $i;
+						$data['parent_id'] = $parent_id;
+						// $menu = Menu::find($key);
+						// $menu->position = $i;
+						// $menu->category_id = $id;
+						// $menu->save();
+						$this->crud_model->update($this->table, $data, array('id' => $id));
+						$i++;
+					}
+					$response = array(
+						'status' => 'success',
+						'status_code' => 200,
+						'status_message' => 'Successully Saved',
+					);
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Server Error',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
 
 	public function change_show_on_menu_status()
-    {
-        try {
+	{
+		try {
 
-                if (!$this->input->is_ajax_request()) {
-                    exit('No direct script access allowed');
-                } else { 
-                    // echo "here";exit;
-                   
-                    $post = $this->input->post();
-                    // var_dump($post);exit;
-                    $id = $post["id"];  
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				// echo "here";exit;
 
-					if($id){   
-						$data['status'] = '0';
+				$post = $this->input->post();
+				// var_dump($post);exit;
+				$id = $post["id"];
 
-						$result = $this->crud_model->update($this->table, $data,array('id'=>$id));
-						if($result){
-							$response = array(
-								'status' => 'success',
-								'status_code' => 200,
-								'status_message' => 'Successfully Removed',  
-							);
-						}else{
-							$response = array(
-								'status' => 'error',
-								'status_code' => 500,
-								'status_message' => 'Unable To Remove',  
-							);
-						}
-					}else{
+				if ($id) {
+					$data['status'] = '0';
+
+					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
+					if ($result) {
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully Removed',
+						);
+					} else {
 						$response = array(
 							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Server Error',  
+							'status_code' => 500,
+							'status_message' => 'Unable To Remove',
 						);
-					} 
-                }
-            } catch (Exception $e) {
-            $response = array(
-                'status' => 'error',
-                'status_message' => $e->getMessage()
-            );
-        }
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Server Error',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
 }
