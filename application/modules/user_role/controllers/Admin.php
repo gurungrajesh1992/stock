@@ -16,12 +16,13 @@ class Admin extends Auth_controller
 
 		// $data['roles'] = $this->db->get_where('user_role',array('status !='=>'2'))->result(); 
 
-		// var_dump($this->uri->segment(3));exit;
+		// var_dump($this->uri->segment(3));
+		// exit;
 
 		$config['base_url'] = base_url('user_role/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all('user_role', array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;
-		$config['per_page'] = 10;
+		$config['per_page'] = 2;
 		//outside of flist that is <ul></ul>
 		$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
 

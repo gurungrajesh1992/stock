@@ -8,7 +8,9 @@
     font-size: 15px;
     color: #706969;
 }
-
+span.req {
+    color: #e51313;
+}
 .error_message {
     background: #f3bfb9;
     padding: 5px;
