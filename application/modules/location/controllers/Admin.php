@@ -78,6 +78,7 @@ class Admin extends Auth_controller
 
 			if ($this->form_validation->run()) {
 				$data = array(
+					'parent_id' => $this->input->post('parent_id'),
 					'store_name' => $this->input->post('store_name'),
 					'address' => $this->input->post('address'),
 					'status' => $this->input->post('status'),
@@ -96,6 +97,9 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
+					if ($id == $data['parent_id']) {
+						$data['parent_id'] = 0;
+					}
 					$data['updated_on'] = date('Y-m-d');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
@@ -109,9 +113,54 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		if (isset($data['detail']->parent_id)) {
+			$selected_parent = $data['detail']->parent_id;
+		} else {
+			$selected_parent = '';
+		}
+		$data['html'] = $this->get_parents_html($selected_parent);
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function get_parents_html($selected_parent = '')
+	{
+		$html = '<option value="NULL">Root</option>';
+		$parents = $this->db->get_where($this->table, array('status' => '1', 'parent_id' => 0))->result();
+		if ($parents) {
+			foreach ($parents as $key => $value) {
+				// var_dump($value);
+				// die();
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $value->store_name . '</option>';
+				$childs = $this->db->get_where($this->table, array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($childs)) {
+					$space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					// var_dump($this->get_childs($html,$childs,$selected_parent,$space));exit;
+					$html .= $this->get_childs($childs, $selected_parent, $space);
+				}
+			}
+		}
+
+		return $html;
+	}
+
+	public function get_childs($childs = array(), $selected_parent, $space)
+	{
+		// var_dump($html);exit;
+		$html = '';
+		if (!empty($childs)) {
+			foreach ($childs as $key => $value) {
+				// echo "here";exit;
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $space . $value->store_name . '</option>';
+				$new_childs = $this->db->get_where($this->table, array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($new_childs)) {
+					$space = $space . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					$html .= $this->get_childs($new_childs, $selected_parent, $space);
+				}
+			}
+		}
+		return $html;
 	}
 
 	public function soft_delete($id)

@@ -12,8 +12,9 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Store Name</th>
-                  <th>Address</th>
+                  <th>Item Name</th>
+                  <th>Item Code</th>
+                  <th>Model Number</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -31,8 +32,9 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->store_name; ?></td>
-                      <td><?php echo $value->address; ?></td>
+                      <td><?php echo $value->item_name; ?></td>
+                      <td><?php echo $value->item_code; ?></td>
+                      <td><?php echo $value->model_no; ?></td>
                       <td><?php echo $status; ?></td>
                       <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
                     </tr>

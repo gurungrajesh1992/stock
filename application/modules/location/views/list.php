@@ -12,6 +12,7 @@
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Parent</th>
                   <th>Store Name</th>
                   <th>Address</th>
                   <th>Status</th>
@@ -28,9 +29,16 @@
                     } else {
                       $status = 'Inactive';
                     }
+
+                    if ($value->parent_id > 0) {
+                      $parent =  $this->db->get_where('location_para', array('id' => $value->parent_id))->row()->store_name;
+                    } else {
+                      $parent = 'Root';
+                    }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
+                      <td><?php echo $parent; ?></td>
                       <td><?php echo $value->store_name; ?></td>
                       <td><?php echo $value->address; ?></td>
                       <td><?php echo $status; ?></td>

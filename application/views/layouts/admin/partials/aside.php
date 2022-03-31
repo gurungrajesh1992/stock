@@ -159,7 +159,7 @@ $current_user = $this->session->userdata('current_user');
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link ">
-            <i class="nav-icon fa fa-map-marker"></i>
+            <i class="nav-icon fa fa-list-alt"></i>
             <p>
               Item Category
               <i class="right fas fa-angle-left"></i>

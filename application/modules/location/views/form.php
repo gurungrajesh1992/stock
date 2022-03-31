@@ -18,6 +18,15 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
+                <label>Select Parent</label>
+                <select name="parent_id" class="form-control" id="parent_id">
+                  <?php echo $html; ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
                 <label>Store Name <span style="color:red;"> *</span></label>
                 <input type="text" name="store_name" class="form-control" id="store_name" placeholder="Enter Store Name" value="<?php echo set_value('store_name', (((isset($detail->store_name)) && $detail->store_name != '') ? $detail->store_name : '')); ?>">
                 <?php echo form_error('store_name', '<div class="error_message">', '</div>'); ?>
@@ -38,7 +47,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Status</label>
-                <select name="status" class="form-control selct2" id="status">
+                <select name="status" class="form-control" id="status">
                   <option value="1" <?php echo  set_select('status', '1', (isset($detail->status) && $detail->status == '1') ? TRUE : ''); ?>>Active</option>
                   <option value="0" <?php echo  set_select('status', '0', (isset($detail->status) && $detail->status == '0') ? TRUE : ''); ?>>Inactive</option>
                 </select>

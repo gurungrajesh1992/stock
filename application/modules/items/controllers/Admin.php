@@ -8,9 +8,9 @@ class Admin extends Auth_controller
 	{
 		parent::__construct();
 
-		$this->table = 'location_para';
-		$this->title = 'Location';
-		$this->redirect = 'location';
+		$this->table = 'item_infos';
+		$this->title = 'Item';
+		$this->redirect = 'items';
 	}
 
 	public function all($page = '')
@@ -73,13 +73,28 @@ class Admin extends Auth_controller
 	{
 		$data['detail'] = $this->crud_model->get_where_single($this->table, array('id' => $id));
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('store_name', 'Store Name', 'required|trim');
-			$this->form_validation->set_rules('address', 'Address', 'required|trim');
+			$this->form_validation->set_rules('category_id', 'Category Name', 'required|trim');
+			$this->form_validation->set_rules('location_id', 'Location Name', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$data = array(
-					'store_name' => $this->input->post('store_name'),
-					'address' => $this->input->post('address'),
+					'category_id' => $this->input->post('category_id'),
+					'location_id' => $this->input->post('location_id'),
+
+					'item_code' => $this->input->post('item_code'),
+					'item_name' => $this->input->post('item_name'),
+					'item_type' => $this->input->post('item_type'),
+					'specification' => $this->input->post('specification'),
+					'model_no' => $this->input->post('model_no'),
+					'max_qty' => $this->input->post('max_qty'),
+					'min_qty' => $this->input->post('min_qty'),
+					'reorder_level' => $this->input->post('reorder_level'),
+					'shelf_life_no' => $this->input->post('shelf_life_no'),
+					'shelf_life_ym' => $this->input->post('shelf_life_ym'),
+					'purchases_date' => $this->input->post('purchases_date'),
+					'depreciation_rate' => $this->input->post('depreciation_rate'),
+					'item_image' => $this->input->post('item_image'),
+
 					'status' => $this->input->post('status'),
 				);
 
@@ -98,8 +113,11 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
+					if ($id == $data['parent_id']) {
+						$data['parent_id'] = 0;
+					}
 					$data['updated_on'] = date('Y-m-d');
-					$data['updated_by'] = $this->current_user->id;
+					// $data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -111,9 +129,58 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$this->load->model('Items_model');
+		$data['categories'] = $this->Items_model->getAll_categories();
+		$data['locations'] = $this->Items_model->getAll_location();
+
+		if (isset($data['detail']->parent_id)) {
+			$selected_parent = $data['detail']->parent_id;
+		} else {
+			$selected_parent = '';
+		}
+		$data['html'] = $this->get_parents_html($selected_parent);
+
+		// var_dump($data);
+		// die();
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function get_parents_html($selected_parent = '')
+	{
+		$html = '<option>Select Category Name</option>';
+		$parents = $this->db->get_where('categories', array('status' => '1', 'parent_id' => 0))->result();
+		if ($parents) {
+			foreach ($parents as $key => $value) {
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $value->category_name . '</option>';
+				$childs = $this->db->get_where('categories', array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($childs)) {
+					$space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					// var_dump($this->get_childs($html,$childs,$selected_parent,$space));exit;
+					$html .= $this->get_childs($childs, $selected_parent, $space);
+				}
+			}
+		}
+
+		return $html;
+	}
+
+	public function get_childs($childs = array(), $selected_parent, $space)
+	{
+		// var_dump($html);exit;
+		$html = '';
+		if (!empty($childs)) {
+			foreach ($childs as $key => $value) {
+				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $space . $value->category_name . '</option>';
+				$new_childs = $this->db->get_where('categories', array('parent_id' => $value->id, 'status' => '1'))->result();
+				if (!empty($new_childs)) {
+					$space = $space . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+					$html .= $this->get_childs($new_childs, $selected_parent, $space);
+				}
+			}
+		}
+		return $html;
 	}
 
 	public function soft_delete($id)

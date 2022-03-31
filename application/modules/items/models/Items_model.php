@@ -7,9 +7,23 @@ class Items_model extends CI_Model
         parent::__construct();
     }
 
-    // public function getAll($table, $where)
+    public function getAll_location()
+    {
+        $locations =  $this->db->get_where('location_para', array('status' => '1'))->result_array();
+
+        return $locations;
+    }
+
+    public function getAll_categories()
+    {
+        $locations =  $this->db->get_where('categories', array('status' => '1'))->result_array();
+
+        return $locations;
+    }
+
+    // public function get_where($table, $where)
     // {
-    //     $blogs = $this->db->select('*')->from($table)->where($where)->get('')->result_array();
-    //     return $blogs;
+    //     $result = $this->db->order_by('id', 'DESC')->get_where($table, $where)->result();
+    //     return $result;
     // }
 }
