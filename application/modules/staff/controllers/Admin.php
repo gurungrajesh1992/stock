@@ -8,9 +8,9 @@ class Admin extends Auth_controller {
 		parent::__construct();
 		// var_dump($this->current_user);exit;
 		$this->load->library('form_validation');   
-		$this->table = 'teams';
-		$this->redirect = 'team/admin/';
-		$this->title = 'Team';
+		$this->table = 'staff_infos';
+		$this->redirect = 'staff/admin/';
+		$this->title = 'Staff';
 	}
 
 	public function all($page='')
@@ -110,6 +110,9 @@ class Admin extends Auth_controller {
 				}   
 			}
 		} 
+		$data['countries'] = $this->crud_model->get_where('country_para',array('status'=>'1'));
+		$data['designations'] = $this->crud_model->get_where('designation_para',array('status'=>'1'));
+		$data['departments'] = $this->crud_model->get_where('department_para',array('status'=>'1'));
 		$data['title'] = 'Add/Edit '.$this->title;
         $data['page'] = 'form';
         $this->load->view('layouts/admin/index',$data);

@@ -27,27 +27,115 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Address</label>
-                      <input type="text" name="address" class="form-control" id="address" placeholder="Address" value="<?php echo set_value('address', (((isset($detail->address)) && $detail->address != '')? $detail->address : '')); ?>">
-                      <?php echo form_error('address', '<div class="error_message">', '</div>'); ?>
+                      <label>Temporary Address</label>
+                      <input type="text" name="temp_address" class="form-control" id="temp_address" placeholder="Temporary Address" value="<?php echo set_value('temp_address', (((isset($detail->temp_address)) && $detail->temp_address != '')? $detail->temp_address : '')); ?>">
+                      <?php echo form_error('temp_address', '<div class="error_message">', '</div>'); ?>
                     </div> 
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Contact</label>
-                      <input type="text" name="contact" class="form-control" id="contact" placeholder="Contact" value="<?php echo set_value('contact', (((isset($detail->contact)) && $detail->contact != '')? $detail->contact : '')); ?>">
-                      <?php echo form_error('contact', '<div class="error_message">', '</div>'); ?>     
+                      <label>Permanent Address<span>*</span></label>
+                      <input type="text" name="permanent_address" class="form-control" id="permanent_address" placeholder="Permanent Address" value="<?php echo set_value('permanent_address', (((isset($detail->permanent_address)) && $detail->permanent_address != '')? $detail->permanent_address : '')); ?>">
+                      <?php echo form_error('permanent_address', '<div class="error_message">', '</div>'); ?>
                     </div> 
                   </div> 
                 </div>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Designation</label>
-                      <input type="text" name="designation" class="form-control" id="designation" placeholder="Designation" value="<?php echo set_value('designation', (((isset($detail->designation)) && $detail->designation != '')? $detail->designation : '')); ?>">
+                      <label>Contact</label>
+                      <input type="text" name="contact" class="form-control" id="contact" placeholder="Contact" value="<?php echo set_value('contact', (((isset($detail->contact)) && $detail->contact != '')? $detail->contact : '')); ?>">
+                      <?php echo form_error('contact', '<div class="error_message">', '</div>'); ?>     
+                    </div> 
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Country <span>*</span></label>
+                      <select name="country_code" id="country_code" class="form-control">
+                          <?php 
+                          if(isset($data->country_code)){
+                              // $this->load->model('country_model');
+                              // $c_name= $this->country_model->get_name($data->country_code);
+                              // echo '<option value="'.$c_name->RecordNo.'">'.$c_name->country_code.'</option>';
+                          }
+                          ?>
+                          <option value="">Select Country</option>
+                          <?php
+                          foreach($countries as $country)
+                          {
+                          echo '<option value="'.$country->country_code.'">'.$country->country_name.'</option>';
+                          }
+                          ?>
+                        
+                      </select>
+                      <?php echo form_error('country_code', '<div class="error_message">', '</div>'); ?>
+                    </div> 
+                  </div> 
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="text" name="email" class="form-control" id="email" placeholder="Email" value="<?php echo set_value('email', (((isset($detail->email)) && $detail->email != '')? $detail->email : '')); ?>">
+                    
+                    </div> 
+                  </div> 
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Designation <span>*</span></label>
+                      <select name="designation_code" id="designation_code" class="form-control">
+                        <?php 
+                          if(isset($data->designation_code)){
+                            
+                          }
+                        ?>   
+                        <option value="">Select Designation</option>                     
+                        <?php
+                          foreach($designations as $designation)
+                          {
+                          echo '<option value="'.$designation->designation_code.'">'.$designation->designation_name.'</option>';
+                          }
+                        ?>
+                         
+                     
+                        
+                      </select>
                       <?php echo form_error('designation', '<div class="error_message">', '</div>'); ?>
                     </div> 
                   </div> 
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Department <span>*</span></label>
+                      <select name="department_code" id="department_code" class="form-control">
+                        <?php 
+                          if(isset($data->department_code)){
+                            
+                          }
+                        ?>   
+                        <option value="">Select Designation</option>                     
+                        <?php
+                          foreach($departments as $department)
+                          {
+                          echo '<option value="'.$department->department_code.'">'.$department->department_name.'</option>';
+                          }
+                        ?>
+                        
+                      </select>
+                      <?php echo form_error('department_code', '<div class="error_message">', '</div>'); ?>
+                    </div> 
+                  </div> 
+                  
+                </div>  
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Appointed Date <span>*</span></label>
+                      <input type="date" name="appointed_date" class="form-control" id="appointed_date" placeholder="Appointed Date" value="<?php echo set_value('appointed_date', (((isset($detail->appointed_date)) && $detail->appointed_date != '')? $detail->appointed_date : '')); ?>">
+                      <?php echo form_error('appointed_date', '<div class="error_message">', '</div>'); ?>     
+                    </div> 
+                  </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Featured Image</label> 
@@ -61,7 +149,7 @@
                       <?php echo form_error('featured_image', '<div class="error_message">', '</div>'); ?>
                     </div> 
                   </div> 
-                </div>  
+                </div>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
