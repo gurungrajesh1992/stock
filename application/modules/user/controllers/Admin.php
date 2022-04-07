@@ -52,7 +52,7 @@ class Admin extends Auth_controller
 
 		$data['pagination'] = $this->pagination->create_links();
 		$data['items'] = $this->crud_model->get_where_pagination('users', array('status !=' => '2'), $config["per_page"], $page);
-		$data['title'] = 'Staff';
+		$data['title'] = 'User';
 		$data['page'] = 'list';
 		$this->load->view('layouts/admin/index', $data);
 	}
@@ -126,7 +126,7 @@ class Admin extends Auth_controller
 		$data['countries'] = $this->crud_model->get_where('country_para', array('status' => '1'));
 		$data['designations'] = $this->crud_model->get_where('designation_para', array('status' => '1'));
 		$data['departs'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'Add/Edit staff';
+		$data['title'] = 'Add/Edit User';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
