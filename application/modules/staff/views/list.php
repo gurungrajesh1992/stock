@@ -18,9 +18,9 @@
                       <th>Contact</th>
                       <th>Photo</th>    
                       <th>Created</th>
-                      <th>Created By</th>
+                      <!-- <th>Created By</th> -->
                       <th>Updated</th>
-                      <th>Updated By</th>
+                      <!-- <th>Updated By</th> -->
                       <th>status</th>
                       <th>Action</th>
                     </tr>
@@ -49,15 +49,15 @@
                     ?>
                     <tr>
                       <td><?php echo $key+1 ?></td>
-                      <td><?php echo $value->name ?></td>
-                      <td><?php echo $value->designation ?></td>
-                      <td><?php echo $value->address ?></td>
+                      <td><?php echo $value->full_name ?></td>
+                      <td><?php echo $value->designation_code ?></td>
+                      <td><?php echo $value->temp_address ?></td>
                       <td><?php echo $value->contact ?></td>
                       <td><?php if($value->featured_image){ ?><img src="<?php echo $value->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
-                      <td><?php echo $value->created ?></td>
-                      <td><?php echo $created_by ?></td>
-                      <td><?php echo $value->updated ?></td>
-                      <td><?php echo $updated_by ?></td>
+                      <td><?php echo $value->created_on ?></td>
+                      <!-- <td><?php echo $created_by ?></td> -->
+                      <td><?php echo $value->updated_on ?></td>
+                      <!-- <td><?php echo $updated_by ?></td> -->
                       <td><?php echo $status ?></td>
                       <td>
                           <a href="<?php echo base_url($redirect.'form/'.$value->id); ?>" class="btn btn-sm btn-primary">Edit</a> 
