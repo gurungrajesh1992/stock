@@ -77,7 +77,7 @@
                       <select name="designation_code" class="form-control selct2" id="designation_code">
                         <option value>Select Designation</option>
                         <?php foreach ($designations as $key => $value) { ?>
-                          <option value="<?php echo $value->designation_code; ?>" <?php echo  set_select('designation_code', $value->designation_code, (isset($detail->designation_code) && $detail->designation_code == $value->designation_code) ? TRUE : ''); ?>><?php echo $value->designation_code; ?></option>
+                          <option value="<?php echo $value->designation_code; ?>" <?php echo  set_select('designation_code', $value->designation_code, (isset($detail->designation_code) && $detail->designation_code == $value->designation_code) ? TRUE : ''); ?>><?php echo $value->designation_name; ?></option>
                         <?php } ?>
                          <?php echo form_error('designation_code', '<div class="error_message">', '</div>'); ?>
                       </select>
@@ -86,12 +86,12 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Department <span>*</span></label>
-                      <select name="designation_code" class="form-control selct2" id="designation_code">
-                        <option value>Select Designation</option>
-                        <?php foreach ($designations as $key => $value) { ?>
-                          <option value="<?php echo $value->designation_code; ?>" <?php echo  set_select('designation_code', $value->designation_code, (isset($detail->designation_code) && $detail->designation_code == $value->designation_code) ? TRUE : ''); ?>><?php echo $value->designation_code; ?></option>
+                      <select name="department_code" class="form-control selct2" id="department_code">
+                        <option value>Select Departments</option>
+                        <?php foreach ($departments as $key => $value) { ?>
+                          <option value="<?php echo $value->department_code; ?>" <?php echo  set_select('department_code', $value->department_code, (isset($detail->department_code) && $detail->department_code == $value->department_code) ? TRUE : ''); ?>><?php echo $value->department_name; ?></option>
                         <?php } ?>
-                         <?php echo form_error('designation_code', '<div class="error_message">', '</div>'); ?>
+                       
                       </select>
                       <?php echo form_error('department_code', '<div class="error_message">', '</div>'); ?>
                     </div> 
