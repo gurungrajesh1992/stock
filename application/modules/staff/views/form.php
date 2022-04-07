@@ -48,28 +48,17 @@
                       <?php echo form_error('contact', '<div class="error_message">', '</div>'); ?>     
                     </div> 
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6"> 
                     <div class="form-group">
-                      <label>Country <span>*</span></label>
-                      <select name="country_code" id="country_code" class="form-control">
-                          <?php 
-                          if(isset($data->country_code)){
-                              // $this->load->model('country_model');
-                              // $c_name= $this->country_model->get_name($data->country_code);
-                              // echo '<option value="'.$c_name->RecordNo.'">'.$c_name->country_code.'</option>';
-                          }
-                          ?>
-                          <option value="">Select Country</option>
-                          <?php
-                          foreach($countries as $country)
-                          {
-                          echo '<option value="'.$country->country_code.'">'.$country->country_name.'</option>';
-                          }
-                          ?>
-                        
+                      <label>Select Country</label>
+                      <select name="country_code" class="form-control selct2" id="country_code">
+                        <option value>Select Country</option>
+                        <?php foreach ($countries as $key => $value) { ?>
+                          <option value="<?php echo $value->country_code; ?>" <?php echo  set_select('country_code', $value->country_code, (isset($detail->country_code) && $detail->country_code == $value->country_code) ? TRUE : ''); ?>><?php echo $value->country_name; ?></option>
+                        <?php } ?>
+                         <?php echo form_error('country_code', '<div class="error_message">', '</div>'); ?>
                       </select>
-                      <?php echo form_error('country_code', '<div class="error_message">', '</div>'); ?>
-                    </div> 
+                    </div>
                   </div> 
                 </div>
                 <div class="row">
