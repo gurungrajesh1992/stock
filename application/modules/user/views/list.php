@@ -80,7 +80,7 @@
                       <td><?php echo $value->appointed_date; ?></td>
                       <td><?php echo $status ?></td>
                       <td>
-                        <a href="<?php echo base_url('staff/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
                         <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
                         <a class="btn btn-sm btn-primary">Password</a>
 
@@ -98,7 +98,7 @@
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <a href="<?php echo base_url('staff/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
+                                <a href="<?php echo base_url('user/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
                               </div>
                             </div>
                           </div>
