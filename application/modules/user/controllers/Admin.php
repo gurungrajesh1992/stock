@@ -63,6 +63,7 @@ class Admin extends Auth_controller
 		$data['detail'] = $this->db->get_where('users', array('id' => $id))->row();
 		if ($this->input->post()) {
 			$this->form_validation->set_rules('role_id', 'Role', 'required|trim');
+			$this->form_validation->set_rules('staff_id', 'Role', 'required|trim');
 			if ($id == '') {
 				$this->form_validation->set_rules('user_name', 'Username', 'required|trim');
 				$this->form_validation->set_rules('password', 'Password', 'required|trim');
@@ -72,6 +73,7 @@ class Admin extends Auth_controller
 				$data = array(
 					'email' => $this->input->post('email'),
 					'role_id' => $this->input->post('role_id'),
+					'staff_id' => $this->input->post('staff_id'),
 					'status' => $this->input->post('status'),
 				);
 				$id = $this->input->post('id');
