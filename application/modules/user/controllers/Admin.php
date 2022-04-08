@@ -62,7 +62,6 @@ class Admin extends Auth_controller
 
 		$data['detail'] = $this->db->get_where('users', array('id' => $id))->row();
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim');
 			$this->form_validation->set_rules('role_id', 'Role', 'required|trim');
 			if ($id == '') {
 				$this->form_validation->set_rules('user_name', 'Username', 'required|trim');
@@ -71,18 +70,8 @@ class Admin extends Auth_controller
 
 			if ($this->form_validation->run()) {
 				$data = array(
-					'full_name' => $this->input->post('full_name'),
-					'permanent_addres' => $this->input->post('permanent_addres'),
-					'temp_address' => $this->input->post('temp_address'),
-					'contact' => $this->input->post('contact'),
 					'email' => $this->input->post('email'),
-					'description' => $this->input->post('description'),
-					'profile_image' => $this->input->post('profile_image'),
 					'role_id' => $this->input->post('role_id'),
-					'country_code' => $this->input->post('country_code'),
-					'designation_code' => $this->input->post('designation_code'),
-					'depart_id' => $this->input->post('depart_id'),
-					'appointed_date' => $this->input->post('appointed_date'),
 					'status' => $this->input->post('status'),
 				);
 				$id = $this->input->post('id');
@@ -123,9 +112,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['roles'] = $this->crud_model->get_where('user_role', array('status' => '1'));
-		$data['countries'] = $this->crud_model->get_where('country_para', array('status' => '1'));
-		$data['designations'] = $this->crud_model->get_where('designation_para', array('status' => '1'));
-		$data['departs'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+		$data['staffs'] = $this->crud_model->get_where('staff_infos', array('status' => '1'));
 		$data['title'] = 'Add/Edit User';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);

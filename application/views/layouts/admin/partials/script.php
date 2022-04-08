@@ -40,7 +40,6 @@
 
 <!-- nested sortable -->
 <script type="text/javascript" src="<?php echo base_url('theme/admin/'); ?>rajesh/js/jquery.mjs.nestedSortable.js">
-  ">
 </script>
 
 <!-- select2  -->
@@ -51,6 +50,42 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+
+    //requisition items
+
+    $(document).off('change', '#item').on('change', '#item', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items);
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
 
     $(document).off('change', '#type').on('change', '#type', function(e) {
       e.preventDefault();

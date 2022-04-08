@@ -72,7 +72,16 @@ class Admin extends Auth_controller
 
 	public function form($id = '')
 	{
-		$data['detail'] = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		// $string = "RQ07042022-0006";
+		// $explode = explode("-", $string);
+		// $int_value = intval($explode[1]) + 1;
+		// var_dump(sprintf("%04d", $int_value));
+		// exit;
+		// echo "<pre>";
+		// var_dump($this->current_user);
+		// exit;
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
@@ -84,14 +93,44 @@ class Admin extends Auth_controller
 					'remarks' => $this->input->post('remarks'),
 				);
 
-				// $country_code = substr($data['country_name'], 0, 4);
-				// $data['country_code'] = $country_code;
 				$id = $this->input->post('id');
 				if ($id == '') {
-					$data['created_on'] = date('Y-m-d');
-					$data['created_by'] = $this->current_user->id;
+					$last_row_no = $this->crud_model->get_where_single_order_by('requisition_master', array('status' => '1'), 'id', 'DESC');
+
+					if (isset($last_row_no->requisition_no)) {
+						// $string = "RQ07042022-0006";
+						$string = $last_row_no->requisition_no;
+						$explode = explode("-", $string);
+						$int_value = intval($explode[1]) + 1;
+						// var_dump(sprintf("%04d", $int_value));
+						$data['requisition_no'] = 'RQ' . date('dmY') . '-' . sprintf("%04d", $int_value);
+					} else {
+						$data['requisition_no'] = 'RQ' . date('dmY') . '-0001';
+					}
+					$data['requested_date'] = date('Y-m-d');
+					$data['requested_by'] = $this->current_user->id;
+
+					$staff = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $this->current_user->staff_id), 'id', 'DESC');
+					if ($staff) {
+						$data['department_id'] = $staff->department_code;
+					}
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
+
+						$item_code =  $this->input->post('item_code');
+						$quantity_requested =  $this->input->post('quantity_requested');
+						$remark =  $this->input->post('remark');
+
+						if (count($item_code) > 0) {
+							for ($i = 0; $i < count($item_code); $i++) {
+								$insert_detail['requisition_no'] = $data['requisition_no'];
+								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['quantity_requested'] = $quantity_requested[$i];
+								$insert_detail['remark'] = $remark[$i];
+
+								$this->crud_model->insert('requisition_details', $insert_detail);
+							}
+						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
 					} else {
@@ -99,9 +138,26 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					$data['updated_on'] = date('Y-m-d');
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
+						//delete all child before update
+						$this->db->delete('requisition_details', array('requisition_no' => $detail->requisition_no));
+
+
+						$item_code =  $this->input->post('item_code');
+						$quantity_requested =  $this->input->post('quantity_requested');
+						$remark =  $this->input->post('remark');
+
+						if (count($item_code) > 0) {
+							for ($i = 0; $i < count($item_code); $i++) {
+								$insert_detail['requisition_no'] = $detail->requisition_no;
+								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['quantity_requested'] = $quantity_requested[$i];
+								$insert_detail['remark'] = $remark[$i];
+
+								$this->crud_model->insert('requisition_details', $insert_detail);
+							}
+						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
 						redirect($this->redirect . '/admin/all');
 					} else {
@@ -111,6 +167,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
@@ -133,5 +190,72 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Unable To Delete.');
 			redirect($this->redirect . '/admin/all');
 		}
+	}
+
+	public function getForm()
+	{
+		try {
+
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				//access ok 
+				// echo "here";exit;
+				// $check = $this->load->view('listall/image_form');  
+				$val = $this->input->post('val');
+
+				if ($val) {
+					// var_dump($val);
+					// exit;
+					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+					$html = '';
+
+					if ($item_detail) {
+						$html .= '<div class="row">
+									<div class="col-md-4">
+										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
+										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
+									</div>
+									<div class="col-md-4">
+										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity">
+									</div>
+									<div class="col-md-4">
+										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+									</div>
+									</div>';
+					}
+
+
+					if ($html) {
+
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully retrived',
+							'data' => $html,
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable To Get Form',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
 	}
 }
