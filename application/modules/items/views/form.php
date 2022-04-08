@@ -27,7 +27,10 @@
                 </select>
               </div>
             </div> -->
-
+            <?php
+            // var_dump($detail);
+            // exit;
+            ?>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Category Name <span style="color:red;"> *</span></label>
@@ -55,7 +58,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Itme Code<span style="color:red;"> *</span></label>
-                <input type="text" name="item_code" class="form-control" id="item_code" placeholder="Enter Item Code" value="<?php echo set_value('item_code', (((isset($detail->item_code)) && $detail->item_code != '') ? $detail->item_code : '')); ?>">
+                <input type="text" name="item_code" class="form-control" id="item_code" value="<?php echo set_value('item_code', isset($detail->item_code) ? $detail->item_code : $item_code); ?>" readonly>
                 <?php echo form_error('item_code', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
@@ -150,13 +153,7 @@
                 <?php } ?>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Purcheses Date<span style="color:red;"> *</span></label>
-                <input type="date" name="purchases_date" min="0" class="form-control" id="purchases_date" placeholder="Enter purchases_date" value="<?php echo set_value('purchases_date', (((isset($detail->purchases_date)) && $detail->purchases_date != '') ? $detail->purchases_date : '')); ?>">
-                <?php echo form_error('purchases_date', '<div class="error_message">', '</div>'); ?>
-              </div>
-            </div>
+
           </div>
           <div class="row">
             <div class="col-md-12">
