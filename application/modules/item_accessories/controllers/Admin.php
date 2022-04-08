@@ -8,10 +8,10 @@ class Admin extends Auth_controller
 	{
 		parent::__construct();
 
-		$this->table = 'item_infos';
-		$this->title = 'Item';
-		$this->redirect = 'items';
-		$this->load->model('Items_model');
+		$this->table = 'item_accessories';
+		$this->title = 'Item Accessories';
+		$this->redirect = 'item_accessories';
+		$this->load->model('Item_accessories_model');
 	}
 
 	public function all($page = '')
@@ -50,18 +50,12 @@ class Admin extends Auth_controller
 
 		// $data['pagination'] = $this->pagination->create_links();
 
+		$item_accessories = $this->crud_model->get_where_pagination($this->table, array('status !=' => '2'), $config['per_page'], $page);
 
-
-		// $items = $this->crud_model->get_where_pagination('user_role', array('status !=' => '2'), $config["per_page"], $page);
-		$items = $this->crud_model->get_where_pagination($this->table, array('status !=' => '2'), $config['per_page'], $page);
-
-		// echo "<pre>";
-		// var_dump($this->db->last_query());
-		// exit;
 		$data = array(
 			'title' => $this->title . ' List',
 			'page' => 'list',
-			'items' => $items,
+			'item_accessories' => $item_accessories,
 			'redirect' => $this->redirect,
 			'pagination' =>  $this->pagination->create_links()
 		);
@@ -76,32 +70,21 @@ class Admin extends Auth_controller
 
 		$data['detail'] = $this->crud_model->get_where_single($this->table, array('id' => $id));
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('category_id', 'Category Name', 'required|trim');
-			$this->form_validation->set_rules('location_id', 'Location Name', 'required|trim');
+			$this->form_validation->set_rules('accessories_name', 'Accessories Name', 'required|trim');
+			$this->form_validation->set_rules('qty', 'Quantity', 'required|trim');
 
 			if ($this->form_validation->run()) {
 
 				$data = array(
-					'category_id' => $this->input->post('category_id'),
-					'location_id' => $this->input->post('location_id'),
 					'item_code' => $this->input->post('item_code'),
-					'item_name' => $this->input->post('item_name'),
-					'item_type' => $this->input->post('item_type'),
-					'specification' => $this->input->post('specification'),
-					'model_no' => $this->input->post('model_no'),
-					'max_qty' => $this->input->post('max_qty'),
-					'min_qty' => $this->input->post('min_qty'),
-					'reorder_level' => $this->input->post('reorder_level'),
-					'shelf_life_no' => $this->input->post('shelf_life_no'),
-					'shelf_life_ym' => $this->input->post('shelf_life_ym'),
-					'depreciation_rate' => $this->input->post('depreciation_rate'),
-					'item_image' => $this->input->post('item_image'),
+					'accessories_code' => $this->input->post('accessories_code'),
+					'accessories_name' => $this->input->post('accessories_name'),
+					'qty' => $this->input->post('qty'),
 
 					'status' => $this->input->post('status'),
 				);
-
-				// $country_code = substr($data['country_name'], 0, 4);
-				// $data['country_code'] = $country_code;
+				// var_dump($data);
+				// exit;
 				$id = $this->input->post('id');
 				if ($id == '') {
 					$data['created_on'] = date('Y-m-d');
@@ -115,9 +98,6 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					if ($id == $data['parent_id']) {
-						$data['parent_id'] = 0;
-					}
 					$data['updated_on'] = date('Y-m-d');
 					// $data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
@@ -132,57 +112,12 @@ class Admin extends Auth_controller
 			}
 		}
 
-		$data['categories'] = $this->Items_model->getAll_categories();
-		$data['locations'] = $this->Items_model->getAll_location();
-		$data['item_code'] = $this->Items_model->item_code();
-
-		if (isset($data['detail']->category_id)) {
-			$selected_parent = $data['detail']->category_id;
-		} else {
-			$selected_parent = '';
-		}
-		$data['html'] = $this->get_parents_html($selected_parent);
+		$data['item_code'] = $this->Item_accessories_model->getAll_item_code();
+		$data['accessories_code'] = $this->Item_accessories_model->item_accessories_auto_generate();
 
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
-	}
-
-	public function get_parents_html($selected_parent = '')
-	{
-		$html = '<option>Select Category Name</option>';
-		$parents = $this->db->get_where('categories', array('status' => '1', 'parent_id' => 0))->result();
-		if ($parents) {
-			foreach ($parents as $key => $value) {
-				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $value->category_name . '</option>';
-				$childs = $this->db->get_where('categories', array('parent_id' => $value->id, 'status' => '1'))->result();
-				if (!empty($childs)) {
-					$space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-					// var_dump($this->get_childs($html,$childs,$selected_parent,$space));exit;
-					$html .= $this->get_childs($childs, $selected_parent, $space);
-				}
-			}
-		}
-
-		return $html;
-	}
-
-	public function get_childs($childs = array(), $selected_parent, $space)
-	{
-		// var_dump($html);exit;
-		$html = '';
-		if (!empty($childs)) {
-			foreach ($childs as $key => $value) {
-				// echo "here";exit;
-				$html  .= '<option value="' . $value->id . '" ' . (((isset($value->id)) && $value->id == $selected_parent) ? "selected" : "") . '>' . $space . $value->category_name . '</option>';
-				$new_childs = $this->db->get_where('categories', array('parent_id' => $value->id, 'status' => '1'))->result();
-				if (!empty($new_childs)) {
-					$space = $space . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-					$html .= $this->get_childs($new_childs, $selected_parent, $space);
-				}
-			}
-		}
-		return $html;
 	}
 
 	public function soft_delete($id)
