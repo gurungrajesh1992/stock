@@ -8,9 +8,9 @@ class Admin extends Auth_controller {
 		parent::__construct();
 		// var_dump($this->current_user);exit;
 		$this->load->library('form_validation');   
-		$this->table = 'teams';
-		$this->redirect = 'team/admin/';
-		$this->title = 'Team';
+		$this->table = 'staff_infos';
+		$this->redirect = 'staff/admin/';
+		$this->title = 'Staff';
 	}
 
 	public function all($page='')
@@ -65,16 +65,21 @@ class Admin extends Auth_controller {
 		
 		$data['detail'] = $this->db->get_where($this->table,array('id'=>$id))->row();
 		if($this->input->post()){
-			$this->form_validation->set_rules('name', 'Full Name', 'required|trim');  
+			$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim');  
 			
 			if($this->form_validation->run()){
 				$data = array(
-							'name' => $this->input->post('name'), 
+							'full_name' => $this->input->post('full_name'), 
 							'description' => $this->input->post('description'),
 							'featured_image' => $this->input->post('featured_image'),  
-							'designation' => $this->input->post('designation'),
-							'address' => $this->input->post('address'),
+							'designation_code' => $this->input->post('designation_code'),
+							'temp_address' => $this->input->post('temp_address'),
+							'permanent_address' => $this->input->post('permanent_address'),
 							'contact' => $this->input->post('contact'), 
+							'email' => $this->input->post('email'),
+							'country_code' => $this->input->post('country_code'),
+							'department_code' => $this->input->post('department_code'),
+							'appointed_date' => $this->input->post('appointed_date'),
 							'status' => $this->input->post('status'),  
 						);   				
 				$id = $this->input->post('id');	 	
@@ -87,7 +92,7 @@ class Admin extends Auth_controller {
 						$data['slug'] = strtolower ($slug).time();
 					}
 					$data['created_by'] = $this->current_user->id; 
-					$data['created'] = date('Y-m-d'); 
+					$data['created_on'] = date('Y-m-d'); 
 					$result = $this->crud_model->insert($this->table, $data);
 					if($result==true){
 						$this->session->set_flashdata('success','Successfully Inserted.');
@@ -97,7 +102,7 @@ class Admin extends Auth_controller {
 						redirect($this->redirect.'form');
 					}
 				}else{ 
-					$data['updated'] = date('Y-m-d');
+					$data['updated_on'] = date('Y-m-d');
 					$data['updated_by'] = $this->current_user->id; 
 					$result = $this->crud_model->update($this->table, $data,array('id'=>$id));
 					if($result==true){
@@ -110,6 +115,9 @@ class Admin extends Auth_controller {
 				}   
 			}
 		} 
+		$data['countries'] = $this->crud_model->get_where('country_para',array('status'=>'1'));
+		$data['designations'] = $this->crud_model->get_where('designation_para',array('status'=>'1'));
+		$data['departments'] = $this->crud_model->get_where('department_para',array('status'=>'1'));
 		$data['title'] = 'Add/Edit '.$this->title;
         $data['page'] = 'form';
         $this->load->view('layouts/admin/index',$data);
