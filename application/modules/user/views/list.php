@@ -30,6 +30,7 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
+                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
                     if ($value->updated_by) {
                       $updated_by = $this->db->get_where('users', array('id' => $value->updated_by))->row()->user_name;
                     } else {
@@ -48,14 +49,14 @@
                       $role = '';
                     }
 
-                    if ($value->country_code) {
-                      $nationality = $this->db->get_where('country_para', array('country_code' => $value->country_code))->row()->nationality;
+                    if ($staff_detail->country_code) {
+                      $nationality = $this->db->get_where('country_para', array('country_code' => $staff_detail->country_code))->row()->nationality;
                     } else {
                       $nationality = '';
                     }
 
-                    if ($value->depart_id) {
-                      $depart = $this->db->get_where('department_para', array('id' => $value->depart_id))->row()->department_name;
+                    if ($staff_detail->department_code) {
+                      $depart = $this->db->get_where('department_para', array('department_code' => $staff_detail->department_code))->row()->department_name;
                     } else {
                       $depart = '';
                     }
@@ -68,16 +69,16 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1 ?></td>
-                      <td><?php echo $value->full_name ?></td>
+                      <td><?php echo $staff_detail->full_name ?></td>
                       <td><?php echo $role ?></td>
-                      <td><?php echo $value->permanent_addres ?></td>
-                      <td><?php echo $value->temp_address ?></td>
-                      <td><?php echo $value->contact ?></td>
-                      <td><?php echo $value->email ?></td>
+                      <td><?php echo $staff_detail->permanent_address ?></td>
+                      <td><?php echo $staff_detail->temp_address ?></td>
+                      <td><?php echo $staff_detail->contact ?></td>
+                      <td><?php echo $staff_detail->email ?></td>
                       <td><?php echo $nationality ?></td>
-                      <td><?php echo $value->designation_code ?></td>
+                      <td><?php echo $staff_detail->designation_code ?></td>
                       <td><?php echo $depart ?></td>
-                      <td><?php echo $value->appointed_date; ?></td>
+                      <td><?php echo $staff_detail->appointed_date; ?></td>
                       <td><?php echo $status ?></td>
                       <td>
                         <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>

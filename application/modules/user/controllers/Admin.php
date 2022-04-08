@@ -87,17 +87,17 @@ class Admin extends Auth_controller
 						$data['user_name'] = $this->input->post('user_name');
 					} else {
 						$this->session->set_flashdata('error', 'User Name Already Exists!!! Try Another One');
-						redirect('staff/admin/form/');
+						redirect('user/admin/form/');
 					}
 
 					$data['password'] = md5($this->input->post('password'));
 					$result = $this->crud_model->insert('users', $data);
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
-						redirect('staff/admin/all');
+						redirect('user/admin/all');
 					} else {
 						$this->session->set_flashdata('error', 'Unable To Insert.');
-						redirect('staff/admin/form');
+						redirect('user/admin/form');
 					}
 				} else {
 					$data['updated'] = date('Y-m-d');
@@ -105,10 +105,10 @@ class Admin extends Auth_controller
 					$result = $this->crud_model->update('users', $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');
-						redirect('staff/admin/all');
+						redirect('user/admin/all');
 					} else {
 						$this->session->set_flashdata('error', 'Unable To Update.');
-						redirect('staff/admin/form/' . $id);
+						redirect('user/admin/form/' . $id);
 					}
 				}
 			}

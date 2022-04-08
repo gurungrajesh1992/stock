@@ -64,7 +64,8 @@
         alert('already selected, you can change quantity');
         return false;
       }
-      // console.log(already_items);
+      // console.log(already_items.length);
+      // return false;
       $.ajax({
 
         url: '<?php echo base_url('requisition/admin/getForm'); ?>',
@@ -73,6 +74,7 @@
         dataType: "json",
         data: {
           "val": val,
+          "total": already_items.length,
         },
         success: function(resp) {
           // console.log(resp.data);return false;

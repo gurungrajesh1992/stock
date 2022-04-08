@@ -81,6 +81,9 @@ class Admin extends Auth_controller
 		// var_dump($this->current_user);
 		// exit;
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		if ($detail) {
+			$staffs = $this->crud_model->get_where('department_para', array('status' => '1'));
+		}
 		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
@@ -109,10 +112,12 @@ class Admin extends Auth_controller
 					}
 					$data['requested_date'] = date('Y-m-d');
 					$data['requested_by'] = $this->current_user->id;
+					$data['cancel_tag'] = '0';
 
 					$staff = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $this->current_user->staff_id), 'id', 'DESC');
+					$depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('department_code' => $staff->department_code), 'id', 'DESC');
 					if ($staff) {
-						$data['department_id'] = $staff->department_code;
+						$data['department_id'] = $depart_detail->id;
 					}
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
@@ -168,6 +173,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
@@ -200,9 +206,11 @@ class Admin extends Auth_controller
 				exit('No direct script access allowed');
 			} else {
 				//access ok 
-				// echo "here";exit;
+				// echo "here";
+				// exit;
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
+				$total = $this->input->post('total');
 
 				if ($val) {
 					// var_dump($val);
@@ -212,14 +220,17 @@ class Admin extends Auth_controller
 
 					if ($item_detail) {
 						$html .= '<div class="row">
-									<div class="col-md-4">
+									<div class="col-md-1">
+									' . ($total + 1) . '.
+									</div>
+									<div class="col-md-3">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-2">
 										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity">
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
 									</div>
 									</div>';
