@@ -75,15 +75,7 @@
                   
                   </div> 
                 </div>
-                <!-- <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Description</label> 
-                      <textarea name="description" id="description" class="form-control" rows="5" cols="80" autocomplete="off"><?php echo set_value('description', (((isset($detail->description)) && $detail->description != '')? $detail->description : '')); ?></textarea>
-                      <?php echo form_error('description', '<div class="error_message">', '</div>'); ?>
-                    </div> 
-                  </div> 
-                </div> -->
+                
                 <div class="row">  
                   
                   <div class="col-md-6">
@@ -97,6 +89,7 @@
                     </div> 
                   </div>  
                 </div> 
+
                 <div class="row"> 
                   <div class="col-md-12">
                     <div class="form-group">  

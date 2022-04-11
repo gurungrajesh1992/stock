@@ -63,10 +63,7 @@ class Admin extends Auth_controller {
 	}
 	public function validate_appointed_date($field_value,$old_date)
 	{
-			echo $field_value;
-			echo $old_date;exit;
-		
-		if($old_date > $field_value){
+			if($old_date > $field_value){
 		
 			$this->form_validation->set_message('validate_appointed_date', 'The %s field is invalid.','required');
 			return FALSE;
@@ -86,7 +83,7 @@ class Admin extends Auth_controller {
 		
 		if($this->input->post()){
 			$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim');  
-			$this->form_validation->set_rules('appointed_date', 'Appointed Date', 'required|callback_validate_appointed_date[{$old_date}]');
+			$this->form_validation->set_rules('appointed_date', 'Appointed Date', 'required|callback_validate_appointed_date['.$old_date.']');
 				
 
 			
