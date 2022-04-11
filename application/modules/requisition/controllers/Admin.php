@@ -328,7 +328,7 @@ class Admin extends Auth_controller
 				if ($val) {
 					// var_dump($val);
 					// exit;
-					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+					$item_detail = $this->crud_model->get_where_order_by('item_infos', array('item_code' => $val));
 					$html = '';
 
 					if ($item_detail) {
