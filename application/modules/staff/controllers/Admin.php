@@ -94,9 +94,29 @@ class Admin extends Auth_controller {
 					$data['created_by'] = $this->current_user->id; 
 					$data['created_on'] = date('Y-m-d'); 
 					$result = $this->crud_model->insert($this->table, $data);
+					 
+
 					if($result==true){
-						$this->session->set_flashdata('success','Successfully Inserted.');
-						redirect($this->redirect.'all');
+						$insert_id = $this->db->insert_id();
+						$staff= array(
+							'staff_id'=> $insert_id,
+							'designation_code' => $this->input->post('designation_code'),
+							'department_code' => $this->input->post('department_code'),
+							'from' => $this->input->post('appointed_date'),
+							'status' => $this->input->post('status'), 
+							'created_by'=> $this->current_user->id,
+							'created_on'=>date('Y-m-d'),
+						); 
+						$staff_result = $this->crud_model->insert('staff_desig_depart', $staff);
+
+						if($staff_result){
+							$this->session->set_flashdata('success','Successfully Inserted.');
+							redirect($this->redirect.'all');
+						}
+						else{
+							$this->session->set_flashdata('error', 'Unable To Insert.');
+						redirect($this->redirect.'form');
+						}
 					}else{
 						$this->session->set_flashdata('error', 'Unable To Insert.');
 						redirect($this->redirect.'form');
