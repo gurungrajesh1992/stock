@@ -99,7 +99,7 @@ class Admin extends Auth_controller
 					}
 				} else {
 					$data['updated_on'] = date('Y-m-d');
-					// $data['updated_by'] = $this->current_user->id;
+					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');
