@@ -51,6 +51,37 @@
 <script>
   $(document).ready(function() {
 
+    // get staff of a department
+
+    $(document).off('change', '#department_id').on('change', '#department_id', function(e) {
+      var val = $(this).val();
+      if (val == '') {
+        alert('SElect atleast one department');
+        return false;
+      }
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/getStaffOfDepartment'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
     //requisition items
 
     $(document).off('change', '#item').on('change', '#item', function(e) {
@@ -64,7 +95,8 @@
         alert('already selected, you can change quantity');
         return false;
       }
-      // console.log(already_items);
+      // console.log(already_items.length);
+      // return false;
       $.ajax({
 
         url: '<?php echo base_url('requisition/admin/getForm'); ?>',
@@ -73,6 +105,7 @@
         dataType: "json",
         data: {
           "val": val,
+          "total": already_items.length,
         },
         success: function(resp) {
           // console.log(resp.data);return false;
