@@ -4,6 +4,28 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
+                <form class="all_form" method="post" action enctype="multipart/form-data">
+                 <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Select Staff</label>
+                        <select name="staff_id" class="form-control selct2" id="staff_id">
+                          <option value>Select Staff</option>
+                          <?php foreach ($staffs as $key => $value) { ?>
+                            <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id);  ?>><?php echo $value->full_name; ?></option>
+                          <?php } ?>
+                         </select>
+                      </div>
+                    </div>
+                  </div>
+                   <div class="row">
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <input type="submit" name="submit" class="form-control btn btn-sm btn-primary" id="submit" value="search">
+                          </div>
+                    </div>
+                  </div>
+                </form>
                 <!-- <h3 class="card-title"><a href="<?php echo base_url($redirect.'form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3> -->
               </div>
               <!-- /.card-header -->
@@ -14,9 +36,12 @@
                       <th>#</th>
                       <th>Full Name</th> 
                       <th>Designation</th>
+                      <th>Department</th>
+                     
                       <th>Address</th>
                       <th>Contact</th>
-                      <th>Photo</th>    
+                      <!-- <th>Photo</th>     -->
+                      
                       <th>Created</th>
                       <!-- <th>Created By</th> -->
                       <th>Updated</th>
@@ -54,15 +79,20 @@
                       <td><?php echo $key+1 ?></td>
                       <td><?php echo $dets->full_name ?></td>
                       <td><?php echo $value->designation_code ?></td>
+                      <td><?php echo $value->department_code ?></td>
                       <td><?php echo $dets->temp_address ?></td>
                       <td><?php echo $dets->contact ?></td>
-                      <td><?php if($dets->featured_image){ ?><img src="<?php echo $dets->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
+                      <!-- <td><?php if($dets->featured_image){ ?><img src="<?php echo $dets->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td>  -->
                       <td><?php echo $value->from ?></td>
                       <!-- <td><?php echo $created_by ?></td> -->
-                      <td><?php echo $value->updated_on ?></td>
+                      <td><?php echo $value->to ?></td>
                       <!-- <td><?php echo $updated_by ?></td> -->
                       <td><?php echo $status ?></td>
                       <td>
+                        <?php if(isset($input) && $input=='ss'){
+
+                        }else{
+                        ?>
                           <a href="<?php echo base_url($redirect.'form/'.$value->id); ?>" class="btn btn-sm btn-primary">Edit</a> 
                           <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a> 
 
@@ -85,6 +115,9 @@
                                 </div>
                             </div>
                           </div>
+                        <?php
+                          }
+                        ?>
                       </td>
                     </tr> 
                     <?php } ?>
