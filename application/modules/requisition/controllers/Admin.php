@@ -72,23 +72,13 @@ class Admin extends Auth_controller
 
 	public function form($id = '')
 	{
-		// $string = "RQ07042022-0006";
-		// $explode = explode("-", $string);
-		// $int_value = intval($explode[1]) + 1;
-		// var_dump(sprintf("%04d", $int_value));
-		// exit;
-		// echo "<pre>";
-		// var_dump($this->current_user);
-		// exit;
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
 		if ($detail) {
-			$staffs = $this->crud_model->joinDataMultiple('staff_infos', 'department_para', array('staff_infos.status' => '1', 'department_para.id' => $detail->department_id), 'department_code', 'department_code', 'department_name');
-			// echo "<pre>";
-			// var_dump($staffs);
-			// exit;
+			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
+			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
 			if ($staffs) {
 				$data['staffs'] = $staffs;
 			} else {
@@ -124,9 +114,12 @@ class Admin extends Auth_controller
 			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
 
 			if ($this->form_validation->run()) {
-				if (count($this->input->post('item_code')) <= 0) {
+				$id = $this->input->post('id');
+				$selected_items = $this->input->post('item_code');
+				if (!isset($selected_items)) {
 					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
-					if ($id != '') {
+
+					if ($id == '') {
 						redirect($this->redirect . '/admin/form');
 					} else {
 						redirect($this->redirect . '/admin/form/' . $id);
@@ -134,22 +127,20 @@ class Admin extends Auth_controller
 				}
 				$data = array(
 					'requisition_date' => $this->input->post('requisition_date'),
+					'requisition_no' => $this->input->post('requisition_no'),
+					'department_id' => $this->input->post('department_id'),
+					'requested_by' => $this->input->post('requested_by'),
 					'remarks' => $this->input->post('remarks'),
 				);
 
-				$id = $this->input->post('id');
+
 				if ($id == '') {
 
 
-					$data['requested_date'] = date('Y-m-d');
-					$data['requested_by'] = $this->current_user->id;
+					$data['created_on'] = date('Y-m-d');
+					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
 
-					$staff = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $this->current_user->staff_id), 'id', 'DESC');
-					$depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('department_code' => $staff->department_code), 'id', 'DESC');
-					if ($staff) {
-						$data['department_id'] = $depart_detail->id;
-					}
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
 
@@ -271,8 +262,13 @@ class Admin extends Auth_controller
 									<div class="col-md-2">
 										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity">
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-5">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+									</div>
+									<div class="col-md-1">
+										<div class="rmv">
+											<span class="rmv_itm">X</span>
+										</div>
 									</div>
 									</div>';
 					}
@@ -323,15 +319,22 @@ class Admin extends Auth_controller
 				// exit;
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
-				$total = $this->input->post('total');
 
 				if ($val) {
 					// var_dump($val);
 					// exit;
-					$item_detail = $this->crud_model->get_where_order_by('item_infos', array('item_code' => $val));
-					$html = '';
+					$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $val));
+					$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+					// echo "<pre>";
+					// var_dump($staffs);
+					// exit;
+					$html = '<option value>Select Staff</option>';
 
-					if ($item_detail) {
+					if ($staffs) {
+						foreach ($staffs  as $key => $value) {
+							$html .= '<option value="' . $value->staff_id . '">' . $value->full_name . '</option>';
+						}
+					} else {
 						$html .= '';
 					}
 
@@ -348,14 +351,14 @@ class Admin extends Auth_controller
 						$response = array(
 							'status' => 'error',
 							'status_code' => 300,
-							'status_message' => 'Unable To Get Form',
+							'status_message' => 'No data found',
 						);
 					}
 				} else {
 					$response = array(
 						'status' => 'error',
 						'status_code' => 300,
-						'status_message' => 'Please Select Item First',
+						'status_message' => 'Please Select Department First',
 					);
 				}
 			}

@@ -19,7 +19,6 @@
                   <th>Requested By</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
-                  <th>Items</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -53,31 +52,7 @@
                       <td><?php echo isset($user_detail->full_name) ? $user_detail->full_name : ''; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
-                      <td>
-                        <!-- Trigger the modal with a button -->
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal<?php echo $value->id; ?>">Items</button>
 
-                        <!-- Modal -->
-                        <div id="myModal<?php echo $value->id ?>" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Modal Header</h4>
-                              </div>
-                              <div class="modal-body">
-                                <?php echo $value->id ?>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </td>
                       <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
                     </tr>
                   <?php }

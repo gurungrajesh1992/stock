@@ -38,7 +38,7 @@
               <div class="form-group">
                 <label>Select Staff</label>
                 <select name="requested_by" class="form-control selct2" id="requested_by">
-                  <option value>Select Department</option>
+                  <option value>Select Staff</option>
                   <?php foreach ($staffs as $key => $value) { ?>
                     <option value="<?php echo $value->id; ?>" <?php echo  set_select('requested_by', $value->id, (isset($detail->requested_by) && $detail->requested_by  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                   <?php } ?>
@@ -119,8 +119,13 @@
                             <div class="col-md-2">
                               <input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity" value="<?php echo $value->quantity_requested; ?>">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                               <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remark; ?></textarea>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="rmv">
+                                <span class="rmv_itm">X</span>
+                              </div>
                             </div>
                           </div>
                     <?php }
@@ -131,7 +136,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class=" row">
             <div class="col-md-4">
 
             </div>

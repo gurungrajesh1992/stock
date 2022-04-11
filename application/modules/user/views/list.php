@@ -31,6 +31,9 @@
                 if ($items) {
                   foreach ($items as $key => $value) {
                     $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
+                    $staff_depart_desg = $this->crud_model->get_where_single_order_by('staff_desig_depart', array('staff_id' => $value->staff_id, 'status' => '1'), 'id', 'DECS');
+                    // echo "<pre>";
+                    // var_dump($staff_depart_desg);
                     if ($value->updated_by) {
                       $updated_by = $this->db->get_where('users', array('id' => $value->updated_by))->row()->user_name;
                     } else {
@@ -55,10 +58,17 @@
                       $nationality = '';
                     }
 
-                    if ($staff_detail->department_code) {
-                      $depart = $this->db->get_where('department_para', array('department_code' => $staff_detail->department_code))->row()->department_name;
+                    if ($staff_depart_desg->department_code) {
+                      $depart = $this->db->get_where('department_para', array('department_code' => $staff_depart_desg->department_code))->row()->department_name;
                     } else {
                       $depart = '';
+                    }
+
+
+                    if ($staff_depart_desg->designation_code) {
+                      $desig = $this->db->get_where('designation_para', array('designation_code' => $staff_depart_desg->designation_code))->row()->designation_name;
+                    } else {
+                      $desig = '';
                     }
 
                     if ($value->status == '1') {
@@ -76,10 +86,10 @@
                       <td><?php echo $staff_detail->contact ?></td>
                       <td><?php echo $staff_detail->email ?></td>
                       <td><?php echo $nationality ?></td>
-                      <td><?php echo $staff_detail->designation_code ?></td>
-                      <td><?php echo $depart ?></td>
+                      <td><?php echo $desig; ?></td>
+                      <td><?php echo $depart; ?></td>
                       <td><?php echo $staff_detail->appointed_date; ?></td>
-                      <td><?php echo $status ?></td>
+                      <td><?php echo $status; ?></td>
                       <td>
                         <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
                         <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
