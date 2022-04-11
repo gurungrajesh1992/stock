@@ -7,10 +7,12 @@ class Admin extends Auth_controller {
 	{
 		parent::__construct();
 		// var_dump($this->current_user);exit;
-		$this->load->library('form_validation');   
-		$this->table = 'staff_infos';
-		$this->redirect = 'staff/admin/';
-		$this->title = 'Staff';
+		// $this->load->library('form_validation');   
+		$this->load->library(array('my_form_validation'));
+        $this->form_validation->run($this);
+		$this->table = 'staff_desig_depart';
+		$this->redirect = 'staff_dep_deg/admin/';
+		$this->title = 'Staff Designation & Department';
 	}
 
 	public function all($page='')
@@ -59,85 +61,76 @@ class Admin extends Auth_controller {
 		$data['redirect'] = $this->redirect;
         $this->load->view('layouts/admin/index',$data);
 	}
-	
+	public function validate_appointed_date($field_value,$old_date)
+	{
+			echo $field_value;
+			echo $old_date;exit;
+		
+		if($old_date > $field_value){
+		
+			$this->form_validation->set_message('validate_appointed_date', 'The %s field is invalid.','required');
+			return FALSE;
+		}else{
+		// {echo "hereesss";exit;
+			return true;
+		}
+	}
 	public function form($id='')
 	{ 
+	
+		$data['dep_deg'] = $this->crud_model->get_where_single('staff_desig_depart',array('status'=>'1','id'=>$id)); 
+		$staff_id=$data['dep_deg']->staff_id;
+		$old_date=$data['dep_deg']->from;
+		// echo $old_date;
+		$data['detail'] = $this->db->get_where('staff_infos',array('id'=>$staff_id))->row();
 		
-		$data['detail'] = $this->db->get_where($this->table,array('id'=>$id))->row();
-		$data['dep_deg'] = $this->crud_model->get_where_single('staff_desig_depart',array('status'=>'1','staff_id'=>$id)); 
-		// print_r($data['dep_deg'] );
 		if($this->input->post()){
 			$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim');  
+			$this->form_validation->set_rules('appointed_date', 'Appointed Date', 'required|callback_validate_appointed_date[{$old_date}]');
+				
+
+			
+				
 			
 			if($this->form_validation->run()){
-				$data = array(
-							'full_name' => $this->input->post('full_name'), 
-							'description' => $this->input->post('description'),
-							'featured_image' => $this->input->post('featured_image'),  
-							'designation_code' => $this->input->post('designation_code'),
-							'temp_address' => $this->input->post('temp_address'),
-							'permanent_address' => $this->input->post('permanent_address'),
-							'contact' => $this->input->post('contact'), 
-							'email' => $this->input->post('email'),
-							'country_code' => $this->input->post('country_code'),
-							'department_code' => $this->input->post('department_code'),
-							'appointed_date' => $this->input->post('appointed_date'),
-							'status' => $this->input->post('status'),  
-						);   				
-				$id = $this->input->post('id');	 	
-				if($id == ''){ 
-					$slug = $this->crud_model->createUrlSlug($this->input->post('title'));
-					$check_slug = $this->crud_model->get_where_single($this->table,array('slug'=>$slug));
-					if(empty($check_slug)){
-						$data['slug'] = strtolower ($slug);
-					}else{
-						$data['slug'] = strtolower ($slug).time();
-					}
-					$data['created_by'] = $this->current_user->id; 
-					$data['created_on'] = date('Y-m-d'); 
-					$result = $this->crud_model->insert($this->table, $data);
-					 
-
-					if($result==true){
-						$insert_id = $this->db->insert_id();
-						$staff= array(
-							'staff_id'=> $insert_id,
+				$data1 = array(
+							'to'=>$this->input->post('appointed_date'),
+							'status' => '2',
+						); 
+				$data2 = array(
+							'staff_id'=> $staff_id,
 							'designation_code' => $this->input->post('designation_code'),
 							'department_code' => $this->input->post('department_code'),
 							'from' => $this->input->post('appointed_date'),
-							'status' => $this->input->post('status'), 
-							'created_by'=> $this->current_user->id,
-							'created_on'=>date('Y-m-d'),
-						); 
-						$staff_result = $this->crud_model->insert('staff_desig_depart', $staff);
-
-						if($staff_result){
-							$this->session->set_flashdata('success','Successfully Inserted.');
+							'status' => $this->input->post('status'),  
+						);   
+						// print_r($data1);
+						// print_r($data2);
+						// die;			
+						
+				// $id = $this->input->post('id');	 	
+				
+					$data1['updated_on'] = date('Y-m-d');
+					$data1['updated_by'] = $this->current_user->id; 
+					$data2['created_on'] = date('Y-m-d');
+					$data2['created_by'] = $this->current_user->id; 
+					$result1 = $this->crud_model->update($this->table, $data1,array('staff_id'=>$staff_id));
+					if($result1){
+						$result2 = $this->crud_model->insert($this->table, $data2);
+					// $result = $this->crud_model->update($this->table, $data,array('id'=>$id));
+						if($result2==true){
+							$this->session->set_flashdata('success','Successfully Updated.');
 							redirect($this->redirect.'all');
+						}else{
+							$this->session->set_flashdata('error', 'Unable To Update.');
+							redirect($this->redirect.'form/'.$id);
 						}
-						else{
-							$this->session->set_flashdata('error', 'Unable To Insert.');
-						redirect($this->redirect.'form');
-						}
-					}else{
-						$this->session->set_flashdata('error', 'Unable To Insert.');
-						redirect($this->redirect.'form');
-					}
-				}else{ 
-					$data['updated_on'] = date('Y-m-d');
-					$data['updated_by'] = $this->current_user->id; 
-					$result = $this->crud_model->update($this->table, $data,array('id'=>$id));
-					if($result==true){
-						$this->session->set_flashdata('success','Successfully Updated.');
-						redirect($this->redirect.'all');
-					}else{
-						$this->session->set_flashdata('error', 'Unable To Update.');
-						redirect($this->redirect.'form/'.$id);
-					}
-				}   
+					}	
+					
+				  
 			}
 		}
-		
+	
 		$data['countries'] = $this->crud_model->get_where('country_para',array('status'=>'1'));
 		$data['designations'] = $this->crud_model->get_where('designation_para',array('status'=>'1'));
 		$data['departments'] = $this->crud_model->get_where('department_para',array('status'=>'1'));
