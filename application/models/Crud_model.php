@@ -111,4 +111,13 @@ class Crud_model extends CI_Model
         $this->db->where($where);
         return $this->db->get('')->row();
     }
+
+    public function joinDataMultiple($table, $join_table, $where, $key_table, $referencekey, $joinField)
+    {
+        $this->db->select("$table.*,$join_table.$joinField", False);
+        $this->db->from($table);
+        $this->db->join($join_table, "$join_table.$referencekey=$table.$key_table");
+        $this->db->where($where);
+        return $this->db->get('')->result();
+    }
 }

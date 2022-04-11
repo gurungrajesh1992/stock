@@ -7,8 +7,8 @@ class Admin extends Auth_controller
 	public function __construct()
 	{
 		parent::__construct();
-		// var_dump($this->current_user);exit;
-		// $this->load->library('form_validation'); 
+		$this->load->library(array('my_form_validation'));
+		$this->form_validation->run($this);
 		$this->table = 'requisition_master';
 		$this->title = 'Requisition';
 		$this->redirect = 'requisition';
@@ -81,16 +81,57 @@ class Admin extends Auth_controller
 		// var_dump($this->current_user);
 		// exit;
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		// echo "<pre>";
+		// var_dump($detail);
+		// exit;
 		if ($detail) {
-			$staffs = $this->crud_model->get_where('department_para', array('status' => '1'));
+			$staffs = $this->crud_model->joinDataMultiple('staff_infos', 'department_para', array('staff_infos.status' => '1', 'department_para.id' => $detail->department_id), 'department_code', 'department_code', 'department_name');
+			// echo "<pre>";
+			// var_dump($staffs);
+			// exit;
+			if ($staffs) {
+				$data['staffs'] = $staffs;
+			} else {
+				$data['staffs'] = array();
+			}
+		} else {
+			$data['staffs'] = array();
 		}
+		if (isset($detail->requisition_no)) {
+			$data['requisition_no'] = $detail->requisition_no;
+		} else {
+			$last_row_no = $this->crud_model->get_where_single_order_by('requisition_master', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->requisition_no)) {
+				// $string = "RQ07042022-0006";
+				$string = $last_row_no->requisition_no;
+				$explode = explode("-", $string);
+				$int_value = intval($explode[1]) + 1;
+				// var_dump(sprintf("%04d", $int_value));
+				$data['requisition_no'] = 'RQ' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			} else {
+				$data['requisition_no'] = 'RQ' . date('dmY') . '-0001';
+			}
+		}
+
+
 		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
 			$this->form_validation->set_rules('requisition_date', 'Requisition Date', 'required|trim');
+			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
+			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+
 			if ($this->form_validation->run()) {
+				if (count($this->input->post('item_code')) <= 0) {
+					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
+					if ($id != '') {
+						redirect($this->redirect . '/admin/form');
+					} else {
+						redirect($this->redirect . '/admin/form/' . $id);
+					}
+				}
 				$data = array(
 					'requisition_date' => $this->input->post('requisition_date'),
 					'remarks' => $this->input->post('remarks'),
@@ -98,18 +139,8 @@ class Admin extends Auth_controller
 
 				$id = $this->input->post('id');
 				if ($id == '') {
-					$last_row_no = $this->crud_model->get_where_single_order_by('requisition_master', array('status' => '1'), 'id', 'DESC');
 
-					if (isset($last_row_no->requisition_no)) {
-						// $string = "RQ07042022-0006";
-						$string = $last_row_no->requisition_no;
-						$explode = explode("-", $string);
-						$int_value = intval($explode[1]) + 1;
-						// var_dump(sprintf("%04d", $int_value));
-						$data['requisition_no'] = 'RQ' . date('dmY') . '-' . sprintf("%04d", $int_value);
-					} else {
-						$data['requisition_no'] = 'RQ' . date('dmY') . '-0001';
-					}
+
 					$data['requested_date'] = date('Y-m-d');
 					$data['requested_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
@@ -179,6 +210,16 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
+	public function requisition_date_check($str)
+	{
+		if ($str != '') {
+			$this->form_validation->set_message("requisition_date_check", "The 	field must be empty");
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
 	public function soft_delete($id)
 	{
 		if ($id == '' || $id == 0) {
@@ -234,6 +275,64 @@ class Admin extends Auth_controller
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
 									</div>
 									</div>';
+					}
+
+
+					if ($html) {
+
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully retrived',
+							'data' => $html,
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable To Get Form',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function getStaffOfDepartment()
+	{
+		try {
+
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				//access ok 
+				// echo "here";
+				// exit;
+				// $check = $this->load->view('listall/image_form');  
+				$val = $this->input->post('val');
+				$total = $this->input->post('total');
+
+				if ($val) {
+					// var_dump($val);
+					// exit;
+					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+					$html = '';
+
+					if ($item_detail) {
+						$html .= '';
 					}
 
 

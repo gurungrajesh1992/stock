@@ -37,12 +37,19 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Select Staff</label>
-                <select name="department_id" class="form-control selct2" id="department_id">
+                <select name="requested_by" class="form-control selct2" id="requested_by">
                   <option value>Select Department</option>
-                  <?php foreach ($departments as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('department_id', $value->id, (isset($detail->department_id) && $detail->department_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->department_name; ?></option>
+                  <?php foreach ($staffs as $key => $value) { ?>
+                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('requested_by', $value->id, (isset($detail->requested_by) && $detail->requested_by  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                   <?php } ?>
                 </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Requisition No. <span class="req">*</span></label>
+                <input type="text" name="requisition_no" class="form-control" id="requisition_no" placeholder="Requisition" value="<?php echo set_value('requisition_no', (((isset($requisition_no)) && $requisition_no != '') ? $requisition_no : '')); ?>" readonly>
+                <?php echo form_error('requisition_no', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
           </div>
