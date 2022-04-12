@@ -345,6 +345,29 @@ $current_user = $this->session->userdata('current_user');
         <li class="nav-header">Operation</li>
         <li class="nav-item">
           <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-square"></i>
+            <p>
+              Opening Form
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('opening_master/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('opening_master/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
             <i class="nav-icon fa fa-paper-plane"></i>
             <p>
               Requisition
