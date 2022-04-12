@@ -40,7 +40,7 @@
 
 <!-- nested sortable -->
 <script type="text/javascript" src="<?php echo base_url('theme/admin/'); ?>rajesh/js/jquery.mjs.nestedSortable.js">
-  ">
+  >
 </script>
 
 <!-- select2  -->
@@ -146,5 +146,39 @@
       filebrowserUploadUrl: '<?php echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&editor=ckeditor&fldr='); ?>',
       filebrowserImageBrowseUrl: '<?php echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&editor=ckeditor&fldr='); ?>'
     });
+
+    $(document).off('change', '#item_opening').on('change', '#item_opening', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);return false;
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items);
+      $.ajax({
+        url: '<?php echo base_url('opening_master/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items_opening').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
   })
 </script>
