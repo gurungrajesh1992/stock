@@ -17,47 +17,88 @@ class Admin extends Auth_controller {
 
 	public function all($page='')
 	{ 
-		
+		 $data['staffs'] = $this->db->get_where('staff_infos',array('status'=>'1'))->result();
+	
 		// $data['roles'] = $this->db->get_where('user_role',array('status !='=>'2'))->result(); 
 
-		// var_dump($this->uri->segment(3));exit;
+		if($this->input->post('staff_id')!= NULL) {
+			
+			$staff_id=$this->input->post('staff_id');
+				$config['base_url'] = base_url($this->redirect.'all');
+				$config['total_rows'] = $this->crud_model->count_all($this->table,array('status !='=>'0','staff_id'=>$staff_id),'id');
+				$config['uri_segment'] = 4;
+				$config['per_page'] = 10;
+				//outside of flist that is <ul></ul>
+				$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
 
-		$config['base_url'] = base_url($this->redirect.'all');
-		$config['total_rows'] = $this->crud_model->count_all($this->table,array('status !='=>'2'),'id');
-		$config['uri_segment'] = 4;
-		$config['per_page'] = 10;
-		//outside of flist that is <ul></ul>
-		$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
+				//go to first link customize
+				$config['first_link'] = 'First';
+				$config['first_tag_open'] = '<li class="page-item">';
+				$config['first_tag_close'] = '</li>';
 
-		//go to first link customize
-		$config['first_link'] = 'First';
-		$config['first_tag_open'] = '<li class="page-item">';
-		$config['first_tag_close'] = '</li>';
+				//for all list outside of the a tag that is <li></li>
+				$config['num_tag_open'] = '<li class="page-item">'; 
+				//to add class to attribute
+				$config['attributes'] = array('class' => 'page-link');
+				$config['num_tag_close'] = '</li>';
 
-		//for all list outside of the a tag that is <li></li>
-		$config['num_tag_open'] = '<li class="page-item">'; 
-		//to add class to attribute
-		$config['attributes'] = array('class' => 'page-link');
-		$config['num_tag_close'] = '</li>';
+				//customize current page
+				$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link">';
+				$config['cur_tag_close'] = '</a></li>';
 
-		//customize current page
-		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link">';
-		$config['cur_tag_close'] = '</a></li>';
+				$config['last_link'] = 'Last';
+				$config['last_tag_open'] = '<li class="page-item">';
+				$config['last_tag_close'] = '</li>';
 
-		$config['last_link'] = 'Last';
-		$config['last_tag_open'] = '<li class="page-item">';
-		$config['last_tag_close'] = '</li>';
+				$config['full_tag_close'] = '</ul>';
 
-		$config['full_tag_close'] = '</ul>';
+				$this->pagination->initialize($config);
 
-		$this->pagination->initialize($config);
+				$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+				$data['pagination'] = $this->pagination->create_links();
+				$data['items'] = $this->crud_model->get_where_pagination($this->table,array('status !='=>'0','staff_id'=>$staff_id),$config["per_page"], $page);
+				$data['input'] = 'ss';
+		}else{
 
-		$data['pagination'] = $this->pagination->create_links();
-		$data['items'] = $this->crud_model->get_where_pagination($this->table,array('status !='=>'2'),$config["per_page"], $page);
+			$config['base_url'] = base_url($this->redirect.'all');
+			$config['total_rows'] = $this->crud_model->count_all($this->table,array('status !='=>'2'),'id');
+			$config['uri_segment'] = 4;
+			$config['per_page'] = 10;
+			//outside of flist that is <ul></ul>
+			$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
+
+			//go to first link customize
+			$config['first_link'] = 'First';
+			$config['first_tag_open'] = '<li class="page-item">';
+			$config['first_tag_close'] = '</li>';
+
+			//for all list outside of the a tag that is <li></li>
+			$config['num_tag_open'] = '<li class="page-item">'; 
+			//to add class to attribute
+			$config['attributes'] = array('class' => 'page-link');
+			$config['num_tag_close'] = '</li>';
+
+			//customize current page
+			$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link">';
+			$config['cur_tag_close'] = '</a></li>';
+
+			$config['last_link'] = 'Last';
+			$config['last_tag_open'] = '<li class="page-item">';
+			$config['last_tag_close'] = '</li>';
+
+			$config['full_tag_close'] = '</ul>';
+
+			$this->pagination->initialize($config);
+
+			$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+
+			$data['pagination'] = $this->pagination->create_links();
+			$data['items'] = $this->crud_model->get_where_pagination($this->table,array('status !='=>'2'),$config["per_page"], $page);
+			
+		}
 		$data['title'] = $this->title;
-        $data['page'] = 'list';
+       	$data['page'] = 'list';
 		$data['redirect'] = $this->redirect;
         $this->load->view('layouts/admin/index',$data);
 	}
@@ -74,7 +115,7 @@ class Admin extends Auth_controller {
 	}
 	public function form($id='')
 	{ 
-	
+		
 		$data['dep_deg'] = $this->crud_model->get_where_single('staff_desig_depart',array('status'=>'1','id'=>$id)); 
 		$staff_id=$data['dep_deg']->staff_id;
 		$old_date=$data['dep_deg']->from;
