@@ -260,7 +260,7 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity">
+										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity" required>
 									</div>
 									<div class="col-md-5">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
@@ -324,7 +324,7 @@ class Admin extends Auth_controller
 					// var_dump($val);
 					// exit;
 					$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $val));
-					$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+					$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code, 'staff_desig_depart.status' => '1'), 'staff_id', 'id', 'full_name');
 					// echo "<pre>";
 					// var_dump($staffs);
 					// exit;
