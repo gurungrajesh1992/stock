@@ -40,7 +40,10 @@
 
 <!-- nested sortable -->
 <script type="text/javascript" src="<?php echo base_url('theme/admin/'); ?>rajesh/js/jquery.mjs.nestedSortable.js">
-  >
+// <<<<<<< HEAD
+//   >
+// =======
+// >>>>>>> 7b2f7cf96e3359ff4ca9197eafb2f64dd4d1b419
 </script>
 
 <!-- select2  -->
@@ -51,6 +54,75 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+
+    // get staff of a department
+
+    $(document).off('change', '#department_id').on('change', '#department_id', function(e) {
+      var val = $(this).val();
+      if (val == '') {
+        alert('SElect atleast one department');
+        return false;
+      }
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/getStaffOfDepartment'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
+    //requisition items
+
+    $(document).off('change', '#item').on('change', '#item', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
 
     $(document).off('change', '#type').on('change', '#type', function(e) {
       e.preventDefault();

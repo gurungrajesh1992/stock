@@ -4,7 +4,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title"><a href="<?php echo base_url($redirect.'form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+                <!-- <h3 class="card-title"><a href="<?php echo base_url($redirect.'form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3> -->
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -18,9 +18,9 @@
                       <th>Contact</th>
                       <th>Photo</th>    
                       <th>Created</th>
-                      <th>Created By</th>
+                      <!-- <th>Created By</th> -->
                       <th>Updated</th>
-                      <th>Updated By</th>
+                      <!-- <th>Updated By</th> -->
                       <th>status</th>
                       <th>Action</th>
                     </tr>
@@ -29,6 +29,8 @@
                       <?php 
                         if($items){ 
                             foreach($items as $key => $value){  
+                               $dets = $this->db->get_where('staff_infos',array('id'=>$value->staff_id))->row();
+                              
                                 if($value->updated_by){ 
                                     $updated_by = $this->db->get_where('users',array('id'=>$value->updated_by))->row()->user_name;
                                 }else{
@@ -37,6 +39,7 @@
 
                                 if($value->created_by){ 
                                     $created_by = $this->db->get_where('users',array('id'=>$value->created_by))->row()->user_name;
+                                    
                                 }else{
                                     $created_by = '';
                                 } 
@@ -49,15 +52,15 @@
                     ?>
                     <tr>
                       <td><?php echo $key+1 ?></td>
-                      <td><?php echo $value->name ?></td>
-                      <td><?php echo $value->designation ?></td>
-                      <td><?php echo $value->address ?></td>
-                      <td><?php echo $value->contact ?></td>
-                      <td><?php if($value->featured_image){ ?><img src="<?php echo $value->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
-                      <td><?php echo $value->created ?></td>
-                      <td><?php echo $created_by ?></td>
-                      <td><?php echo $value->updated ?></td>
-                      <td><?php echo $updated_by ?></td>
+                      <td><?php echo $dets->full_name ?></td>
+                      <td><?php echo $value->designation_code ?></td>
+                      <td><?php echo $dets->temp_address ?></td>
+                      <td><?php echo $dets->contact ?></td>
+                      <td><?php if($dets->featured_image){ ?><img src="<?php echo $dets->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
+                      <td><?php echo $value->from ?></td>
+                      <!-- <td><?php echo $created_by ?></td> -->
+                      <td><?php echo $value->updated_on ?></td>
+                      <!-- <td><?php echo $updated_by ?></td> -->
                       <td><?php echo $status ?></td>
                       <td>
                           <a href="<?php echo base_url($redirect.'form/'.$value->id); ?>" class="btn btn-sm btn-primary">Edit</a> 

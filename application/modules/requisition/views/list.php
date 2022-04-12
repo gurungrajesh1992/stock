@@ -1,0 +1,110 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Requisition No</th>
+                  <th>Requisition Date</th>
+                  <th>Remarks</th>
+                  <th>Department</th>
+                  <th>Requested By</th>
+                  <th>Is Cancelled</th>
+                  <th>Is Approved</th>
+                  <th>Items</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <?php
+                if ($items) {
+                  foreach ($items as $key => $value) {
+
+                    $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
+                    // $user_detail = $this->crud_model->get_where_single_order_by('users', array('id' => $value->requested_by), 'id', 'DECS');
+                    $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
+                    if ($value->status == '1') {
+                      $status = 'Active';
+                    } else {
+                      $status = 'Inactive';
+                    }
+
+                    if ($value->cancel_tag == '1') {
+                      $cancel_tag = 'Yes';
+                    } else {
+                      $cancel_tag = 'No';
+                    }
+                ?>
+                    <tr>
+                      <td><?php echo $key + 1; ?></td>
+                      <td><?php echo $value->requisition_no; ?></td>
+                      <td><?php echo $value->requisition_date; ?></td>
+                      <td><?php echo $value->remarks; ?></td>
+                      <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
+                      <td><?php echo isset($user_detail->full_name) ? $user_detail->full_name : ''; ?></td>
+                      <td><?php echo $cancel_tag; ?></td>
+                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
+                      <td>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal<?php echo $value->id; ?>">Items</button>
+
+                        <!-- Modal -->
+                        <div id="myModal<?php echo $value->id ?>" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Modal Header</h4>
+                              </div>
+                              <div class="modal-body">
+                                <?php echo $value->id ?>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </td>
+                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
+                    </tr>
+                  <?php }
+                } else { ?>
+
+                  <tr>
+                    <td colspan="9" style="text-align:center;">No Records Found</td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
+            <!-- /.card-body -->
+            <?php if ($items) { ?>
+              <div class="card-footer clearfix">
+                <!-- <ul class="pagination pagination-sm m-0 float-right">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul> -->
+                <?php echo $pagination; ?>
+              </div>
+            <?php } ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

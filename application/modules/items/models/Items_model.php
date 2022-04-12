@@ -21,9 +21,19 @@ class Items_model extends CI_Model
         return $locations;
     }
 
-    // public function get_where($table, $where)
-    // {
-    //     $result = $this->db->order_by('id', 'DESC')->get_where($table, $where)->result();
-    //     return $result;
-    // }
+    public function item_code()
+    {
+        $last_row_no = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1'), 'id', 'DESC');
+        if (isset($last_row_no->item_code)) {
+            $string = $last_row_no->item_code;
+            $explode = explode("-", $string);
+            $int_value = intval($explode[1]) + 1;
+            // var_dump(sprintf("%04d", $int_value));
+            $data['item_code'] = 'IC' . date('dmY') . '-' . sprintf("%04d", $int_value);
+        } else {
+            $data['item_code'] = 'IC' . date('dmY') . '-0001';
+        }
+
+        return $data['item_code'];
+    }
 }

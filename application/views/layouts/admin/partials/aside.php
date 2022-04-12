@@ -133,30 +133,7 @@ $current_user = $this->session->userdata('current_user');
             </p>
           </a>
         </li>
-        <li class="nav-header">Organization</li>
-        <li class="nav-item">
-          <a href="#" class="nav-link ">
-            <i class="nav-icon fa fa-map-marker"></i>
-            <p>
-              Location
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo base_url('location/admin/all'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>List</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo base_url('location/admin/form'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Add New</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+        <li class="nav-header">Product</li>
         <li class="nav-item">
           <a href="#" class="nav-link ">
             <i class="nav-icon fa fa-list-alt"></i>
@@ -203,6 +180,122 @@ $current_user = $this->session->userdata('current_user');
             </li>
           </ul>
         </li>
+        <li class="nav-header">Organization</li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-map-marker"></i>
+            <p>
+              Location
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('location/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('location/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-flag"></i>
+            <p>
+              Country
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('country/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('country/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-list-alt"></i>
+            <p>
+              Item Accessories
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_accessories/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_accessories/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-list-alt"></i>
+            <p>
+              Item AMC
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_amc/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_amc/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-list-alt"></i>
+            <p>
+              Item Insurance
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_insurance/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('item_insurance/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-item">
           <a href="#" class="nav-link ">
             <i class="nav-icon fas fa-address-card"></i>
@@ -213,13 +306,13 @@ $current_user = $this->session->userdata('current_user');
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo base_url('user_role/admin/all'); ?>" class="nav-link">
+              <a href="<?php echo base_url('designation/admin/all'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>List</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('user_role/admin/form'); ?>" class="nav-link">
+              <a href="<?php echo base_url('designation/admin/form'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
               </a>
@@ -236,13 +329,37 @@ $current_user = $this->session->userdata('current_user');
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo base_url('user_role/admin/all'); ?>" class="nav-link">
+              <a href="<?php echo base_url('department/admin/all'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>List</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('user_role/admin/form'); ?>" class="nav-link">
+              <a href="<?php echo base_url('department/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-header">Operation</li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-paper-plane"></i>
+            <p>
+              Requisition
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('requisition/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('requisition/admin/form'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
               </a>
@@ -277,6 +394,29 @@ $current_user = $this->session->userdata('current_user');
           <a href="#" class="nav-link ">
             <i class="nav-icon fas fa-user"></i>
             <p>
+              User
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('user/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('user/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fas fa-user"></i>
+            <p>
               Staff
               <i class="right fas fa-angle-left"></i>
             </p>
@@ -292,6 +432,12 @@ $current_user = $this->session->userdata('current_user');
               <a href="<?php echo base_url('staff/admin/form'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('staff_dep_deg/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Staff Desig/depart</p>
               </a>
             </li>
           </ul>
