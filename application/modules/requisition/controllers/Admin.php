@@ -201,6 +201,17 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
+	public function view($id = '')
+	{
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+
+
+		$data['detail'] = $detail;
+		$data['title'] = 'View ' . $this->title;
+		$data['page'] = 'view';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
 	public function requisition_date_check($str)
 	{
 		if ($str != '') {
