@@ -16,7 +16,7 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
-		$config['base_url'] = base_url($this->redirect.'/admin/all');
+		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
@@ -80,16 +80,18 @@ class Admin extends Auth_controller
 			$this->form_validation->set_rules('designation_name', 'Designation Name', 'required|trim');
 			if ($this->form_validation->run()) {
 				$data = array(
-					'designation' => $this->input->post('designation'),
+					'designation_name' => $this->input->post('designation_name'),
 					'position' => $this->input->post('position'),
 					'remarks' => $this->input->post('remarks'),
-					'status' => $this->input->post('status'), 
+					'status' => $this->input->post('status'),
 				);
 
-				$designation_code = substr($data['designation_name'],0,4);
-				$data['designation_code'] = $designation_code;
+
 				$id = $this->input->post('id');
 				if ($id == '') {
+					$designation_code = substr($data['designation_name'], 0, 4);
+					$data['designation_code'] = $designation_code;
+
 					$data['created_on'] = date('Y-m-d');
 					$data['created_by'] = $this->current_user->id;
 					$result = $this->crud_model->insert($this->table, $data);
@@ -101,7 +103,7 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					$data['updated_on'] = date('Y-m-d');  
+					$data['updated_on'] = date('Y-m-d');
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');
