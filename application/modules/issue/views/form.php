@@ -1,3 +1,8 @@
+<style>
+  .reqsn_cls {
+    display: none;
+  }
+</style>
 <section class="content">
   <div class="container-fluid">
     <form class="all_form" method="post" action enctype="multipart/form-data">
@@ -18,9 +23,18 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
+                <label>Select Issue Type</label>
+                <select name="issue_type" class="form-control selct2" id="issue_type" required>
+                  <option value>Select</option>
+                  <option value="DR">Direct</option>
+                  <option value="RQ">By Request</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group reqsn_cls" id="reqsn">
                 <label>Select Requisition no</label>
                 <select name="requisition_no" class="form-control selct2" id="requisition_no" required>
-                  <option value>Select</option>
                   <?php foreach ($requisitions as $key => $value) { ?>
                     <option value="<?php echo $value->requisition_no; ?>"><?php echo $value->requisition_no; ?></option>
                   <?php } ?>

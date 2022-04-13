@@ -99,7 +99,7 @@ class Admin extends Auth_controller
 				);
 
 				if ($id == '') {
-					$data['created_on'] = date('Y-m-d');
+					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$result = $this->crud_model->insert($this->table, $data);
 					$insert_id = $this->db->insert_id();
@@ -132,7 +132,7 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					$data['updated_on'] = date('Y-m-d');
+					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
@@ -186,6 +186,8 @@ class Admin extends Auth_controller
 		$data = array(
 			'status' => '2',
 		);
+		$data['updated_on'] = date('Y-m-d H:i:s');
+		$data['updated_by'] = $this->current_user->id;
 		$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 		if ($result == true) {
 			$this->session->set_flashdata('success', 'Successfully Deleted.');

@@ -29,8 +29,8 @@
                   foreach ($items as $key => $value) {
 
                     $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
-                    // $user_detail = $this->crud_model->get_where_single_order_by('users', array('id' => $value->requested_by), 'id', 'DECS');
-                    $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
+                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->requested_by), 'id', 'DECS');
+                    // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
@@ -49,7 +49,7 @@
                       <td><?php echo $value->requisition_date; ?></td>
                       <td><?php echo $value->remarks; ?></td>
                       <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
-                      <td><?php echo isset($user_detail->full_name) ? $user_detail->full_name : ''; ?></td>
+                      <td><?php echo isset($staff_detail->full_name) ? $staff_detail->full_name : ''; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
 

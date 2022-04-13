@@ -55,6 +55,19 @@
 <script>
   $(document).ready(function() {
 
+    // onchange issue type
+    $(document).off('change', '#issue_type').on('change', '#issue_type', function(e) {
+      e.preventDefault();
+      // alert('hi'); 
+      var val = $(this).val();
+      // alert(val);
+      if (val == 'DR') {
+        $("#reqsn").addClass("reqsn_cls");
+      } else {
+        $("#reqsn").removeClass("reqsn_cls")
+      }
+    });
+
     // REMOVE item
 
     $(document).off('click', '.rmv').on('click', '.rmv', function(e) {
@@ -113,6 +126,43 @@
       $.ajax({
 
         url: '<?php echo base_url('requisition/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
+    //issue items
+    $(document).off('change', '#item_isuue').on('change', '#item_isuue', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/getForm'); ?>',
         type: "POST",
         // contentType: "application/json",  
         dataType: "json",
