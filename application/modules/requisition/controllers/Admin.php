@@ -262,7 +262,7 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
-						$html .= '<div class="row">
+						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>

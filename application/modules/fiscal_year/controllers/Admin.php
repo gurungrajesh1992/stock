@@ -16,7 +16,7 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
-		$config['base_url'] = base_url($this->redirect.'/admin/all');
+		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
@@ -88,11 +88,15 @@ class Admin extends Auth_controller
 					// 'current_tag' => $this->input->post('current_tag'),
 
 				);
-                
+
 				$id = $this->input->post('id');
 				if ($id == '') {
-					$data['creatd_on'] = date('Y-m-d');
+					$data['created_on'] = date('Y-m-d');
 					$data['created_by'] = $this->current_user->id;
+
+					$update['current_tag'] = 'N';
+					$this->crud_model->update('fiscal_year_para', $update, array());
+
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
@@ -102,7 +106,7 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					$data['updated_on'] = date('Y-m-d');  
+					$data['updated_on'] = date('Y-m-d');
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');

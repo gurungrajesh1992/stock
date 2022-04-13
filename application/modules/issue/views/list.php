@@ -12,11 +12,15 @@
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Issue Slip No</th>
                   <th>Requisition No</th>
-                  <th>Requisition Date</th>
+                  <th>Issue Date</th>
                   <th>Remarks</th>
                   <th>Department</th>
                   <th>Requested By</th>
+                  <th>Issued By</th>
+                  <th>Issued On</th>
+                  <th>Issued By</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
                   <th>Items</th>

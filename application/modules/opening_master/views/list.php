@@ -15,6 +15,7 @@
                   <th>Fiscal Year</th>
                   <th>Opening Date</th>
                   <th>Remarks</th>
+                  <th>Is Approved</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -23,17 +24,19 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
-                    if($value->status == '1'){
-                        $status = 'Active'; 
-                    }else{
+                    if ($value->status == '1') {
+                      $status = 'Active';
+                    } else {
                       $status = 'Inactive';
                     }
+
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
                       <td><?php echo $value->fiscal_year; ?></td>
                       <td><?php echo $value->opening_date; ?></td>
                       <td><?php echo $value->remarks; ?></td>
+                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Approved' : 'Not Approved' ?></td>
                       <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
                     </tr>
                   <?php }

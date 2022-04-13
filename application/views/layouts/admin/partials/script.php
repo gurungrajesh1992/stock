@@ -40,10 +40,10 @@
 
 <!-- nested sortable -->
 <script type="text/javascript" src="<?php echo base_url('theme/admin/'); ?>rajesh/js/jquery.mjs.nestedSortable.js">
-// <<<<<<< HEAD
-//   >
-// =======
-// >>>>>>> 7b2f7cf96e3359ff4ca9197eafb2f64dd4d1b419
+  // <<<<<<< HEAD
+  //   >
+  // =======
+  // >>>>>>> 7b2f7cf96e3359ff4ca9197eafb2f64dd4d1b419
 </script>
 
 <!-- select2  -->
@@ -70,7 +70,7 @@
       // alert(val);
       // return false;
       if (val == '') {
-        alert('SElect atleast one department');
+        alert('Select atleast one department');
         return false;
       }
       $.ajax({

@@ -14,121 +14,126 @@
             </button>
           </div>
         </div>
-        
+
         <div class="card-body">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                  <label>Select Fiscal Year<span class="req">*</span></label>
-                  <select name="fiscal_year" class="form-control selct2" id="fiscal_year">
-                    <option value>Select Fiscal Year</option>
-                    <?php foreach ($fiscals as $key => $value) { ?>
-                      <option value="<?php echo $value->fiscal_year; ?>" <?php echo  set_select('fiscal_year', $value->fiscal_year, (isset($detail->fiscal_year) && $detail->fiscal_year == $value->fiscal_year) ? TRUE : ''); ?>><?php echo $value->fiscal_year; ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
+                <label>Select Fiscal Year<span class="req">*</span></label>
+                <select name="fiscal_year" class="form-control selct2" id="fiscal_year">
+                  <option value>Select Fiscal Year</option>
+                  <?php foreach ($fiscals as $key => $value) { ?>
+                    <option value="<?php echo $value->fiscal_year; ?>" <?php echo  set_select('fiscal_year', $value->fiscal_year, (isset($detail->fiscal_year) && $detail->fiscal_year == $value->fiscal_year) ? TRUE : ''); ?>><?php echo $value->fiscal_year; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
             </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label>Opening Date<span class="req">*</span></label>
-                  <input type="date" name="opening_date" class="form-control" id="opening_date" placeholder="Opening Date" value="<?php echo set_value('opening_date', (((isset($detail->opening_date)) && $detail->opening_date != '')? $detail->opening_date : '')); ?>">
-                  <?php echo form_error('opening_date', '<div class="error_message">', '</div>'); ?>
-                </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Opening Date<span class="req">*</span></label>
+                <input type="date" name="opening_date" class="form-control" id="opening_date" placeholder="Opening Date" value="<?php echo set_value('opening_date', (((isset($detail->opening_date)) && $detail->opening_date != '') ? $detail->opening_date : '')); ?>">
+                <?php echo form_error('opening_date', '<div class="error_message">', '</div>'); ?>
               </div>
+            </div>
 
           </div>
 
 
-          <div class="row"> 
-              <div class="col-md-8">
-                <div class="form-group">
-                  <label>Remarks</label>
-                  <input type="text" name="remarks" class="form-control" id="remarks" placeholder="Remarks" value="<?php echo set_value('remarks', (((isset($detail->remarks)) && $detail->remarks != '')? $detail->remarks : '')); ?>">
-                  <?php echo form_error('remarks', '<div class="error_message">', '</div>'); ?>
-                </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label>Remarks</label>
+                <input type="text" name="remark" class="form-control" id="remarks" placeholder="Remarks" value="<?php echo set_value('remarks', (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')); ?>">
+                <?php echo form_error('remarks', '<div class="error_message">', '</div>'); ?>
               </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div style="border: 1px solid #ddd;"> 
-              
+              <div style="border: 1px solid #ddd;">
+
               </div>
             </div>
           </div>
 
           <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Select Item To Proceed</label>
-                    <select name="item" class="form-control selct2" id="item_opening">
-                      <option value>Select item</option>
-                      <?php foreach ($items as $key => $value) { ?>
-                        <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Select Item To Proceed</label>
+                <select name="item" class="form-control selct2" id="item_opening">
+                  <option value>Select item</option>
+                  <?php foreach ($items as $key => $value) { ?>
+                    <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="row">
-                <div class="col-md-12">
-                  <div class="req_item" id="items_opening">
-                    <div class="row">
-                      <div class="col-md-2">
-                        <label>Product</label>
-                      </div>
-                      <div class="col-md-2">
-                        <label>Quantity</label>
-                      </div>
-                      <div class="col-md-2">
-                        <label>Unit Price</label>
-                      </div>
-                      <div class="col-md-4">
-                        <label>Location</label>
-                      </div>
-                      <div class="col-md-2">
-                        <label>Remarks</label>
-                      </div>
-                    </div>
-                    <?php
-                    if (isset($detail->requisition_no)) {
-                      $childs = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
-                      if ($childs) {
-                        foreach ($childs as $key => $value) {
-                          $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
-                    ?>  
-                          <div class="row">
-                            <div class="col-md-2">
-                              <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
-                              <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
-                            </div>
-                            <div class="col-md-2">
-                              <input type="number" name="qty[]" class="form-control" placeholder="Requested Quantity" value="<?php echo $value->qty; ?>">
-                            </div>
-                            <div class="col-md-2">
-                              <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>">
-                            </div>
-                            <div class="col-md-4">
-                            <select name="location_id" class="form-control selct2" id="location_id">
-                              <option value>Select Location</option>
-                              <?php foreach ($locations as $key => $value) { ?>
-                                <option value="<?php echo $value->id; ?>"><?php echo $value->store_name; ?></option>
-                              <?php } ?>
-                            </select>
-                            </div>
-                            <div class="col-md-2">
-                              <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
-                            </div>
-                          </div>
-                    <?php }
-                      }
-                    } ?>
+            <div class="col-md-12">
+              <div class="req_item" id="items_opening">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label>Product</label>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Quantity</label>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Unit Price</label>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Location</label>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Remarks</label>
                   </div>
                 </div>
+                <?php
+                if (isset($detail->id)) {
+                  $childs = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
+                  if ($childs) {
+                    foreach ($childs as $key => $value) {
+                      $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                ?>
+                      <div class="row" style="margin-bottom: 15px;">
+                        <div class=" col-md-2">
+                          <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                          <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                        </div>
+                        <div class="col-md-2">
+                          <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                        </div>
+                        <div class="col-md-2">
+                          <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                        </div>
+                        <div class="col-md-3">
+                          <select name="location_id[]" class="form-control" id="location_id" required>
+                            <option value>Select Location</option>
+                            <?php foreach ($locations as $key_l => $value_l) { ?>
+                              <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                        <div class="col-md-2">
+                          <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="rmv">
+                            <span class="rmv_itm">X</span>
+                          </div>
+                        </div>
+                      </div>
+                <?php }
+                  }
+                } ?>
               </div>
+            </div>
           </div>
-            
+
+
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -139,8 +144,9 @@
           </div>
         </div>
       </div>
-    </form>
+  </div>
+  </form>
 
 
-   
+
 </section>

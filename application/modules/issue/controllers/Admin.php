@@ -53,7 +53,7 @@ class Admin extends Auth_controller
 
 
 		// $items = $this->crud_model->get_where_pagination('user_role', array('status !=' => '2'), $config["per_page"], $page);
-		$items = $this->crud_model->get_where_pagination('requisition_master', array('status !=' => '2'), $config['per_page'], $page);
+		$items = $this->crud_model->get_where_pagination('issue_slip_master', array('status !=' => '2'), $config['per_page'], $page);
 
 		// echo "<pre>";
 		// var_dump($this->db->last_query());
@@ -70,51 +70,32 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function form($id = '')
+	public function add($requisition_no = '')
 	{
-		// $string = "IS07042022-0006";
-		// $explode = explode("-", $string);
-		// $int_value = intval($explode[1]) + 1;
-		// var_dump(sprintf("%04d", $int_value));
-		// exit;
-		// echo "<pre>";
-		// var_dump($this->current_user);
-		// exit;
-		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		if (empty($requisition_no)) {
+			$this->session->set_flashdata('error', 'Requisition Number Required.');
+			redirect($this->redirect . '/admin/form');
+		}
+		$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $requisition_no));
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
-		if ($detail) {
-			$staffs = $this->crud_model->joinDataMultiple('staff_infos', 'department_para', array('staff_infos.status' => '1', 'department_para.id' => $detail->department_id), 'department_code', 'department_code', 'department_name');
-			// echo "<pre>";
-			// var_dump($staffs);
-			// exit;
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
-		} else {
-			$data['staffs'] = array();
-		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
-		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
-				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
-				$explode = explode("-", $string);
-				$int_value = intval($explode[1]) + 1;
-				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
-			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
-			}
+		if (!$requisition_detail) {
+			$this->session->set_flashdata('error', 'Record Not Found!!!');
+			redirect($this->redirect . '/admin/form');
 		}
 
-
-		$data['detail'] = $detail;
+		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
+		if (isset($last_row_no->issue_slip_no)) {
+			$string = $last_row_no->issue_slip_no;
+			$explode = explode("-", $string);
+			$int_value = intval($explode[1]) + 1;
+			// var_dump(sprintf("%04d", $int_value));
+			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+		} else {
+			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+		}
+		$data['requisition_detail'] = $requisition_detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
@@ -124,14 +105,7 @@ class Admin extends Auth_controller
 			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
 
 			if ($this->form_validation->run()) {
-				if (count($this->input->post('item_code')) <= 0) {
-					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
-					if ($id != '') {
-						redirect($this->redirect . '/admin/form');
-					} else {
-						redirect($this->redirect . '/admin/form/' . $id);
-					}
-				}
+
 				$data = array(
 					'requisition_date' => $this->input->post('requisition_date'),
 					'remarks' => $this->input->post('remarks'),
@@ -173,39 +147,28 @@ class Admin extends Auth_controller
 						$this->session->set_flashdata('error', 'Unable To Insert.');
 						redirect($this->redirect . '/admin/form');
 					}
-				} else {
-					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
-					if ($result == true) {
-						//delete all child before update
-						$this->db->delete('requisition_details', array('issue_slip_no' => $detail->issue_slip_no));
-
-
-						$item_code =  $this->input->post('item_code');
-						$quantity_requested =  $this->input->post('quantity_requested');
-						$remark =  $this->input->post('remark');
-
-						if (count($item_code) > 0) {
-							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $detail->issue_slip_no;
-								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['quantity_requested'] = $quantity_requested[$i];
-								$insert_detail['remark'] = $remark[$i];
-
-								$this->crud_model->insert('requisition_details', $insert_detail);
-							}
-						}
-						$this->session->set_flashdata('success', 'Successfully Updated.');
-						redirect($this->redirect . '/admin/all');
-					} else {
-						$this->session->set_flashdata('error', 'Unable To Update.');
-						redirect($this->redirect . '/admin/form/' . $id);
-					}
 				}
 			}
 		}
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'Add/Edit ' . $this->title;
+		$data['title'] = 'Add ' . $this->title;
+		$data['page'] = 'add';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function form()
+	{
+		if ($this->input->post()) {
+			$this->form_validation->set_rules('requisition_no', 'Requisition No', 'required|trim');
+			if ($this->form_validation->run()) {
+				$requisition_no = $this->input->post('requisition_no');
+				$this->session->set_flashdata('success', 'Requisition Retrieved Successfully');
+				redirect($this->redirect . '/admin/add/' . $requisition_no);
+			}
+		}
+		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => ''));
+		$data['title'] = 'Select requisition for issue';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
