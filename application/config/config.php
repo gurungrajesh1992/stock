@@ -27,6 +27,7 @@ $root = "http://" . $_SERVER['HTTP_HOST'];
 $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 
 $config['base_url'] = "$root";
+// $config['base_url'] = "http://192.168.1.80/stock/";
 
 // var_dump($config['base_url']);
 // exit;

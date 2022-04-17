@@ -78,15 +78,18 @@ class Admin extends Auth_controller
 			// var_dump($this->input->post());
 			// exit;
 			$this->form_validation->set_rules('designation_name', 'Designation Name', 'required|trim');
+			$this->form_validation->set_rules('designation_code', 'Designation Code', 'required|trim');
 			if ($this->form_validation->run()) {
 				$data = array(
 					'designation_name' => $this->input->post('designation_name'),
+					'designation_code' => $this->input->post('designation_code'),
 					'position' => $this->input->post('position'),
 					'remarks' => $this->input->post('remarks'),
 					'status' => $this->input->post('status'),
 				);
 
-
+				// $designation_code = substr($data['designation_name'],0,4);
+				// $data['designation_code'] = $designation_code;
 				$id = $this->input->post('id');
 				if ($id == '') {
 					$designation_code = substr($data['designation_name'], 0, 4);

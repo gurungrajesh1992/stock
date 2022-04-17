@@ -23,7 +23,7 @@
                   <option value>Select Item Code</option>
                   <?php foreach ($item_code as $key => $value) {
                   ?>
-                    <option value="<?php echo $value['item_code']; ?>" <?php echo  set_select('item_code', $value['item_code'], (isset($detail->item_code) && $detail->item_code == $value['item_code']) ? TRUE : ''); ?>><?php echo $value['item_code']; ?></option>
+                    <option value="<?php echo $value['item_code']; ?>" <?php echo  set_select('item_code', $value['item_code'], (isset($detail->item_code) && $detail->item_code == $value['item_code']) ? TRUE : ''); ?>><?php echo $value['item_name']; ?></option>
                   <?php } ?>
                 </select>
               </div>
