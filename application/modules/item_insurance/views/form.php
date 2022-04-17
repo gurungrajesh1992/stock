@@ -18,12 +18,12 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Item Code<span style="color:red;"> *</span></label>
+                <label>Item<span style="color:red;"> *</span></label>
                 <select name="item_code" class="form-control" id="item_code">
-                  <option value>Select Item Code</option>
+                  <option value>Select Item</option>
                   <?php foreach ($item_insurance as $key => $value) {
                   ?>
-                    <option value="<?php echo $value['item_code']; ?>" <?php echo  set_select('item_code', $value['item_code'], (isset($detail->item_code) && $detail->item_code == $value['item_code']) ? TRUE : ''); ?>><?php echo $value['item_code']; ?></option>
+                    <option value="<?php echo $value['item_code']; ?>" <?php echo  set_select('item_code', $value['item_code'], (isset($detail->item_code) && $detail->item_code == $value['item_code']) ? TRUE : ''); ?>><?php echo $value['item_name']; ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -31,14 +31,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Insurance Company Name <span style="color:red;"> *</span></label>
-                <input type="text" name="insurance_company" class="form-control" id="insurance_company" placeholder="Enter Accessories Name" value="<?php echo set_value('insurance_company', (((isset($detail->insurance_company)) && $detail->insurance_company != '') ? $detail->insurance_company : '')); ?>">
+                <input type="text" name="insurance_company" class="form-control" id="insurance_company" placeholder="Enter Insurance Company Name" value="<?php echo set_value('insurance_company', (((isset($detail->insurance_company)) && $detail->insurance_company != '') ? $detail->insurance_company : '')); ?>">
                 <?php echo form_error('insurance_company', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>Insurance Number <span style="color:red;"> *</span></label>
-                <input type="text" name="insurance_no" class="form-control" id="insurance_no" placeholder="Enter Accessories Name" value="<?php echo set_value('insurance_no', (((isset($detail->insurance_no)) && $detail->insurance_no != '') ? $detail->insurance_no : '')); ?>">
+                <input type="text" name="insurance_no" class="form-control" id="insurance_no" placeholder="Enter Insurance Number" value="<?php echo set_value('insurance_no', (((isset($detail->insurance_no)) && $detail->insurance_no != '') ? $detail->insurance_no : '')); ?>">
                 <?php echo form_error('insurance_no', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>

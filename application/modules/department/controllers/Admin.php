@@ -78,15 +78,17 @@ class Admin extends Auth_controller
 			// var_dump($this->input->post());
 			// exit;
 			$this->form_validation->set_rules('department_name', 'Department Name', 'required|trim');
+			$this->form_validation->set_rules('department_code', 'Department Code', 'required|trim');
 			if ($this->form_validation->run()) {
 				$data = array(
 					'department_name' => $this->input->post('department_name'),
+					'department_code' => $this->input->post('department_code'),
 					'remarks' => $this->input->post('remarks'),
 					'status' => $this->input->post('status'), 
 				);
 
-				$department_code = substr($data['department_name'],0,3);
-				$data['department_code'] = $department_code;
+				// $department_code = substr($data['department_name'],0,3);
+				// $data['department_code'] = $department_code;
 				$id = $this->input->post('id');
 				if ($id == '') {
 					$data['created_on'] = date('Y-m-d');

@@ -18,20 +18,22 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label>department_name <span class="req">*</span></label>
+                <label>Department Name <span class="req">*</span></label>
                 <input type="text" name="department_name" class="form-control" id="department_name" placeholder="Department Name" value="<?php echo set_value('department_name', (((isset($detail->department_name)) && $detail->department_name != '')? $detail->department_name : '')); ?>">
                 <?php echo form_error('department_name', '<div class="error_message">', '</div>'); ?>
               </div>
             </div> 
           </div>
-          <!-- <div class="row">
-            <div class="col-md-12">
+           <div class="row">
+            <div class="col-md-4">
               <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" id="description" class="form-control" rows="5" cols="80" autocomplete="off"><?php //echo (((isset($detail->description)) && $detail->description != '') ? $detail->description : '') ?></textarea>
+                <label>Department Code <span class="req">*</span></label>
+                <input type="text" name="department_code" class="form-control" id="department_code" placeholder="Department Code" value="<?php echo set_value('department_code', (((isset($detail->department_code)) && $detail->department_code != '')? $detail->department_code : '')); ?>">
+                <?php echo form_error('department_code', '<div class="error_message">', '</div>'); ?>
               </div>
-            </div>
-          </div> --> 
+            </div> 
+          </div>
+         
           <div class="row"> 
               <div class="col-md-4">
                 <div class="form-group">

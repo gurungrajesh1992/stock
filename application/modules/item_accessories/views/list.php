@@ -4,6 +4,28 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
+            <form class="all_form" method="post" action enctype="multipart/form-data">
+                 <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Select Item</label>
+                        <select name="item_code" class="form-control selct2" id="item_code">
+                          <option value>Select Item</option>
+                          <?php foreach ($items as $key => $value) { ?>
+                            <option value="<?php echo $value->item_code; ?>" <?php echo  set_select('item_code', $value->item_code);  ?>><?php echo $value->item_name; ?></option>
+                          <?php } ?>
+                         </select>
+                      </div>
+                    </div>
+                  </div>
+                   <div class="row">
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <input type="submit" name="submit" class="form-control btn btn-sm btn-primary" id="submit" value="search">
+                          </div>
+                    </div>
+                  </div>
+                </form>
             <h3 class="card-title"><a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
           </div>
           <!-- /.card-header -->

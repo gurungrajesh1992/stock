@@ -104,7 +104,7 @@ class Admin extends Auth_controller {
 	}
 	public function validate_appointed_date($field_value,$old_date)
 	{
-			if($old_date > $field_value){
+			if($old_date >= $field_value){
 		
 			$this->form_validation->set_message('validate_appointed_date', 'The %s field is invalid.','required');
 			return FALSE;
