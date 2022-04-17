@@ -85,6 +85,15 @@ class Admin extends Auth_controller
 			redirect($this->redirect . '/admin/form');
 		}
 
+		if ($requisition_detail->cancel_tag == '1') {
+			$this->session->set_flashdata('error', 'Requisition Cancelled');
+			redirect($this->redirect . '/admin/add/' . $requisition_no);
+		} else if ($requisition_detail->approved_by != '') {
+			$this->session->set_flashdata('error', 'Requisition Alreqady Approved, Can not edit');
+			redirect($this->redirect . '/admin/add/' . $requisition_no);
+		} else {
+		}
+
 		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
 		if (isset($last_row_no->issue_slip_no)) {
 			$string = $last_row_no->issue_slip_no;
@@ -325,7 +334,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => ''));
+		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['title'] = 'Select Issue Type for Issue Slip';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);

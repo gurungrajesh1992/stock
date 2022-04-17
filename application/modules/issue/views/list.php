@@ -60,12 +60,12 @@
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td>
                         <?php if ($value->requisition_no == NULL) { ?>
-                          <a href="<?php echo base_url($redirect . '/admin/direct_add/' . $value->id); ?>">Edit</a>
+                          <a href="<?php echo base_url($redirect . '/admin/direct_add/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>
                         <?php } else { ?>
-                          <a href="<?php echo base_url($redirect . '/admin/edit/' . $value->id); ?>">Edit</a>
+                          <a href="<?php echo base_url($redirect . '/admin/edit/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>
                         <?php } ?>
 
-                        <br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a>
+                        <a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>
                       </td>
                     </tr>
                   <?php }

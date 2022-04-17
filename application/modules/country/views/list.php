@@ -24,9 +24,9 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
-                    if($value->status == '1'){
-                        $status = 'Active';
-                    }else{
+                    if ($value->status == '1') {
+                      $status = 'Active';
+                    } else {
                       $status = 'Inactive';
                     }
                 ?>
@@ -36,7 +36,7 @@
                       <td><?php echo $value->country_name; ?></td>
                       <td><?php echo $value->nationality; ?></td>
                       <td><?php echo $status; ?></td>
-                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
+                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a></td>
                     </tr>
                   <?php }
                 } else { ?>

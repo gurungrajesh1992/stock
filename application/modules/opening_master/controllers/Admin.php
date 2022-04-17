@@ -70,7 +70,8 @@ class Admin extends Auth_controller
 
 	public function form($id = '')
 	{
-		$data['detail'] = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
@@ -132,6 +133,10 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$this->session->set_flashdata('error', 'Can not edit, Already Approved');
+						redirect($this->redirect . '/admin/form/' . $id);
+					}
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
