@@ -18,7 +18,7 @@
                   <th>Temp Address</th>
                   <th>Contact</th>
                   <th>Email</th>
-                  <th>Nationality</th>
+                  <!-- <th>Nationality</th> -->
                   <th>Designation</th>
                   <th>Depart</th>
                   <th>Appointed Date</th>
@@ -52,20 +52,20 @@
                       $role = '';
                     }
 
-                    if ($staff_detail->country_code) {
-                      $nationality = $this->db->get_where('country_para', array('country_code' => $staff_detail->country_code))->row()->nationality;
-                    } else {
-                      $nationality = '';
-                    }
+                    // if ($staff_detail->country_code) {
+                    //   $nationality = $this->db->get_where('country_para', array('country_code' => $staff_detail->country_code))->row()->nationality;
+                    // } else {
+                    //   $nationality = '';
+                    // }
 
-                    if ($staff_depart_desg->department_code) {
+                    if (isset($staff_depart_desg->department_code)) {
                       $depart = $this->db->get_where('department_para', array('department_code' => $staff_depart_desg->department_code))->row()->department_name;
                     } else {
                       $depart = '';
                     }
 
 
-                    if ($staff_depart_desg->designation_code) {
+                    if (isset($staff_depart_desg->designation_code)) {
                       $desig = $this->db->get_where('designation_para', array('designation_code' => $staff_depart_desg->designation_code))->row()->designation_name;
                     } else {
                       $desig = '';
@@ -79,16 +79,16 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1 ?></td>
-                      <td><?php echo $staff_detail->full_name ?></td>
+                      <td><?php if(isset($staff_detail->full_name )){ echo $staff_detail->full_name; }?></td>
                       <td><?php echo $role ?></td>
-                      <td><?php echo $staff_detail->permanent_address ?></td>
-                      <td><?php echo $staff_detail->temp_address ?></td>
-                      <td><?php echo $staff_detail->contact ?></td>
-                      <td><?php echo $staff_detail->email ?></td>
-                      <td><?php echo $nationality ?></td>
+                      <td><?php if(isset($staff_detail->permanent_address )){echo $staff_detail->permanent_address; } ?></td>
+                      <td><?php if(isset($staff_detail->temp_address )){ echo $staff_detail->temp_address; } ?></td>
+                      <td><?php if(isset($staff_detail->contact )){ echo $staff_detail->contact; } ?></td>
+                      <td><?php if(isset($staff_detail->email )){ echo $staff_detail->email; } ?></td>
+                      <!-- <td><?php echo $nationality ?></td> -->
                       <td><?php echo $desig; ?></td>
                       <td><?php echo $depart; ?></td>
-                      <td><?php echo $staff_detail->appointed_date; ?></td>
+                      <td><?php if(isset($staff_detail->appointed_date )){ echo $staff_detail->appointed_date;  } ?></td>
                       <td><?php echo $status; ?></td>
                       <td>
                         <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>

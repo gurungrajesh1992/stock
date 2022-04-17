@@ -29,6 +29,8 @@
                       <?php 
                         if($items){ 
                             foreach($items as $key => $value){  
+                              $des_dep = $this->db->get_where('staff_desig_depart',array('staff_id'=>$value->id, 'status'=>'1'))->row();
+                             
                                 if($value->updated_by){ 
                                     $updated_by = $this->db->get_where('users',array('id'=>$value->updated_by))->row()->user_name;
                                 }else{
@@ -50,7 +52,7 @@
                     <tr>
                       <td><?php echo $key+1 ?></td>
                       <td><?php echo $value->full_name ?></td>
-                      <td><?php echo $value->designation_code ?></td>
+                      <td><?php echo $des_dep->designation_code ?></td>
                       <td><?php echo $value->temp_address ?></td>
                       <td><?php echo $value->contact ?></td>
                       <td><?php if($value->featured_image){ ?><img src="<?php echo $value->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
