@@ -35,7 +35,6 @@
               <div class="form-group reqsn_cls" id="reqsn">
                 <label>Select Requisition no</label>
                 <select name="requisition_no" class="form-control selct2" id="requisition_no">
-                  <option value>Select</option>
                   <?php foreach ($requisitions as $key => $value) { ?>
                     <option value="<?php echo $value->requisition_no; ?>"><?php echo $value->requisition_no; ?></option>
                   <?php } ?>
