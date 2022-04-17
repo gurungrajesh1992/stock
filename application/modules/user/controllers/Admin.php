@@ -79,7 +79,7 @@ class Admin extends Auth_controller
 				$id = $this->input->post('id');
 				if ($id == '') {
 					$data['created_by'] = $this->current_user->id;
-					$data['created'] = date('Y-m-d');
+					$data['created_on'] = date('Y-m-d');
 
 					//duplicate user check 
 					$is_already = $this->crud_model->get_where_single('users', array('user_name' => $this->input->post('user_name')));
