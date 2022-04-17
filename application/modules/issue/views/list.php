@@ -12,14 +12,16 @@
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Issue Slip No</th>
+                  <th>Issue Slip Date</th>
+                  <th>Issue Type</th>
                   <th>Requisition No</th>
-                  <th>Requisition Date</th>
-                  <th>Remarks</th>
                   <th>Department</th>
-                  <th>Requested By</th>
+                  <th>Issued To</th>
+                  <th>Issued By</th>
+                  <th>Issued On</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
-                  <th>Items</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -30,8 +32,8 @@
                   foreach ($items as $key => $value) {
 
                     $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
-                    // $user_detail = $this->crud_model->get_where_single_order_by('users', array('id' => $value->requested_by), 'id', 'DECS');
-                    $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
+                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
+                    // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
@@ -46,39 +48,25 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
+                      <td><?php echo $value->issue_slip_no; ?></td>
+                      <td><?php echo $value->issue_date; ?></td>
+                      <td><?php echo $value->issue_type; ?></td>
                       <td><?php echo $value->requisition_no; ?></td>
-                      <td><?php echo $value->requisition_date; ?></td>
-                      <td><?php echo $value->remarks; ?></td>
                       <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
-                      <td><?php echo isset($user_detail->full_name) ? $user_detail->full_name : ''; ?></td>
+                      <td><?php echo isset($staff_detail->full_name) ? $staff_detail->full_name : ''; ?></td>
+                      <td><?php echo $value->issued_by; ?></td>
+                      <td><?php echo $value->issued_on; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td>
-                        <!-- Trigger the modal with a button -->
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal<?php echo $value->id; ?>">Items</button>
+                        <?php if ($value->requisition_no == NULL) { ?>
+                          <a href="<?php echo base_url($redirect . '/admin/direct_add/' . $value->id); ?>">Edit</a>
+                        <?php } else { ?>
+                          <a href="<?php echo base_url($redirect . '/admin/edit/' . $value->id); ?>">Edit</a>
+                        <?php } ?>
 
-                        <!-- Modal -->
-                        <div id="myModal<?php echo $value->id ?>" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Modal Header</h4>
-                              </div>
-                              <div class="modal-body">
-                                <?php echo $value->id ?>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
+                        <br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a>
                       </td>
-                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
                     </tr>
                   <?php }
                 } else { ?>

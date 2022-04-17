@@ -137,7 +137,7 @@ class Admin extends Auth_controller
 				if ($id == '') {
 
 
-					$data['created_on'] = date('Y-m-d');
+					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
 
@@ -165,6 +165,8 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
+					$data['updated_on'] = date('Y-m-d H:i:s');
+					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						//delete all child before update
@@ -201,6 +203,17 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
+	public function view($id = '')
+	{
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+
+
+		$data['detail'] = $detail;
+		$data['title'] = 'View ' . $this->title;
+		$data['page'] = 'view';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
 	public function requisition_date_check($str)
 	{
 		if ($str != '') {
@@ -220,6 +233,8 @@ class Admin extends Auth_controller
 		$data = array(
 			'status' => '2',
 		);
+		$data['updated_on'] = date('Y-m-d H:i:s');
+		$data['updated_by'] = $this->current_user->id;
 		$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 		if ($result == true) {
 			$this->session->set_flashdata('success', 'Successfully Deleted.');
@@ -251,7 +266,7 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
-						$html .= '<div class="row">
+						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>

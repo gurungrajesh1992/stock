@@ -108,7 +108,7 @@
                         foreach ($childs as $key => $value) {
                           $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                     ?>
-                          <div class="row">
+                          <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-1">
                               <?php echo ($key + 1) . '.'; ?>
                             </div>

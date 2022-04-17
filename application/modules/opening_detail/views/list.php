@@ -12,13 +12,10 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Requisition No</th>
-                  <th>Requisition Date</th>
+                  <!-- <th>Item Code</th> -->
+                  <th>Quantity</th>
+                  <th>Price Per Unit</th>
                   <th>Remarks</th>
-                  <th>Department</th>
-                  <th>Requested By</th>
-                  <th>Is Cancelled</th>
-                  <th>Is Approved</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -27,33 +24,20 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
-
-                    $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
-                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->requested_by), 'id', 'DECS');
-                    // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
-                    if ($value->status == '1') {
-                      $status = 'Active';
-                    } else {
+                    if($value->status == '1'){
+                        $status = 'Active'; 
+                    }else{
                       $status = 'Inactive';
-                    }
-
-                    if ($value->cancel_tag == '1') {
-                      $cancel_tag = 'Yes';
-                    } else {
-                      $cancel_tag = 'No';
                     }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->requisition_no; ?></td>
-                      <td><?php echo $value->requisition_date; ?></td>
+                      <!-- <td><?php //echo $value->item_code; ?></td> -->
+                      <td><?php echo $value->qty; ?></td>
+                      <td><?php echo $value->unit_price; ?></td>
+                      <td><?php echo $value->total_price; ?></td>
                       <td><?php echo $value->remarks; ?></td>
-                      <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
-                      <td><?php echo isset($staff_detail->full_name) ? $staff_detail->full_name : ''; ?></td>
-                      <td><?php echo $cancel_tag; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
-
-                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>">View</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
+                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>">Edit</a><br><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>">Delete</a></td>
                     </tr>
                   <?php }
                 } else { ?>

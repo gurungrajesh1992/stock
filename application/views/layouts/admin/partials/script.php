@@ -40,6 +40,10 @@
 
 <!-- nested sortable -->
 <script type="text/javascript" src="<?php echo base_url('theme/admin/'); ?>rajesh/js/jquery.mjs.nestedSortable.js">
+  // <<<<<<< HEAD
+  //   >
+  // =======
+  // >>>>>>> 7b2f7cf96e3359ff4ca9197eafb2f64dd4d1b419
 </script>
 
 <!-- select2  -->
@@ -50,6 +54,19 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+
+    // onchange issue type
+    $(document).off('change', '#issue_type').on('change', '#issue_type', function(e) {
+      e.preventDefault();
+      // alert('hi'); 
+      var val = $(this).val();
+      // alert(val);
+      if (val == 'DR') {
+        $("#reqsn").addClass("reqsn_cls");
+      } else {
+        $("#reqsn").removeClass("reqsn_cls")
+      }
+    });
 
     // REMOVE item
 
@@ -66,7 +83,7 @@
       // alert(val);
       // return false;
       if (val == '') {
-        alert('SElect atleast one department');
+        alert('Select atleast one department');
         return false;
       }
       $.ajax({
@@ -109,6 +126,43 @@
       $.ajax({
 
         url: '<?php echo base_url('requisition/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
+    //issue items
+    $(document).off('change', '#item_isuue').on('change', '#item_isuue', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/getForm'); ?>',
         type: "POST",
         // contentType: "application/json",  
         dataType: "json",
@@ -223,5 +277,39 @@
       filebrowserUploadUrl: '<?php echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&editor=ckeditor&fldr='); ?>',
       filebrowserImageBrowseUrl: '<?php echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&editor=ckeditor&fldr='); ?>'
     });
+
+    $(document).off('change', '#item_opening').on('change', '#item_opening', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);return false;
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items);
+      $.ajax({
+        url: '<?php echo base_url('opening_master/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items_opening').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
   })
 </script>

@@ -53,7 +53,7 @@ class Admin extends Auth_controller
 
 
 		// $items = $this->crud_model->get_where_pagination('user_role', array('status !=' => '2'), $config["per_page"], $page);
-		$items = $this->crud_model->get_where_pagination('requisition_master', array('status !=' => '2'), $config['per_page'], $page);
+		$items = $this->crud_model->get_where_pagination('issue_slip_master', array('status !=' => '2'), $config['per_page'], $page);
 
 		// echo "<pre>";
 		// var_dump($this->db->last_query());
@@ -70,25 +70,114 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function form($id = '')
+	public function add($requisition_no = '')
 	{
-		// $string = "IS07042022-0006";
-		// $explode = explode("-", $string);
-		// $int_value = intval($explode[1]) + 1;
-		// var_dump(sprintf("%04d", $int_value));
-		// exit;
+		if (empty($requisition_no)) {
+			$this->session->set_flashdata('error', 'Requisition Number Required.');
+			redirect($this->redirect . '/admin/form');
+		}
+		$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $requisition_no));
 		// echo "<pre>";
-		// var_dump($this->current_user);
+		// var_dump($detail);
 		// exit;
+		if (!$requisition_detail) {
+			$this->session->set_flashdata('error', 'Record Not Found!!!');
+			redirect($this->redirect . '/admin/form');
+		}
+
+		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
+		if (isset($last_row_no->issue_slip_no)) {
+			$string = $last_row_no->issue_slip_no;
+			$explode = explode("-", $string);
+			$int_value = intval($explode[1]) + 1;
+			// var_dump(sprintf("%04d", $int_value));
+			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+		} else {
+			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+		}
+		$data['requisition_detail'] = $requisition_detail;
+		if ($this->input->post()) {
+			// echo "<pre>";
+			// var_dump($this->input->post());
+			// exit;
+			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
+			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
+			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
+			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
+			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+
+			if ($this->form_validation->run()) {
+				$id = $this->input->post('id');
+				$selected_items = $this->input->post('item_code');
+				if (!isset($selected_items)) {
+					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
+
+					if ($id == '') {
+						redirect($this->redirect . '/admin/direct_add');
+					} else {
+						redirect($this->redirect . '/admin/direct_add/' . $id);
+					}
+				}
+
+				$data = array(
+					'issue_slip_no' => $this->input->post('issue_slip_no'),
+					'requisition_no' => $this->input->post('requisition_no'),
+					'issue_date' => $this->input->post('issue_date'),
+					'department_id' => $this->input->post('department_id'),
+					'staff_id' => $this->input->post('staff_id'),
+					'issued_by' => $this->input->post('issued_by'),
+					'issued_on' => $this->input->post('issued_on'),
+					'remarks' => $this->input->post('remarks'),
+				);
+
+
+				if ($id == '') {
+
+					$data['issue_type'] = "RQ";
+					$data['created_on'] = date('Y-m-d H:i:s');
+					$data['created_by'] = $this->current_user->id;
+					$data['cancel_tag'] = '0';
+
+					$result = $this->crud_model->insert($this->table, $data);
+					if ($result == true) {
+
+						$item_code =  $this->input->post('item_code');
+						$issued_qnty =  $this->input->post('issued_quantity');
+						$issued_remark =  $this->input->post('issued_remark');
+
+						if (count($item_code) > 0) {
+							for ($i = 0; $i < count($item_code); $i++) {
+								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['remarks'] = $issued_remark[$i];
+
+								$this->crud_model->insert('issue_slip_details', $insert_detail);
+							}
+						}
+						$this->session->set_flashdata('success', 'Successfully Inserted.');
+						redirect($this->redirect . '/admin/all');
+					} else {
+						$this->session->set_flashdata('error', 'Unable To Insert.');
+						redirect($this->redirect . '/admin/add');
+					}
+				}
+			}
+		}
+		$data['title'] = 'Add Requested ' . $this->title;
+		$data['page'] = 'add';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function direct_add($id = '')
+	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
 		if ($detail) {
-			$staffs = $this->crud_model->joinDataMultiple('staff_infos', 'department_para', array('staff_infos.status' => '1', 'department_para.id' => $detail->department_id), 'department_code', 'department_code', 'department_name');
-			// echo "<pre>";
-			// var_dump($staffs);
-			// exit;
+			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
+			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
 			if ($staffs) {
 				$data['staffs'] = $staffs;
 			} else {
@@ -112,100 +201,132 @@ class Admin extends Auth_controller
 				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
 			}
 		}
-
-
 		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('requisition_date', 'Requisition Date', 'required|trim');
+			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
 			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
+			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
+			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
 
 			if ($this->form_validation->run()) {
-				if (count($this->input->post('item_code')) <= 0) {
+				$id = $this->input->post('id');
+				$selected_items = $this->input->post('item_code');
+				if (!isset($selected_items)) {
 					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
-					if ($id != '') {
-						redirect($this->redirect . '/admin/form');
+
+					if ($id == '') {
+						redirect($this->redirect . '/admin/direct_add');
 					} else {
-						redirect($this->redirect . '/admin/form/' . $id);
+						redirect($this->redirect . '/admin/direct_add/' . $id);
 					}
 				}
 				$data = array(
-					'requisition_date' => $this->input->post('requisition_date'),
+					'issue_slip_no' => $this->input->post('issue_slip_no'),
+					'issue_date' => $this->input->post('issue_date'),
+					'department_id' => $this->input->post('department_id'),
+					'staff_id' => $this->input->post('staff_id'),
+					'issued_by' => $this->input->post('issued_by'),
+					'issued_on' => $this->input->post('issued_on'),
 					'remarks' => $this->input->post('remarks'),
 				);
 
-				$id = $this->input->post('id');
+
 				if ($id == '') {
 
-
-					$data['requested_date'] = date('Y-m-d');
-					$data['requested_by'] = $this->current_user->id;
+					$data['issue_type'] = "DR";
+					$data['created_on'] = date('Y-m-d H:i:s');
+					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
 
-					$staff = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $this->current_user->staff_id), 'id', 'DESC');
-					$depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('department_code' => $staff->department_code), 'id', 'DESC');
-					if ($staff) {
-						$data['department_id'] = $depart_detail->id;
-					}
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$quantity_requested =  $this->input->post('quantity_requested');
+						$issued_qnty =  $this->input->post('issued_qnty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['quantity_requested'] = $quantity_requested[$i];
-								$insert_detail['remark'] = $remark[$i];
+								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['remarks'] = $remark[$i];
 
-								$this->crud_model->insert('requisition_details', $insert_detail);
+								$this->crud_model->insert('issue_slip_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
 					} else {
 						$this->session->set_flashdata('error', 'Unable To Insert.');
-						redirect($this->redirect . '/admin/form');
+						redirect($this->redirect . '/admin/direct_add');
 					}
 				} else {
+					$data['updated_on'] = date('Y-m-d H:i:s');
+					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						//delete all child before update
-						$this->db->delete('requisition_details', array('issue_slip_no' => $detail->issue_slip_no));
+						$this->db->delete('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
 
 
 						$item_code =  $this->input->post('item_code');
-						$quantity_requested =  $this->input->post('quantity_requested');
+						$issued_qnty =  $this->input->post('issued_qnty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['issue_slip_no'] = $detail->issue_slip_no;
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['quantity_requested'] = $quantity_requested[$i];
-								$insert_detail['remark'] = $remark[$i];
+								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['remarks'] = $remark[$i];
 
-								$this->crud_model->insert('requisition_details', $insert_detail);
+								$this->crud_model->insert('issue_slip_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
 						redirect($this->redirect . '/admin/all');
 					} else {
 						$this->session->set_flashdata('error', 'Unable To Update.');
-						redirect($this->redirect . '/admin/form/' . $id);
+						redirect($this->redirect . '/admin/direct_add/' . $id);
 					}
 				}
 			}
 		}
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'Add/Edit ' . $this->title;
+		$data['title'] = 'Add/Edit Direct ' . $this->title;
+		$data['page'] = 'direct_add';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function form()
+	{
+		if ($this->input->post()) {
+			$this->form_validation->set_rules('issue_type', 'Issue Type', 'required|trim');
+			if ($this->form_validation->run()) {
+				$issue_type = $this->input->post('issue_type');
+
+				if ($issue_type == "DR") {
+					$this->session->set_flashdata('success', 'Create Issue Slip Dierectly');
+					redirect($this->redirect . '/admin/direct_add/');
+				} else {
+					$requisition_no = $this->input->post('requisition_no');
+					if (!isset($requisition_no) && $requisition_no == '') {
+						$this->session->set_flashdata('error', 'Requisition Number Required');
+						redirect($this->redirect . '/admin/form');
+					}
+					$this->session->set_flashdata('success', 'Requisition Retrieved Successfully');
+					redirect($this->redirect . '/admin/add/' . $requisition_no);
+				}
+			}
+		}
+		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => ''));
+		$data['title'] = 'Select Issue Type for Issue Slip';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
@@ -229,6 +350,8 @@ class Admin extends Auth_controller
 		$data = array(
 			'status' => '2',
 		);
+		$data['updated_on'] = date('Y-m-d H:i:s');
+		$data['updated_by'] = $this->current_user->id;
 		$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 		if ($result == true) {
 			$this->session->set_flashdata('success', 'Successfully Deleted.');
@@ -260,7 +383,7 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
-						$html .= '<div class="row">
+						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
@@ -269,10 +392,15 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity">
+										<input type="number" name="issued_qnty[]" class="form-control" placeholder="Issued Quantity" required>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-5">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+									</div>
+									<div class="col-md-1">
+										<div class="rmv">
+											<span class="rmv_itm">X</span>
+										</div>
 									</div>
 									</div>';
 					}
