@@ -87,6 +87,9 @@ class Admin extends Auth_controller
 		} else {
 			$data['staffs'] = array();
 		}
+		// echo "<pre>";
+		// var_dump($data['staffs']);
+		// exit;
 		if (isset($detail->requisition_no)) {
 			$data['requisition_no'] = $detail->requisition_no;
 		} else {
@@ -153,6 +156,7 @@ class Admin extends Auth_controller
 								$insert_detail['requisition_no'] = $data['requisition_no'];
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['quantity_requested'] = $quantity_requested[$i];
+								$insert_detail['remaining_qnty'] = $quantity_requested[$i];
 								$insert_detail['remark'] = $remark[$i];
 
 								$this->crud_model->insert('requisition_details', $insert_detail);
@@ -186,6 +190,7 @@ class Admin extends Auth_controller
 								$insert_detail['requisition_no'] = $detail->requisition_no;
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['quantity_requested'] = $quantity_requested[$i];
+								$insert_detail['remaining_qnty'] = $quantity_requested[$i];
 								$insert_detail['remark'] = $remark[$i];
 
 								$this->crud_model->insert('requisition_details', $insert_detail);

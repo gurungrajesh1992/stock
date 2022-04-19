@@ -40,7 +40,7 @@
                 <select name="requested_by" class="form-control selct2" id="requested_by">
                   <option value>Select Staff</option>
                   <?php foreach ($staffs as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('requested_by', $value->id, (isset($detail->requested_by) && $detail->requested_by  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
+                    <option value="<?php echo $value->staff_id; ?>" <?php echo  set_select('requested_by', $value->staff_id, (isset($detail->requested_by) && $detail->requested_by  == $value->staff_id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                   <?php } ?>
                 </select>
               </div>

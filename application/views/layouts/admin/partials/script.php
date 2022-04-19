@@ -54,7 +54,49 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+    //onchange issue slip date show stock value in each row
+    $(document).off('change', '#issue_date').on('change', '#issue_date', function(e) {
+      var issue_slip_date = $(this).val();
+      $.ajax({
 
+        url: '<?php echo base_url('issue/admin/getAllStock'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "issue_slip_date": issue_slip_date,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $.each(resp.data, function(k, v) {
+              var item_code = v.item_code;
+              var total_stock = (parseInt(v.totalIn) - parseInt(v.totalOut));
+              $('#stock_' + item_code).val(total_stock);
+            });
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
+    //check greater than remaining
+    $(document).off('change', '.iss').on('change', '.iss', function(e) {
+      var issued = $(this).val();
+      var id = $(this).attr('id');
+      var id_val = id.split("_");
+
+      var remaining = $('#remaining_' + id_val[1]).val();
+      // console.log(issued, remaining);
+      // return false;
+      if (parseInt(issued) > parseInt(remaining)) {
+        alert('Please Select less than or equal to ' + remaining);
+        $(this).val(remaining);
+      }
+    });
     // onchange issue type
     $(document).off('change', '#issue_type').on('change', '#issue_type', function(e) {
       e.preventDefault();
