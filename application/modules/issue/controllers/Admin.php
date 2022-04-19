@@ -78,7 +78,7 @@ class Admin extends Auth_controller
 		}
 		$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $requisition_no));
 		// echo "<pre>";
-		// var_dump($detail);
+		// var_dump($requisition_detail);
 		// exit;
 		if (!$requisition_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
@@ -87,12 +87,14 @@ class Admin extends Auth_controller
 
 		if ($requisition_detail->cancel_tag == '1') {
 			$this->session->set_flashdata('error', 'Requisition Cancelled');
-			redirect($this->redirect . '/admin/add/' . $requisition_no);
-		} else if ($requisition_detail->approved_by != '') {
-			$this->session->set_flashdata('error', 'Requisition Alreqady Approved, Can not edit');
-			redirect($this->redirect . '/admin/add/' . $requisition_no);
+			redirect($this->redirect . '/admin/form');
+		} else if ($requisition_detail->approved_by == '') {
+			$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add issue');
+			redirect($this->redirect . '/admin/form');
 		} else {
 		}
+		// echo "here";
+		// exit;
 
 		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
 		if (isset($last_row_no->issue_slip_no)) {
@@ -122,9 +124,9 @@ class Admin extends Auth_controller
 					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
 
 					if ($id == '') {
-						redirect($this->redirect . '/admin/direct_add');
+						redirect($this->redirect . '/admin/add');
 					} else {
-						redirect($this->redirect . '/admin/direct_add/' . $id);
+						redirect($this->redirect . '/admin/edit/' . $id);
 					}
 				}
 
@@ -175,6 +177,106 @@ class Admin extends Auth_controller
 		}
 		$data['title'] = 'Add Requested ' . $this->title;
 		$data['page'] = 'add';
+		$this->load->view('layouts/admin/index', $data);
+	}
+
+	public function edit($id = '')
+	{
+		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
+			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
+			redirect($this->redirect . '/admin/edit/' . $id);
+		}
+		if (!$master_detail) {
+			$this->session->set_flashdata('error', 'Record Not Found!!!');
+			redirect($this->redirect . '/admin/all');
+		}
+		if ($master_detail) {
+			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
+		}
+
+		// echo "<pre>";
+		// var_dump($detail);
+		// exit;
+		if (!$requisition_detail) {
+			$this->session->set_flashdata('error', 'Record Not Found!!!');
+			redirect($this->redirect . '/admin/all');
+		}
+
+		$data['master_detail'] = $master_detail;
+		$data['requisition_detail'] = $requisition_detail;
+		if ($this->input->post()) {
+			// echo "<pre>";
+			// var_dump($this->input->post());
+			// exit;
+			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
+			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
+			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
+			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
+			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+
+			if ($this->form_validation->run()) {
+				$id = $this->input->post('id');
+				$selected_items = $this->input->post('item_code');
+				if (!isset($selected_items)) {
+					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
+
+					if ($id == '') {
+						redirect($this->redirect . '/admin/add');
+					} else {
+						redirect($this->redirect . '/admin/edit/' . $id);
+					}
+				}
+
+				$data = array(
+					'issue_slip_no' => $this->input->post('issue_slip_no'),
+					'requisition_no' => $this->input->post('requisition_no'),
+					'issue_date' => $this->input->post('issue_date'),
+					'department_id' => $this->input->post('department_id'),
+					'staff_id' => $this->input->post('staff_id'),
+					'issued_by' => $this->input->post('issued_by'),
+					'issued_on' => $this->input->post('issued_on'),
+					'remarks' => $this->input->post('remarks'),
+				);
+
+
+				if ($id == '') {
+				} else {
+
+					$this->db->delete('issue_slip_details', array('issue_slip_no' => $master_detail->issue_slip_no));
+
+					$data['updated_on'] = date('Y-m-d H:i:s');
+					$data['updated_by'] = $this->current_user->id;
+
+					// $result = $this->crud_model->insert($this->table, $data);
+					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
+					if ($result == true) {
+
+						$item_code =  $this->input->post('item_code');
+						$issued_qnty =  $this->input->post('issued_quantity');
+						$issued_remark =  $this->input->post('issued_remark');
+
+						if (count($item_code) > 0) {
+							for ($i = 0; $i < count($item_code); $i++) {
+								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['remarks'] = $issued_remark[$i];
+
+								$this->crud_model->insert('issue_slip_details', $insert_detail);
+							}
+						}
+						$this->session->set_flashdata('success', 'Successfully Updated.');
+						redirect($this->redirect . '/admin/all');
+					} else {
+						$this->session->set_flashdata('error', 'Unable To Update.');
+						redirect($this->redirect . '/admin/edit/' . $id);
+					}
+				}
+			}
+		}
+		$data['title'] = 'Edit Requested ' . $this->title;
+		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
 	}
 
@@ -275,6 +377,12 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/direct_add');
 					}
 				} else {
+
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$this->session->set_flashdata('error', 'Can not edit, Already Approved');
+						redirect($this->redirect . '/admin/direct_add/' . $id);
+					}
+
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));

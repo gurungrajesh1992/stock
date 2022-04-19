@@ -54,7 +54,20 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+    //check greater than remaining
+    $(document).off('change', '.iss').on('change', '.iss', function(e) {
+      var issued = $(this).val();
+      var id = $(this).attr('id');
+      var id_val = id.split("_");
 
+      var remaining = $('#remaining_' + id_val[1]).val();
+      // console.log(issued, remaining);
+      // return false;
+      if (parseInt(issued) > parseInt(remaining)) {
+        alert('Please Select less than or equal to ' + remaining);
+        $(this).val(remaining);
+      }
+    });
     // onchange issue type
     $(document).off('change', '#issue_type').on('change', '#issue_type', function(e) {
       e.preventDefault();

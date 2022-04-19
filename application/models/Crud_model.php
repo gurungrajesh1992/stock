@@ -120,4 +120,18 @@ class Crud_model extends CI_Model
         $this->db->where($where);
         return $this->db->get('')->result();
     }
+
+    public function get_total_item_stock($table, $where)
+    {
+        $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut', false);
+        $this->db->from($table);
+        $this->db->where($where);
+        $result = $this->db->get('')->row();
+        if ($result) {
+            $stock = ($result->totalIn - $result->totalOut);
+            return $stock;
+        } else {
+            return 0;
+        }
+    }
 }
