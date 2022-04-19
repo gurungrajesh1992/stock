@@ -87,6 +87,9 @@ class Admin extends Auth_controller
 		} else {
 			$data['staffs'] = array();
 		}
+		// echo "<pre>";
+		// var_dump($data['staffs']);
+		// exit;
 		if (isset($detail->requisition_no)) {
 			$data['requisition_no'] = $detail->requisition_no;
 		} else {

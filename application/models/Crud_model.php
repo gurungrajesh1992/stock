@@ -134,4 +134,15 @@ class Crud_model extends CI_Model
             return 0;
         }
     }
+
+    public function get_all_total_stock($table, $where, $group_by)
+    {
+        $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut, item_code', false);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->group_by($group_by);
+        $result = $this->db->get('')->result();
+
+        return $result;
+    }
 }

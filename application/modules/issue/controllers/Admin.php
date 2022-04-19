@@ -556,6 +556,57 @@ class Admin extends Auth_controller
 		echo json_encode($response);
 	}
 
+	public function getAllStock()
+	{
+		try {
+
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+
+				$issue_slip_date = $this->input->post('issue_slip_date');
+
+				if ($issue_slip_date) {
+					$where = array(
+						'transaction_date <=' => $issue_slip_date,
+					);
+					$all_stock = $this->crud_model->get_all_total_stock('stock_ledger', $where, 'item_code');
+					// echo "<pre>";
+					// var_dump($all_stock);
+					// exit;
+					if ($all_stock) {
+
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully retrived',
+							'data' => $all_stock,
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable To Get All Stock',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'No Issue Slip Date Selected',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
 	public function getStaffOfDepartment()
 	{
 		try {
