@@ -100,7 +100,7 @@ class Admin extends Auth_controller
 						redirect('user/admin/form');
 					}
 				} else {
-					$data['updated'] = date('Y-m-d');
+					$data['updated_on'] = date('Y-m-d');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update('users', $data, array('id' => $id));
 					if ($result == true) {

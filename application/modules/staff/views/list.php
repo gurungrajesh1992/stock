@@ -52,7 +52,7 @@
                     <tr>
                       <td><?php echo $key+1 ?></td>
                       <td><?php echo $value->full_name ?></td>
-                      <td><?php echo $des_dep->designation_code ?></td>
+                      <td><?php if(isset($des_dep->designation_code )){ echo $des_dep->designation_code ; } ?></td>
                       <td><?php echo $value->temp_address ?></td>
                       <td><?php echo $value->contact ?></td>
                       <td><?php if($value->featured_image){ ?><img src="<?php echo $value->featured_image; ?>" class="img-fluid" style="max-height: 150px;object-fit: contain;"><?php } ?></td> 
