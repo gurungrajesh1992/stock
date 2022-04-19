@@ -210,13 +210,55 @@ class Admin extends Auth_controller
 	public function view($id = '')
 	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		// echo "<pre>";
+		// var_dump($detail);
+		// exit;
+		if ($detail) {
+			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
+			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+			if ($staffs) {
+				$data['staffs'] = $staffs;
+			} else {
+				$data['staffs'] = array();
+			}
+		} else {
+			$data['staffs'] = array();
+		}
+		if (isset($detail->requisition_no)) {
+			$data['requisition_no'] = $detail->requisition_no;
+		} else {
+			$last_row_no = $this->crud_model->get_where_single_order_by('requisition_master', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->requisition_no)) {
+				// $string = "RQ07042022-0006";
+				$string = $last_row_no->requisition_no;
+				$explode = explode("-", $string);
+				$int_value = intval($explode[1]) + 1;
+				// var_dump(sprintf("%04d", $int_value));
+				$data['requisition_no'] = 'RQ' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			} else {
+				$data['requisition_no'] = 'RQ' . date('dmY') . '-0001';
+			}
+		}
 
 
 		$data['detail'] = $detail;
-		$data['title'] = 'View ' . $this->title;
+		
+		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
 	}
+
+	// public function view($id = '')
+	// {
+	// 	$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+	
+	// 	$data['detail'] = $detail;
+	// 	$data['title'] = 'View ' . $this->title;
+	// 	$data['page'] = 'view';
+	// 	$this->load->view('layouts/admin/index', $data);
+	// }
 
 	public function requisition_date_check($str)
 	{
