@@ -5,76 +5,51 @@
         <div class="card-header">
           <h3 class="card-title"><?php echo $title ?></h3>
 
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
-            </button>
+           <div class="card-tools"> 
+            <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
+            
           </div>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Requisition No. <span class="req">*</span></label>
-                <input type="text" name="requisition_no" class="form-control" id="requisition_no" value="<?php echo set_value('requisition_no', (((isset($requisition_no)) && $requisition_no != '') ? $requisition_no : '')); ?>" readonly>
-              
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Select Department</label>
-                <select name="department_id" class="form-control selct2" id="department_id">
-                  <option value>Select Department</option>
-                  <?php foreach ($departments as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('department_id', $value->id, (isset($detail->department_id) && $detail->department_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->department_name; ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Select Staff</label>
-                <select name="requested_by" class="form-control selct2" id="requested_by">
-                  <option value>Select Staff</option>
-                  <?php foreach ($staffs as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('requested_by', $value->id, (isset($detail->requested_by) && $detail->requested_by  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-             <div class="row">
-           
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Select Department</label>
-                <select name="department_id" class="form-control selct2" id="department_id">
-                  <option value>Select Department</option>
-                  <?php foreach ($departments as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('department_id', $value->id, (isset($detail->department_id) && $detail->department_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->department_name; ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label>Select Staff</label>
-                <select name="requested_by" class="form-control selct2" id="requested_by">
-                  <option value>Select Staff</option>
-                  <?php foreach ($staffs as $key => $value) { ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('requested_by', $value->id, (isset($detail->requested_by) && $detail->requested_by  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-            
-            <div class="col-md-3">
-              <div class="form-group">
                 <label>Requisition Date <span class="req">*</span></label>
-                <input type="date" name="requisition_date" class="form-control" id="requisition_date" placeholder="Country Name" value="<?php echo set_value('requisition_date', (((isset($detail->requisition_date)) && $detail->requisition_date != '') ? $detail->requisition_date : '')); ?>">
-                <?php echo form_error('requisition_date', '<div class="error_message">', '</div>'); ?>
+                <input type="text" name="requisition_date" class="form-control" id="requisition_date" placeholder="Country Name" value="<?php echo set_value('requisition_date', (((isset($detail->requisition_date)) && $detail->requisition_date != '') ? $detail->requisition_date : '')); ?>">
+                
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Department</label>
+                <?php
+                if((isset($detail->department_id)) && $detail->department_id != '') {
+                  $department=$this->crud_model->get_where_single('department_para', array('id' =>$detail->department_id));
+                }
+                ?>
+                <input type="text" name="department_id" class="form-control" id="department_id"value="<?php echo $department->department_name; ?>">
+                
+               
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Staff</label>
+                 <?php
+                if((isset($detail->requested_by)) && $detail->requested_by != '') {
+                  $staff=$this->crud_model->get_where_single('staff_infos', array('id' =>$detail->requested_by));
+                }
+                ?>
+                <input type="text" name="requested_by" class="form-control" id="requested_by"value="<?php echo $staff->full_name; ?>">
+                
+               
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Requisition No. <span class="req">*</span></label>
+                <input type="text" name="requisition_no" class="form-control" id="requisition_no" placeholder="Requisition" value="<?php echo set_value('requisition_no', (((isset($requisition_no)) && $requisition_no != '') ? $requisition_no : '')); ?>" readonly>
+                <?php echo form_error('requisition_no', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
           </div>
@@ -94,19 +69,6 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Select Item To Proceed</label>
-                    <select name="item" class="form-control selct2" id="item">
-                      <option value>Select item</option>
-                      <?php foreach ($items as $key => $value) { ?>
-                        <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
-              </div>
               <div class="row">
                 <div class="col-md-12">
                   <div class="req_item" id="items">
@@ -144,14 +106,10 @@
                             <div class="col-md-2">
                               <input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity" value="<?php echo $value->quantity_requested; ?>" required>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                               <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remark; ?></textarea>
                             </div>
-                            <div class="col-md-1">
-                              <div class="rmv">
-                                <span class="rmv_itm">X</span>
-                              </div>
-                            </div>
+                            
                           </div>
                     <?php }
                       }
@@ -161,20 +119,7 @@
               </div>
             </div>
           </div>
-          <div class=" row">
-            <div class="col-md-4">
-
-            </div>
-            <div class="col-md-4">
-
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <input type="submit" name="submit" class="form-control btn btn-sm btn-primary" id="submit" value="Save">
-                <input type="hidden" name="id" class="form-control btn btn-sm btn-primary" id="submit" value="<?php echo (((isset($detail->id)) && $detail->id != '') ? $detail->id : '') ?>">
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </form>

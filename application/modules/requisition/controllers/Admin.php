@@ -250,7 +250,7 @@ class Admin extends Auth_controller
 		
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'Add/Edit ' . $this->title;
+		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
 	}
