@@ -100,6 +100,12 @@ class Admin extends Auth_controller
 					'status' => $this->input->post('status'),
 				);
 
+				$data_depreciation_para = array(
+					'item_code' => $this->input->post('item_code'),
+					'depreciation_rate' => $this->input->post('depreciation_rate'),
+					'status' => $this->input->post('status'),
+				);
+
 				// $country_code = substr($data['country_name'], 0, 4);
 				// $data['country_code'] = $country_code;
 				$id = $this->input->post('id');
@@ -107,6 +113,9 @@ class Admin extends Auth_controller
 					$data['created_on'] = date('Y-m-d');
 					$data['created_by'] = $this->current_user->id;
 					$result = $this->crud_model->insert($this->table, $data);
+					$data_depreciation_para['created_on'] = date('Y-m-d');
+					$data_depreciation_para['created_by'] = $this->current_user->id;
+					$result = $this->db->insert('depreciation_para', $data_depreciation_para);
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');

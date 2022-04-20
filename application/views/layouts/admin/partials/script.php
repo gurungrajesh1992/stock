@@ -54,6 +54,43 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+
+    $(document).off('change', '#item_mrn').on('change', '#item_mrn', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('mrn/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
     //check greater than remaining
     $(document).off('change', '.iss').on('change', '.iss', function(e) {
       var issued = $(this).val();
