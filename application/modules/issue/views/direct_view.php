@@ -47,7 +47,7 @@
                                 <select name="staff_id" class="form-control selct2" id="requested_by" required>
                                     <option value>Select Staff</option>
                                     <?php foreach ($staffs as $key => $value) { ?>
-                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
+                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->staff_id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -60,7 +60,19 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                           
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Select To Add Items</label>
+                                        <select name="item" class="form-control selct2" id="item_isuue">
+                                            <option value>Select item</option>
+                                            <?php foreach ($items as $key => $value) { ?>
+                                                <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="req_item" id="items">
@@ -98,10 +110,14 @@
                                                         <div class="col-md-2">
                                                             <input type="number" name="issued_qnty[]" class="form-control" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" required>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-5">
                                                             <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
                                                         </div>
-                                                        
+                                                        <div class="col-md-1">
+                                                            <div class="rmv">
+                                                                <span class="rmv_itm">X</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                         <?php }
                                             }
@@ -139,7 +155,20 @@
                             </div>
                         </div>
                     </div>
-                   
+                    <div class=" row">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="submit" name="submit" class="form-control btn btn-sm btn-primary" id="submit" value="Save">
+                                <input type="hidden" name="id" class="form-control btn btn-sm btn-primary" id="submit" value="<?php echo (((isset($detail->id)) && $detail->id != '') ? $detail->id : '') ?>">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
