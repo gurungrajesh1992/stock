@@ -5,51 +5,52 @@
                 <div class="card-header">
                     <h3 class="card-title"><?php echo $title ?></h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                            <i class="fas fa-times"></i>
-                        </button>
+                    <div class="card-tools"> 
+                        <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
+                        <a class="btn btn-sm btn-success" id="post_open">Post</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Issue Slip No. <span class="req">*</span></label>
-                                <input type="text" name="issue_slip_no" class="form-control" id="issue_slip_no" placeholder="Requisition" value="<?php echo set_value('issue_slip_no', (((isset($issue_slip_no)) && $issue_slip_no != '') ? $issue_slip_no : '')); ?>" readonly>
-                                <?php echo form_error('issue_slip_no', '<div class="error_message">', '</div>'); ?>
+                              <p>
+                                  <label>Issue Slip No. : </label>
+                               <?php echo set_value('issue_slip_no', (((isset($issue_slip_no)) && $issue_slip_no != '') ? $issue_slip_no : '')); ?>
+                            </p>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p>
+                                    <label>Issue Slip Date : </label>
+                                    <?php echo set_value('issue_date', (((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d'))); ?>
+                               </p>
+                               
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Issue Slip Date <span class="req">*</span></label>
-                                <input type="date" name="issue_date" class="form-control" id="issue_date" placeholder="Country Name" value="<?php echo set_value('issue_date', (((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d'))); ?>" required>
-                                <?php echo form_error('issue_date', '<div class="error_message">', '</div>'); ?>
+                                <label>Select Department : </label>
+                                <?php 
+                                if((isset($detail->department_id)) && $detail->department_id != '') {
+                                    $department=$this->crud_model->get_where_single('department_para', array('id' =>$detail->department_id));
+                                    echo $department->department_name;
+                                }
+                                ?>
+                               
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label>Select Department <span class="req">*</span></label>
-                                <select name="department_id" class="form-control selct2" id="department_id" required>
-                                    <option value>Select Department</option>
-                                    <?php foreach ($departments as $key => $value) { ?>
-                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('department_id', $value->id, (isset($detail->department_id) && $detail->department_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->department_name; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Select Staff <span class="req">*</span></label>
-                                <select name="staff_id" class="form-control selct2" id="requested_by" required>
-                                    <option value>Select Staff</option>
-                                    <?php foreach ($staffs as $key => $value) { ?>
-                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
-                                    <?php } ?>
-                                </select>
+                                <label>Select Staff : </label>
+                                <?php 
+                                if((isset($detail->staff_id)) && $detail->staff_id != '') {
+                                    $staff=$this->crud_model->get_where_single('staff_infos', array('id' =>$detail->staff_id));
+                                    echo $staff->full_name;
+                                }
+                                ?>
+                               
                             </div>
                         </div>
                     </div>
@@ -92,14 +93,13 @@
                                                             <?php echo ($key + 1) . '.'; ?>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
-                                                            <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                                                            <?php echo $item_detail->item_name; ?>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="issued_qnty[]" class="form-control" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" required>
-                                                        </div>
+                                                            <?php echo $value->issued_qnty; ?>
+                                                           </div>
                                                         <div class="col-md-6">
-                                                            <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
+                                                            <?php echo $value->remarks; ?>
                                                         </div>
                                                         
                                                     </div>
@@ -119,27 +119,27 @@
                     <div class="row">
                         <div class=" col-md-4">
                             <div class="form-group">
-                                <label>remarks</label>
-                                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"><?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')
-                                                                                                                                ?></textarea>
+                                <label>Remarks : </label>
+                                <?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')
+                                                                                                                              ?></textarea>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued Date <span class="req">*</span></label>
-                                <input type="date" name="issued_on" class="form-control" id="issued_on" placeholder="Country Name" value="<?php echo set_value('issued_on', (((isset($detail->issued_on)) && $detail->issued_on != '') ? $detail->issued_on : '')); ?>" required>
-                                <?php echo form_error('issued_on', '<div class="error_message">', '</div>'); ?>
+                                <label>Issued Date : </label>
+                                <?php echo set_value('issued_on', (((isset($detail->issued_on)) && $detail->issued_on != '') ? $detail->issued_on : '')); ?>
+                                
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued By <span class="req">*</span></label>
-                                <input type="text" name="issued_by" class="form-control" id="issued_by" placeholder="Country Name" value="<?php echo set_value('issued_by', (((isset($detail->issued_by)) && $detail->issued_by != '') ? $detail->issued_by : '')); ?>" required>
-                                <?php echo form_error('issued_by', '<div class="error_message">', '</div>'); ?>
+                                <label>Issued By : </label>
+                                <?php echo set_value('issued_by', (((isset($detail->issued_by)) && $detail->issued_by != '') ? $detail->issued_by : '')); ?>
+                                
                             </div>
                         </div>
                     </div>
-                   
+                    
                 </div>
             </div>
         </form>
