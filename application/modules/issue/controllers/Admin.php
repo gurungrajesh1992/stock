@@ -343,7 +343,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['detail'] = $detail;
-	
+
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
 		$data['title'] = 'View ' . $this->title;
@@ -564,6 +564,7 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
+				$issued_date = $this->input->post('issued_date');
 
 				if ($val) {
 					// var_dump($val);
@@ -572,18 +573,26 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
+						$where_stock = array(
+							'item_code' => $val,
+							'transaction_date <=' => $issued_date,
+						);
+						$total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="issued_qnty[]" class="form-control" placeholder="Issued Quantity" required>
+										<input type="number" name="issued_qnty[]" max="' . $total_item_stock_before_issue_slip_date . '" id="issue_' . $val . '" class="form-control qty_iss" placeholder="Issued Quantity" required>
 									</div>
-									<div class="col-md-5">
+									<div class="col-md-2">
+										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_issue_slip_date . '" readonly>
+									</div>
+									<div class="col-md-4">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
 									</div>
 									<div class="col-md-1">

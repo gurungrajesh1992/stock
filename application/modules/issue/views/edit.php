@@ -130,10 +130,10 @@
                                                             <input type="number" name="remaining[]" id="remaining_<?php echo $value->id; ?>" class="form-control" placeholder="Remaining Quantity" value="<?php echo $remaining_qty; ?>" readonly>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks" placeholder="Stock" value="<?php echo $total_item_stock_before_issue_slip_date; ?>" readonly>
+                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->id; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_issue_slip_date; ?>" readonly>
                                                         </div>
                                                         <div class="col-md-5">
-                                                            <textarea name="issued_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"></textarea>
+                                                            <textarea name="issued_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"><?php echo $value->remarks; ?></textarea>
                                                         </div>
                                                     </div>
                                         <?php }

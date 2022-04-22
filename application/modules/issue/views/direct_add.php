@@ -26,7 +26,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Issue Slip Date <span class="req">*</span></label>
-                                <input type="date" name="issue_date" class="form-control" id="issue_date" placeholder="Country Name" value="<?php echo set_value('issue_date', (((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d'))); ?>" required>
+                                <input type="date" name="issue_date" class="form-control" id="issue_date_direct" placeholder="Country Name" value="<?php echo set_value('issue_date', (((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d'))); ?>" required>
                                 <?php echo form_error('issue_date', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
@@ -82,35 +82,50 @@
                                                     #
                                                 </label>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <label>Product</label>
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Quantity</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-2">
+                                                <label>Stock</label>
+                                            </div>
+                                            <div class="col-md-4">
                                                 <label>Remarks</label>
+                                            </div>
+                                            <div class="col-md-1">
+
                                             </div>
                                         </div>
                                         <?php
                                         if (isset($detail->issue_slip_no)) {
                                             $childs = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
                                             if ($childs) {
+                                                $issue_slip_date = ((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d');
                                                 foreach ($childs as $key => $value) {
+                                                    $where_stock = array(
+                                                        'item_code' => $value->item_code,
+                                                        'transaction_date <=' => $issue_slip_date,
+                                                    );
+                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                         ?>
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-1">
                                                             <?php echo ($key + 1) . '.'; ?>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-2">
                                                             <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="issued_qnty[]" class="form-control" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" required>
+                                                            <input type="number" name="issued_qnty[]" max="<?php echo $total_item_stock_before_issue_slip_date; ?>" id="issue_<?php echo $value->item_code; ?>" class="form-control qty_iss" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" required>
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-2">
+                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_issue_slip_date; ?>" readonly>
+                                                        </div>
+                                                        <div class="col-md-4">
                                                             <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
                                                         </div>
                                                         <div class="col-md-1">

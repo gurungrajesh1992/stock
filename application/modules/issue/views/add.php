@@ -72,19 +72,22 @@
                                             <div class="col-md-2">
                                                 <label>Product</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Issued Quantity</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Requested Quantity</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Total Issued</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Remaining</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
+                                                <label>Stock</label>
+                                            </div>
+                                            <div class="col-md-5">
                                                 <label>Remarks</label>
                                             </div>
                                         </div>
@@ -92,7 +95,13 @@
                                         if (isset($requisition_detail->requisition_no)) {
                                             $childs = $this->crud_model->get_where('requisition_details', array('requisition_no' => $requisition_detail->requisition_no));
                                             if ($childs) {
+                                                $issue_slip_date = ((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d');
                                                 foreach ($childs as $key => $value) {
+                                                    $where_stock = array(
+                                                        'item_code' => $value->item_code,
+                                                        'transaction_date <=' => $issue_slip_date,
+                                                    );
+                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
 
                                                     $requested_qty = (isset($value->quantity_requested) && $value->quantity_requested != '') ? $value->quantity_requested : 0;
@@ -104,19 +113,22 @@
                                                             <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="issued_quantity[]" max="<?php echo $remaining_qty; ?>" id="issue_<?php echo $value->id; ?>" class="form-control iss" placeholder="Issued Quantity" value="" required>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="quantity_requested[]" class="form-control" placeholder="Requested Quantity" value="<?php echo $value->quantity_requested; ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="quantity_received[]" class="form-control" placeholder="Received Quantity" value="<?php echo $received_qty; ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="remaining[]" id="remaining_<?php echo $value->id; ?>" class="form-control" placeholder="Remaining Quantity" value="<?php echo $remaining_qty; ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
+                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->id; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_issue_slip_date; ?>" readonly>
+                                                        </div>
+                                                        <div class="col-md-5">
                                                             <textarea name="issued_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"></textarea>
                                                         </div>
                                                     </div>
