@@ -54,6 +54,86 @@
 <script src="<?php echo base_url('theme/ckeditor/ckeditor.js'); ?>"></script>
 <script>
   $(document).ready(function() {
+
+    //check greater than stock
+    $(document).off('change', '.qty_iss').on('change', '.qty_iss', function(e) {
+      var issued = $(this).val();
+      var id = $(this).attr('id');
+      var id_val = id.split("_");
+
+      var in_stock = $('#stock_' + id_val[1]).val();
+      // alert(in_stock);
+      // return false; 
+      if (parseInt(issued) > parseInt(in_stock)) {
+        alert('Can not be greater than stock qyuantity');
+        $(this).val(in_stock);
+      }
+    });
+
+    //onchange issue slip date show stock value in each row in direct
+    $(document).off('change', '#issue_date_direct').on('change', '#issue_date_direct', function(e) {
+      var issue_slip_date = $(this).val();
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/getAllStock'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "issue_slip_date": issue_slip_date,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $.each(resp.data, function(k, v) {
+              var item_code = v.item_code;
+              var total_stock = (parseInt(v.totalIn) - parseInt(v.totalOut));
+              $('.stock_' + item_code).val(total_stock);
+            });
+          } else {
+            alert(resp.status_message);
+            $('.stcks').val(0);
+            $('.qty_iss').val(0);
+          }
+        }
+      });
+    });
+    //mrn item select
+    $(document).off('change', '#item_mrn').on('change', '#item_mrn', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+        url: '<?php echo base_url('mrn/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
     //onchange issue slip date show stock value in each row
     $(document).off('change', '#issue_date').on('change', '#issue_date', function(e) {
       var issue_slip_date = $(this).val();
@@ -74,10 +154,12 @@
             $.each(resp.data, function(k, v) {
               var item_code = v.item_code;
               var total_stock = (parseInt(v.totalIn) - parseInt(v.totalOut));
-              $('#stock_' + item_code).val(total_stock);
+              $('.stock_' + item_code).val(total_stock);
             });
           } else {
             alert(resp.status_message);
+            $('.stcks').val(0);
+            $('.iss').val(0);
           }
         }
       });
@@ -90,11 +172,19 @@
       var id_val = id.split("_");
 
       var remaining = $('#remaining_' + id_val[1]).val();
-      // console.log(issued, remaining);
+      var in_stock = $('#stock_' + id_val[1]).val();
+      // alert(in_stock);
       // return false;
-      if (parseInt(issued) > parseInt(remaining)) {
-        alert('Please Select less than or equal to ' + remaining);
-        $(this).val(remaining);
+      if (parseInt(in_stock) < parseInt(remaining)) {
+        if (parseInt(issued) > parseInt(in_stock)) {
+          alert('Incorrect Quantity');
+          $(this).val(in_stock);
+        }
+      } else {
+        if (parseInt(issued) > parseInt(remaining)) {
+          alert('Please Select less than or equal to ' + remaining);
+          $(this).val(remaining);
+        }
       }
     });
     // onchange issue type
@@ -202,6 +292,10 @@
       }
       // console.log(already_items.length);
       // return false;
+
+      var issued_date = $('#issue_date_direct').val();
+      // alert(issued_date);
+      // return false;
       $.ajax({
 
         url: '<?php echo base_url('issue/admin/getForm'); ?>',
@@ -211,6 +305,7 @@
         data: {
           "val": val,
           "total": already_items.length,
+          "issued_date": issued_date,
         },
         success: function(resp) {
           // console.log(resp.data);return false;

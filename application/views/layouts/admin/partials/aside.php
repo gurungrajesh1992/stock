@@ -435,6 +435,29 @@ $current_user = $this->session->userdata('current_user');
             </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-paper-plane"></i>
+            <p>
+              MRN
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('mrn/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('mrn/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-header">User Management</li>
         <li class="nav-item">
           <a href="#" class="nav-link ">

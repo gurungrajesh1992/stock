@@ -113,11 +113,9 @@ class Admin extends Auth_controller
 					$data['created_on'] = date('Y-m-d');
 					$data['created_by'] = $this->current_user->id;
 					$result = $this->crud_model->insert($this->table, $data);
-
 					$data_depreciation_para['created_on'] = date('Y-m-d');
 					$data_depreciation_para['created_by'] = $this->current_user->id;
-					$result = $this->crud_model->insert('depreciation_para', $data_depreciation_para);
-
+					$result = $this->db->insert('depreciation_para', $data_depreciation_para);
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
