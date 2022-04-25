@@ -98,7 +98,11 @@
 
               text: resp.status_message,
 
-              duration: 5000
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
 
             }).showToast();
             // alert(resp.status_message);

@@ -113,6 +113,16 @@ class Admin extends Auth_controller
 				);
 
 				if ($id == '') {
+					$last_row_no = $this->crud_model->get_where_single_order_by('opening_master', array('status' => '1'), 'id', 'DESC');
+					if (isset($last_row_no->opening_code)) {
+						$string = $last_row_no->opening_code;
+						$explode = explode("-", $string);
+						$int_value = intval($explode[1]) + 1;
+						// var_dump(sprintf("%04d", $int_value));
+						$data['opening_code'] = 'OPE' . date('dmY') . '-' . sprintf("%04d", $int_value);
+					} else {
+						$data['opening_code'] = 'OPE' . date('dmY') . '-0001';
+					}
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$result = $this->crud_model->insert($this->table, $data);
@@ -355,35 +365,93 @@ class Admin extends Auth_controller
 				if ($table || $row_id) {
 					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
 					if (isset($detail->approved_by) && $detail->approved_by != '') {
-					} else {
-						$response = array(
-							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Record is not approved yet',
-						);
-					}
+						if (isset($detail->posted_by) && $detail->posted_by != '') {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Already Posted !!',
+							);
+						} else {
+							$opening_details = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
+							// echo "<pre>";
+							// var_dump($opening_details);
+							// exit;
+							if (isset($opening_details)) {
+								foreach ($opening_details as $key => $value) {
+									$data = array(
+										'item_code' =>  $value->item_code,
+										'transaction_date' => $detail->opening_date,
+										'transaction_type' => 'OPN',
+										'in_qty' => $value->qty,
+										// 'out_qty' => 0,
+										'rem_qty' => $value->qty,
+										'in_unit_price' => $value->unit_price,
+										'in_total_price' => ($value->qty * $value->unit_price),
+										'in_actual_unit_price' => 0,
+										'in_actual_total_price' => 0,
+										'out_unit_price' => 0,
+										'out_total_price' => 0,
+										'out_actual_unit_price' => 0,
+										'out_actual_total_price' => 0,
+										'location_id' => $value->location_id,
+										// 'batch_no' => '',
+										// 'vendor_id' => '???',
+										// 'client_id' => '???',
+										'remarks' => 'posted from opening',
+										'transactioncode' => $detail->opening_code,
+										'created_on' => date('Y-m-d'),
+										'created_by' => $this->current_user->id,
+										// 'updated_on' => '???',
+										// 'updated_by' => '???',
+										// 'staff_id' => '???',
+										// 'status' => '1',
+									);
+									$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+									if (isset($last_row_no->ledger_code)) {
+										$string = $last_row_no->ledger_code;
+										$explode = explode("-", $string);
+										$int_value = intval($explode[1]) + 1;
+										// var_dump(sprintf("%04d", $int_value));
+										// exit;
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+									} else {
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+									}
 
-					$data['approved_by'] = $this->current_user->id;
-					$data['approved_on'] = date('Y-m-d');
-					$update = $this->crud_model->update($table, $data, array('id' => $row_id));
-					if ($update) {
-						$response = array(
-							'status' => 'success',
-							'status_code' => 300,
-							'status_message' => 'Successfully Approved !!!',
-						);
+									$this->crud_model->insert('stock_ledger', $data);
+								}
+
+								$update['posted_tag'] = '1';
+								$update['posted_by'] = $this->current_user->id;
+								$update['posted_on'] = date('Y-m-d');
+
+								$this->crud_model->update('opening_master', $update, array('id' => $detail->id));
+
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully Posted !!!',
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'No Details Available !!!',
+								);
+							}
+						}
 					} else {
 						$response = array(
 							'status' => 'error',
 							'status_code' => 300,
-							'status_message' => 'Unable to approve',
+							'status_message' => 'Record is not approved yet !!!',
 						);
 					}
 				} else {
 					$response = array(
 						'status' => 'error',
 						'status_code' => 300,
-						'status_message' => 'table and row invalid',
+						'status_message' => 'table and row invalid !!!',
 					);
 				}
 			}
