@@ -58,6 +58,58 @@
 <script>
   $(document).ready(function() {
 
+    //Issue post
+    $(document).off('click', '#post_issue').on('click', '#post_issue', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/issue_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
 
     //opening post
     $(document).off('click', '#post_open').on('click', '#post_open', function() {
@@ -458,30 +510,6 @@
       var t = Math.floor((screen.height - h) / 2);
       var win = window.open(url, 'ResponsiveFilemanager', "scrollbars=1,width=" + w + ",height=" + h + ",top=" + t + ",left=" + l);
     });
-
-    // $(document).off('click','.logo').on('click','.logo',function(e){
-    //     e.preventDefault(); 
-    //     // alert(key);
-    //     var url = '<?php //echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&popup=1&field_id=logo'); 
-                      ?>';
-    //     var w = 880;
-    //     var h = 570;
-    //     var l = Math.floor((screen.width - w) / 2);
-    //     var t = Math.floor((screen.height - h) / 2);
-    //     var win = window.open(url, 'ResponsiveFilemanager', "scrollbars=1,width=" + w + ",height=" + h + ",top=" + t + ",left=" + l);
-    // })
-
-    // $(document).off('click','.fav').on('click','.fav',function(e){
-    //     e.preventDefault(); 
-    //     // alert(key);
-    //     var url = '<?php //echo base_url('responsive_filemanager/filemanager/dialog.php?type=1&popup=1&field_id=fav'); 
-                      ?>';
-    //     var w = 880;
-    //     var h = 570;
-    //     var l = Math.floor((screen.width - w) / 2);
-    //     var t = Math.floor((screen.height - h) / 2);
-    //     var win = window.open(url, 'ResponsiveFilemanager', "scrollbars=1,width=" + w + ",height=" + h + ",top=" + t + ",left=" + l);
-    // })
 
     $(document).off('click', '.generalized_img').on('click', '.generalized_img', function(e) {
       e.preventDefault();

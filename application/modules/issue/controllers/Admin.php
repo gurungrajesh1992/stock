@@ -741,4 +741,129 @@ class Admin extends Auth_controller
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
+
+	public function issue_post()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+
+				if ($table || $row_id) {
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						if (isset($detail->posted_by) && $detail->posted_by != '') {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Already Posted !!',
+							);
+						} else {
+							$issue_details = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+							// echo "<pre>";
+							// var_dump($opening_details);
+							// exit;
+							if (isset($issue_details)) {
+								foreach ($issue_details as $key => $value) {
+									$data = array(
+										'item_code' =>  $value->item_code,
+										'transaction_date' => $detail->issue_date,
+										'transaction_type' => 'ISS',
+										'in_qty' => 0,
+										'out_qty' => $value->issued_qnty,
+										'rem_qty' => 0,
+										'in_unit_price' => 0,
+										'in_total_price' => 0,
+										'in_actual_unit_price' => 0,
+										'in_actual_total_price' => 0,
+										'out_unit_price' => 0,
+										'out_total_price' => 0,
+										'out_actual_unit_price' => 0,
+										'out_actual_total_price' => 0,
+										// 'location_id' => $value->location_id,
+										// 'batch_no' => '',
+										// 'vendor_id' => '???',
+										// 'client_id' => '???',
+										'remarks' => 'posted from issue',
+										'transactioncode' => $detail->issue_slip_no,
+										'created_on' => date('Y-m-d'),
+										'created_by' => $this->current_user->id,
+										// 'updated_on' => '???',
+										// 'updated_by' => '???',
+										// 'staff_id' => '???',
+										// 'status' => '1',
+									);
+									$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+									if (isset($last_row_no->ledger_code)) {
+										$string = $last_row_no->ledger_code;
+										$explode = explode("-", $string);
+										$int_value = intval($explode[1]) + 1;
+										// var_dump(sprintf("%04d", $int_value));
+										// exit;
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+									} else {
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+									}
+
+									$this->crud_model->insert('stock_ledger', $data);
+
+									if (isset($detail->requisition_no)) {
+										//by request 
+										$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
+										$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$value->issued_qnty);
+										$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$value->issued_qnty);
+
+										$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
+									} else {
+										// direct
+									}
+								}
+
+								$update['posted_tag'] = '1';
+								$update['posted_by'] = $this->current_user->id;
+								$update['posted_on'] = date('Y-m-d');
+
+								$this->crud_model->update('issue_slip_master', $update, array('id' => $detail->id));
+
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully Posted !!!',
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'No Details Available !!!',
+								);
+							}
+						}
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Record is not approved yet !!!',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid !!!',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
 }
