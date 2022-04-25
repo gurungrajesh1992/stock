@@ -5,8 +5,8 @@
                 <div class="card-header">
                     <h3 class="card-title"><?php echo $title ?></h3>
 
-                    <div class="card-tools"> 
-                        <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
+                    <div class="card-tools">
+                        <a class="btn btn-sm btn-info" id="approve" table_id="issue_slip_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
                         <a class="btn btn-sm btn-success" id="post_open">Post</a>
                     </div>
                 </div>
@@ -16,8 +16,8 @@
                             <div class="form-group">
                                 <label>Issue Slip Date : </label>
                                 <?php echo set_value('issue_date', (((isset($master_detail->issue_date)) && $master_detail->issue_date != '') ? $master_detail->issue_date : date('Y-m-d'))); ?>
-                                
-                                
+
+
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label>Requisition No. : </label>
                                 <?php echo set_value('requisition_no', (((isset($requisition_detail->requisition_no)) && $requisition_detail->requisition_no != '') ? $requisition_detail->requisition_no : '')); ?>
-                               </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -38,16 +38,16 @@
                             <div class="form-group">
                                 <label>Department : </label>
                                 <?php $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $requisition_detail->department_id), 'id', 'DESC');
-                               echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : '')); 
-                                 ?>
-                               </div>
+                                echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : ''));
+                                ?>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Staff : </label>
                                 <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $requisition_detail->requested_by), 'id', 'DESC');
                                 echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>
-                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -107,10 +107,10 @@
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-2">
                                                             <?php echo $item_detail->item_name; ?>
-                                                          </div>
+                                                        </div>
                                                         <div class="col-md-1">
                                                             <?php echo (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0 ?>
-                                                           </div>
+                                                        </div>
                                                         <div class="col-md-1">
                                                             <?php echo $requested_qty; ?>
                                                         </div>
@@ -155,7 +155,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </form>

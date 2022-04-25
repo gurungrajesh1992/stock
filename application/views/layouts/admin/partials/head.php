@@ -29,4 +29,7 @@
   <link rel="stylesheet" href="<?php echo base_url('theme/admin/') ?>plugins/summernote/summernote-bs4.min.css">
   <!-- custome css -->
   <link rel="stylesheet" href="<?php echo base_url('theme/admin/') ?>rajesh/css/style.css">
+
+  <!-- toastify -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>

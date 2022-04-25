@@ -5,9 +5,9 @@
         <div class="card-header">
           <h3 class="card-title"><?php echo $title ?></h3>
 
-           <div class="card-tools"> 
-            <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
-            
+          <div class="card-tools">
+            <a class="btn btn-sm btn-info" id="approve" table_id="requisition_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+
           </div>
         </div>
         <div class="card-body">
@@ -27,9 +27,9 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label>Staff : </label>
-                 <?php
-                if((isset($detail->requested_by)) && $detail->requested_by != '') {
-                  $staff=$this->crud_model->get_where_single('staff_infos', array('id' =>$detail->requested_by));
+                <?php
+                if ((isset($detail->requested_by)) && $detail->requested_by != '') {
+                  $staff = $this->crud_model->get_where_single('staff_infos', array('id' => $detail->requested_by));
                   echo $staff->full_name;
                 }
                 ?>
@@ -39,11 +39,11 @@
               <div class="form-group">
                 <label>Department : </label>
                 <?php
-                if((isset($detail->department_id)) && $detail->department_id != '') {
-                  $department=$this->crud_model->get_where_single('department_para', array('id' =>$detail->department_id));
+                if ((isset($detail->department_id)) && $detail->department_id != '') {
+                  $department = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
                   echo $department->department_name;
                 }
-                ?> 
+                ?>
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Remarks : </label>
-                <?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')?>
+                <?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '') ?>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@
                             <div class="col-md-6">
                               <?php echo $value->remark; ?>
                             </div>
-                            
+
                           </div>
                     <?php }
                       }
@@ -111,7 +111,7 @@
               </div>
             </div>
           </div>
-         
+
         </div>
       </div>
     </form>

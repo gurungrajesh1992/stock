@@ -283,10 +283,6 @@ class Admin extends Auth_controller
 	public function view($id = '')
 	{
 		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
-		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
-			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
-			redirect($this->redirect . '/admin/edit/' . $id);
-		}
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');

@@ -110,7 +110,7 @@
             <div class=" col-md-4">
               <div class="form-group">
                 <label>Remarks</label>
-                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"><?php echo $detail->remarks; ?></textarea>
+                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"><?php echo (((isset($detail->remarks)) &&  $detail->remarks != '') ?  $detail->remarks : ''); ?></textarea>
               </div>
             </div>
             <div class="col-md-4">

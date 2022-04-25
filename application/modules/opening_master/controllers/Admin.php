@@ -72,7 +72,7 @@ class Admin extends Auth_controller
 	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
 		$data['detail'] = $detail;
-		
+
 		$data['fiscals'] = $this->crud_model->get_where('fiscal_year_para', array('status' => '1'));
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
@@ -283,6 +283,107 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function change_status()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+					$data['approved_by'] = $this->current_user->id;
+					$data['approved_on'] = date('Y-m-d');
+					$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+					if ($update) {
+						$response = array(
+							'status' => 'success',
+							'status_code' => 300,
+							'status_message' => 'Successfully Approved !!!',
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable to approve',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function opening_post()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+
+				if ($table || $row_id) {
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Record is not approved yet',
+						);
+					}
+
+					$data['approved_by'] = $this->current_user->id;
+					$data['approved_on'] = date('Y-m-d');
+					$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+					if ($update) {
+						$response = array(
+							'status' => 'success',
+							'status_code' => 300,
+							'status_message' => 'Successfully Approved !!!',
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable to approve',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
 					);
 				}
 			}
