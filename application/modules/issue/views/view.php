@@ -124,7 +124,7 @@
                                                             <?php echo $total_item_stock_before_issue_slip_date; ?>
                                                         </div>
                                                         <div class="col-md-5">
-                                                            <textarea name="issued_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"></textarea>
+                                                            <?php echo $value->remarks; ?>
                                                         </div>
                                                     </div>
                                         <?php }

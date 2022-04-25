@@ -206,12 +206,33 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
+	
+
 	public function view($id = '')
 	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		
+		if (isset($detail->mrn_no)) {
+			$data['mrn_no'] = $detail->mrn_no;
+		} else {
+			$last_row_no = $this->crud_model->get_where_single_order_by('mrn_master', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->mrn_no)) {
+				// $string = "RQ07042022-0006";
+				$string = $last_row_no->mrn_no;
+				$explode = explode("-", $string);
+				$int_value = intval($explode[1]) + 1;
+				// var_dump(sprintf("%04d", $int_value));
+				$data['mrn_no'] = 'MRN' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			} else {
+				$data['mrn_no'] = 'MRN' . date('dmY') . '-0001';
+			}
+		}
 
 
 		$data['detail'] = $detail;
+		
+		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
