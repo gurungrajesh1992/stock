@@ -247,7 +247,7 @@ class Admin extends Auth_controller
 
 
 		$data['detail'] = $detail;
-		
+
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
 		$data['title'] = 'View ' . $this->title;
@@ -258,7 +258,7 @@ class Admin extends Auth_controller
 	// public function view($id = '')
 	// {
 	// 	$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-	
+
 	// 	$data['detail'] = $detail;
 	// 	$data['title'] = 'View ' . $this->title;
 	// 	$data['page'] = 'view';
@@ -281,6 +281,18 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Select Atleast One');
 			redirect($this->redirect . '/admin/all');
 		}
+
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		if ($detail) {
+			if (isset($detail->approved_by) && $detail->approved_by != '') {
+				$this->session->set_flashdata('error', 'Can not Delete, Already Approved');
+				redirect($this->redirect . '/admin/all');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Record Not Found');
+			redirect($this->redirect . '/admin/all');
+		}
+
 		$data = array(
 			'status' => '2',
 		);
@@ -425,6 +437,61 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Department First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function cancel_row()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be cancelled, already approved !!!',
+						);
+					} else {
+						$data['cancel_tag'] = '1';
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Cancelled !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to cancel',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
 					);
 				}
 			}

@@ -211,6 +211,18 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Select Atleast One');
 			redirect($this->redirect . '/admin/all');
 		}
+
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		if ($detail) {
+			if (isset($detail->approved_by) && $detail->approved_by != '') {
+				$this->session->set_flashdata('error', 'Can not Delete, Already Approved');
+				redirect($this->redirect . '/admin/all');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Record Not Found');
+			redirect($this->redirect . '/admin/all');
+		}
+
 		$data = array(
 			'status' => '2',
 		);
@@ -317,21 +329,32 @@ class Admin extends Auth_controller
 				// var_dump($table, $row_id);
 				// exit;
 				if ($table || $row_id) {
-					$data['approved_by'] = $this->current_user->id;
-					$data['approved_on'] = date('Y-m-d');
-					$update = $this->crud_model->update($table, $data, array('id' => $row_id));
-					if ($update) {
-						$response = array(
-							'status' => 'success',
-							'status_code' => 300,
-							'status_message' => 'Successfully Approved !!!',
-						);
-					} else {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->cancel_tag) && $detail->cancel_tag == '1') {
 						$response = array(
 							'status' => 'error',
 							'status_code' => 300,
-							'status_message' => 'Unable to approve',
+							'status_message' => 'Can not be approved, already cancelled !!!',
 						);
+					} else {
+						$data['approved_by'] = $this->current_user->id;
+						$data['approved_on'] = date('Y-m-d');
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Approved !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to approve',
+							);
+						}
 					}
 				} else {
 					$response = array(
