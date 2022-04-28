@@ -6,7 +6,7 @@
           <h3 class="card-title"><?php echo $title ?></h3>
             <div class="card-tools"> 
                 <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
-                <a class="btn btn-sm btn-success" id="post_open">Post</a>
+              
             </div>
         </div>
         <div class="card-body">
