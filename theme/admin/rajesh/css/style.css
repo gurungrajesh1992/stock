@@ -95,3 +95,7 @@ span.rmv_itm {
     border-radius: 50%;
     cursor: pointer;
 }
+
+.out_of_stock {
+    color: red;
+}

@@ -67,6 +67,25 @@
       // console.log(table, row_id);
       // return false;
 
+      var list = $('.req_item .out_of_stock').map(function() {
+        return 'out of stock';
+      }).get();
+      // console.log(list.length);
+      // return false;
+      if (list.length > 0) {
+        Toastify({
+
+          text: 'Some Product Out of stock !!!',
+
+          duration: 1000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          },
+
+        }).showToast();
+        return false;
+      }
       $.ajax({
 
         url: '<?php echo base_url('issue/admin/issue_post'); ?>',

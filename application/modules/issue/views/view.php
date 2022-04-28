@@ -103,13 +103,15 @@
                                                     $requested_qty = (isset($requisition_detail_item->quantity_requested) && $requisition_detail_item->quantity_requested != '') ? $requisition_detail_item->quantity_requested : 0;
                                                     $received_qty = (isset($requisition_detail_item->received_qnty) && $requisition_detail_item->received_qnty != '') ? $requisition_detail_item->received_qnty : 0;
                                                     $remaining_qty = (isset($requisition_detail_item->remaining_qnty) && $requisition_detail_item->remaining_qnty != '') ? $requisition_detail_item->remaining_qnty : 0;
+
+                                                    $issued_qty = (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0;
                                         ?>
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-2">
                                                             <?php echo $item_detail->item_name; ?>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <?php echo (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0 ?>
+                                                            <?php echo $issued_qty; ?>
                                                         </div>
                                                         <div class="col-md-1">
                                                             <?php echo $requested_qty; ?>
@@ -120,7 +122,7 @@
                                                         <div class="col-md-1">
                                                             <?php echo $remaining_qty; ?>
                                                         </div>
-                                                        <div class="col-md-1">
+                                                        <div class="col-md-1 <?php echo ($issued_qty > $total_item_stock_before_issue_slip_date) ? 'out_of_stock' : 'in_stock'; ?>">
                                                             <?php echo $total_item_stock_before_issue_slip_date; ?>
                                                         </div>
                                                         <div class="col-md-5">

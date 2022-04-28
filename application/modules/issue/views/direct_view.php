@@ -74,10 +74,13 @@
                                             <div class="col-md-3">
                                                 <label>Product</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Quantity</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-2">
+                                                <label>Stock</label>
+                                            </div>
+                                            <div class="col-md-5">
                                                 <label>Remarks</label>
                                             </div>
                                         </div>
@@ -85,8 +88,16 @@
                                         if (isset($detail->issue_slip_no)) {
                                             $childs = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
                                             if ($childs) {
+                                                $issue_slip_date = ((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d');
                                                 foreach ($childs as $key => $value) {
+                                                    $where_stock = array(
+                                                        'item_code' => $value->item_code,
+                                                        'transaction_date <=' => $issue_slip_date,
+                                                    );
+                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                                                    $issued_qty = (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0;
                                         ?>
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-1">
@@ -95,10 +106,13 @@
                                                         <div class="col-md-3">
                                                             <?php echo $item_detail->item_name; ?>
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <?php echo $value->issued_qnty; ?>
+                                                        <div class="col-md-1">
+                                                            <?php echo $issued_qty; ?>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-2 <?php echo ($issued_qty > $total_item_stock_before_issue_slip_date) ? 'out_of_stock' : 'in_stock'; ?>">
+                                                            <?php echo $total_item_stock_before_issue_slip_date; ?>
+                                                        </div>
+                                                        <div class="col-md-5">
                                                             <?php echo $value->remarks; ?>
                                                         </div>
 

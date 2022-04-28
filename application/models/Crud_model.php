@@ -62,6 +62,12 @@ class Crud_model extends CI_Model
         return $result;
     }
 
+    public function get_where_single_order_by_with_offset($table, $where, $order_by, $order_value, $offset)
+    {
+        $result = $this->db->order_by($order_by, $order_value)->get_where($table, $where, 1, $offset)->row();
+        return $result;
+    }
+
     public function count_all($table, $where, $field)
     {
         $total = $this->db->select('count(' . $field . ') as total')->from($table)->where($where)->get()->row();
