@@ -94,7 +94,9 @@ class Admin extends Auth_controller
 		// echo "here";
 		// exit;
 
-		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
+		$last_row_no = $this->crud_model->get_where_single_order_by('issue_return_master', array(''), 'id', 'DESC');
+		// var_dump($last_row_no);
+		// exit;
 		if (isset($last_row_no->issue_return_no)) {
 			$string = $last_row_no->issue_return_no;
 			$explode = explode("-", $string);
@@ -153,7 +155,7 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$returned_qty =  $this->input->post('returned_qty');
 						$issued_qty =  $this->input->post('issued_qty');
-						$remarks =  $this->input->post('remarks');
+						$remarks =  $this->input->post('detail_remarks');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
@@ -182,7 +184,7 @@ class Admin extends Auth_controller
 
 	public function edit($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('issue_return_master', array('id' => $id));
 		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
 			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
 			redirect($this->redirect . '/admin/edit/' . $id);
@@ -192,28 +194,29 @@ class Admin extends Auth_controller
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
+			$issue_return_details = $this->crud_model->get_where_single('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
 		}
 
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
-		if (!$requisition_detail) {
+		if (!$issue_return_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
+		$data['issue_return_details'] = $issue_return_details;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
+
+			$this->form_validation->set_rules('return_date', 'Issue Slip Date', 'required|trim');
 			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
 			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('prepared_date', 'Issued Date', 'required|trim');
+			$this->form_validation->set_rules('prepared_by', 'Issued By', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -229,13 +232,13 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'issue_slip_no' => $this->input->post('issue_slip_no'),
-					'requisition_no' => $this->input->post('requisition_no'),
-					'issue_date' => $this->input->post('issue_date'),
+					'issue_return_no' => $this->input->post('issue_return_no'),
+					'issue_no' => $this->input->post('issue_no'),
+					'return_date' => $this->input->post('return_date'),
 					'department_id' => $this->input->post('department_id'),
 					'staff_id' => $this->input->post('staff_id'),
-					'issued_by' => $this->input->post('issued_by'),
-					'issued_on' => $this->input->post('issued_on'),
+					'prepared_by' => $this->input->post('prepared_by'),
+					'prepared_date' => $this->input->post('prepared_date'),
 					'remarks' => $this->input->post('remarks'),
 				);
 
@@ -243,7 +246,7 @@ class Admin extends Auth_controller
 				if ($id == '') {
 				} else {
 
-					$this->db->delete('issue_slip_details', array('issue_slip_no' => $master_detail->issue_slip_no));
+					$this->db->delete('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
 
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
@@ -253,17 +256,19 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_quantity');
-						$issued_remark =  $this->input->post('issued_remark');
+						$returned_qty =  $this->input->post('returned_qty');
+						$issued_qty =  $this->input->post('issued_qty');
+						$remarks =  $this->input->post('detail_remarks');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['issue_return_no'] = $data['issue_return_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
-								$insert_detail['remarks'] = $issued_remark[$i];
+								$insert_detail['returned_qty'] = $returned_qty[$i];
+								$insert_detail['issued_qty'] = $issued_qty[$i];
+								$insert_detail['remarks'] = $remarks[$i];
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('issue_return_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -282,25 +287,25 @@ class Admin extends Auth_controller
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('issue_return_master', array('id' => $id));
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
+			$issue_return_details = $this->crud_model->get_where_single('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
 		}
 
 		// echo "<pre>";
-		// var_dump($detail);
+		// var_dump($issue_return_details);
 		// exit;
-		if (!$requisition_detail) {
+		if (!$issue_return_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
+		$data['issue_return_details'] = $issue_return_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
@@ -412,8 +417,6 @@ class Admin extends Auth_controller
 					'issued_on' => $this->input->post('issued_on'),
 					'remarks' => $this->input->post('remarks'),
 				);
-				var_dump($data);
-				exit;
 
 				if ($id == '') {
 
@@ -511,7 +514,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['issue_slip_master'] = $this->crud_model->get_where('issue_slip_master', array('status' => '1'));
+		$data['issue_slip_master'] = $this->crud_model->get_where('issue_slip_master', array('posted_tag' => '1'));
 		$data['title'] = 'Select Issue Slip Number';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
