@@ -437,6 +437,29 @@
       }
     });
 
+    //onchange purchase request type
+
+    $(document).off('change', '#p_request_type').on('change', '#p_request_type', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);
+      if (val == "DR") {
+        // alert('top');
+        $("#reqsn").addClass("reqsn_cls");
+        $("#mrn").addClass("reqsn_cls");
+      }
+      if (val == "REQ") {
+        // alert('mid');
+        $("#reqsn").removeClass("reqsn_cls");
+        $("#mrn").addClass("reqsn_cls");
+      }
+      if (val == "MRN") {
+        // alert('bot');
+        $("#reqsn").addClass("reqsn_cls");
+        $("#mrn").removeClass("reqsn_cls");
+      }
+    });
+
     // REMOVE item
 
     $(document).off('click', '.rmv').on('click', '.rmv', function(e) {
