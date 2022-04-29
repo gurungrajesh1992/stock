@@ -125,7 +125,7 @@
                                                             <input type="number" name="issued_qty[]" class="form-control" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" readonly>
                                                         </div>
                                                         <div class="col-md-5">
-                                                            <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+                                                            <textarea name="detail_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
                                                         </div>
                                                     </div>
                                         <?php }

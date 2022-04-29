@@ -28,8 +28,6 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
-                    // var_dump($value);
-                    // exit;
 
                     $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
                     $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
