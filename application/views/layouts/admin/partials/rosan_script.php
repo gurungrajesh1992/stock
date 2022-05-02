@@ -14,7 +14,7 @@
 
                     text: 'already selected, you can change quantity',
 
-                    duration: 10000,
+                    duration: 6000,
 
                     style: {
                         background: "linear-gradient(to right, red, yellow)",
