@@ -86,10 +86,10 @@ class Admin extends Auth_controller
 		}
 
 		if ($purchases_detail->cancel_tag == '1') {
-			$this->session->set_flashdata('error', 'Requisition Cancelled');
+			$this->session->set_flashdata('error', 'Purchases Order  Cancelled');
 			redirect($this->redirect . '/admin/form');
 		} else if ($purchases_detail->approved_by == '') {
-			$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add issue');
+			$this->session->set_flashdata('error', 'Purchases Order  is not Approved, Can not add issue');
 			redirect($this->redirect . '/admin/form');
 		} else {
 		}
@@ -289,7 +289,6 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
-
 		$data['master_detail'] = $master_detail;
 		$data['invoice_details'] = $invoice_details;
 		$data['title'] = 'View ' . $this->title;
@@ -297,46 +296,46 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function direct_view($id = '')
-	{
-		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if ($detail) {
-			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
-			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
-		} else {
-			$data['staffs'] = array();
-		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
-		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
-				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
-				$explode = explode("-", $string);
-				$int_value = intval($explode[1]) + 1;
-				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
-			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
-			}
-		}
-		$data['detail'] = $detail;
+	// public function direct_view($id = '')
+	// {
+	// 	$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+	// 	// echo "<pre>";
+	// 	// var_dump($detail);
+	// 	// exit;
+	// 	if ($detail) {
+	// 		$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
+	// 		$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+	// 		if ($staffs) {
+	// 			$data['staffs'] = $staffs;
+	// 		} else {
+	// 			$data['staffs'] = array();
+	// 		}
+	// 	} else {
+	// 		$data['staffs'] = array();
+	// 	}
+	// 	if (isset($detail->issue_slip_no)) {
+	// 		$data['issue_slip_no'] = $detail->issue_slip_no;
+	// 	} else {
+	// 		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
+	// 		if (isset($last_row_no->issue_slip_no)) {
+	// 			// $string = "IS07042022-0006";
+	// 			$string = $last_row_no->issue_slip_no;
+	// 			$explode = explode("-", $string);
+	// 			$int_value = intval($explode[1]) + 1;
+	// 			// var_dump(sprintf("%04d", $int_value));
+	// 			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+	// 		} else {
+	// 			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+	// 		}
+	// 	}
+	// 	$data['detail'] = $detail;
 
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
-		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'View ' . $this->title;
-		$data['page'] = 'direct_view';
-		$this->load->view('layouts/admin/index', $data);
-	}
+	// 	$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+	// 	$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+	// 	$data['title'] = 'View ' . $this->title;
+	// 	$data['page'] = 'direct_view';
+	// 	$this->load->view('layouts/admin/index', $data);
+	// }
 
 
 	public function direct_add($id = '')
@@ -753,11 +752,11 @@ class Admin extends Auth_controller
 									'status_message' => 'Can not be posted, Already Cancelled !!',
 								);
 							} else {
-								$issue_details = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+								$invoice_detail = $this->crud_model->get_where('issue_slip_details', array('invoice_master' => $detail->invoice_no));
 
-								if (isset($issue_details)) {
+								if (isset($invoice_detail)) {
 									$batch_data = array();
-									foreach ($issue_details as $key => $value) {
+									foreach ($invoice_detail as $key => $value) {
 										$data = array(
 											'item_code' =>  $value->item_code,
 											'transaction_date' => $detail->issue_date,
@@ -778,7 +777,7 @@ class Admin extends Auth_controller
 											// 'vendor_id' => '???',
 											// 'client_id' => '???',
 											'remarks' => 'posted from issue',
-											'transactioncode' => $detail->issue_slip_no,
+											// 'transactioncode' => $detail->issue_slip_no,
 											'created_on' => date('Y-m-d'),
 											'created_by' => $this->current_user->id,
 											// 'updated_on' => '???',

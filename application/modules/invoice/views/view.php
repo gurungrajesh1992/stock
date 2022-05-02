@@ -19,13 +19,12 @@
                                 <?php echo set_value('invoice_no', (((isset($master_detail->invoice_no)) && $master_detail->invoice_no != '') ? $master_detail->invoice_no : '')); ?>
                             </div>
                         </div>
-                        <?php
-                        $supplier_detail = $this->crud_model->get_where_single_order_by('supplier_infos', array('id' => $value->supplier_id), 'id', 'DECS');
-                        ?>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Supplier Name : </label>
-                                <?php echo set_value('supplier_id', (((isset($master_detail->supplier_id)) && $master_detail->supplier_id != '') ? $master_detail->supplier_id : '')); ?>
+                                <?php $suppliers_detail = $this->crud_model->get_where_single_order_by('supplier_infos', array('id' => $master_detail->supplier_id), 'id', 'DESC');
+
+                                echo set_value('supplier_name', (((isset($suppliers_detail->supplier_name)) && $suppliers_detail->supplier_name != '') ? $suppliers_detail->supplier_name : '')); ?>
                             </div>
                         </div>
                     </div>
@@ -44,29 +43,18 @@
                                             <div class="col-md-2">
                                                 <label>Product</label>
                                             </div>
-                                            <div class="col-md-1">
-                                                <label>Issued Quantity</label>
+                                            <div class="col-md-2">
+                                                <label>Quantity</label>
                                             </div>
-                                            <div class="col-md-1">
-                                                <label>Requested Quantity</label>
+                                            <div class="col-md-2">
+                                                <label>Amount</label>
                                             </div>
-                                            <div class="col-md-1">
-                                                <label>Total Issued</label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label>Remaining</label>
-                                            </div>
-                                            <div class="col-md-1">
-                                                <label>Stock</label>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <label>Remarks</label>
-                                            </div>
+
 
                                         </div>
                                         <?php
-                                        if (isset($master_detail->issue_slip_no)) {
-                                            $childs = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $master_detail->issue_slip_no));
+                                        if (isset($master_detail->invoice_no)) {
+                                            $childs = $this->crud_model->get_where('invoice_details', array('invoice_no' => $master_detail->invoice_no));
                                             if ($childs) {
                                                 $issue_slip_date = ((isset($master_detail->issue_date)) && $master_detail->issue_date != '') ? $master_detail->issue_date : date('Y-m-d');
 
@@ -78,36 +66,26 @@
                                                     $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
-                                                    $requisition_detail_item = $this->crud_model->get_where_single('requisition_details', array('item_code' => $value->item_code, 'requisition_no' => $master_detail->requisition_no));
+                                                    // $requisition_detail_item = $this->crud_model->get_where_single('requisition_details', array('item_code' => $value->item_code, 'requisition_no' => $master_detail->requisition_no));
 
-                                                    $requested_qty = (isset($requisition_detail_item->quantity_requested) && $requisition_detail_item->quantity_requested != '') ? $requisition_detail_item->quantity_requested : 0;
-                                                    $received_qty = (isset($requisition_detail_item->received_qnty) && $requisition_detail_item->received_qnty != '') ? $requisition_detail_item->received_qnty : 0;
-                                                    $remaining_qty = (isset($requisition_detail_item->remaining_qnty) && $requisition_detail_item->remaining_qnty != '') ? $requisition_detail_item->remaining_qnty : 0;
+                                                    // $requested_qty = (isset($requisition_detail_item->quantity_requested) && $requisition_detail_item->quantity_requested != '') ? $requisition_detail_item->quantity_requested : 0;
+                                                    // $received_qty = (isset($requisition_detail_item->received_qnty) && $requisition_detail_item->received_qnty != '') ? $requisition_detail_item->received_qnty : 0;
+                                                    // $remaining_qty = (isset($requisition_detail_item->remaining_qnty) && $requisition_detail_item->remaining_qnty != '') ? $requisition_detail_item->remaining_qnty : 0;
 
-                                                    $issued_qty = (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0;
+                                                    // $issued_qty = (isset($value->issued_qnty) && $value->issued_qnty != '') ? $value->issued_qnty : 0;
+
                                         ?>
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-2">
                                                             <?php echo $item_detail->item_name; ?>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <?php echo $issued_qty; ?>
+                                                            <?php echo $value->qty; ?>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <?php echo $requested_qty; ?>
+                                                            <?php echo $value->amount; ?>
                                                         </div>
-                                                        <div class="col-md-1">
-                                                            <?php echo $received_qty; ?>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <?php echo $remaining_qty; ?>
-                                                        </div>
-                                                        <div class="col-md-1 <?php echo ($issued_qty > $total_item_stock_before_issue_slip_date) ? 'out_of_stock' : 'in_stock'; ?>">
-                                                            <?php echo $total_item_stock_before_issue_slip_date; ?>
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <?php echo $value->remarks; ?>
-                                                        </div>
+
                                                     </div>
                                         <?php }
                                             }
@@ -117,7 +95,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </form>
