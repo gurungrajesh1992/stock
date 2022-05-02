@@ -580,6 +580,49 @@
       });
     });
 
+    //invoice items
+    //issue items
+    $(document).off('change', '#invoice_items').on('change', '#invoice_items', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+
+      var issued_date = $('#issue_date_direct').val();
+      // alert(issued_date);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('invoice/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+          "issued_date": issued_date,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
     $(document).off('change', '#type').on('change', '#type', function(e) {
       e.preventDefault();
       var val = $(this).val();
