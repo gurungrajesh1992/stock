@@ -872,6 +872,8 @@ class Admin extends Auth_controller
 											// );
 											// $total_item_stock_before_issue_slip_date_1 = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock1);
 											$offset = 0;
+											$total_out_price = 0;
+											$total_actual_out_price = 0;
 											while ($issued_qty > 0) {
 												$where_loop = array(
 													'item_code' => $v_batch['item_code'],
@@ -879,13 +881,23 @@ class Admin extends Auth_controller
 													'rem_qty >=' => 0
 												);
 												$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
+
 												if (isset($first_inserted_product_qty->rem_qty)) {
+
 													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$issued_qty;
 													if ($remaining >= 0) {
 														$update_old['rem_qty'] = $remaining;
+
+														$total_out_price = $total_out_price + ((int)$issued_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$issued_qty * $first_inserted_product_qty->in_actual_unit_price);
+
 														$issued_qty = 0;
 													} else {
 														$update_old['rem_qty'] = 0;
+
+														$total_out_price = $total_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_actual_unit_price);
+
 														$issued_qty = (int)$issued_qty - (int)$first_inserted_product_qty->rem_qty;
 													}
 
@@ -896,6 +908,15 @@ class Admin extends Auth_controller
 
 												$offset = $offset + 1;
 											}
+
+											$out_unit_price = $total_out_price / $v_batch['out_qty'];
+											$out_actual_unit_price = $total_actual_out_price / $v_batch['out_qty'];
+
+											$update_own['out_unit_price'] = $out_unit_price;
+											$update_own['out_total_price'] = $out_unit_price * $v_batch['out_qty'];
+											$update_own['out_actual_unit_price'] = $out_actual_unit_price;
+											$update_own['out_actual_total_price'] = $out_actual_unit_price * $v_batch['out_qty'];
+											$this->crud_model->update('stock_ledger', $update_own, array('transactioncode' => $v_batch['transactioncode'], 'item_code' => $v_batch['item_code']));
 										}
 
 										//update posted tag  on issue_slip_master

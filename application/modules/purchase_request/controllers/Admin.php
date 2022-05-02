@@ -365,19 +365,19 @@ class Admin extends Auth_controller
 		} else {
 			$data['staffs'] = array();
 		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
+		if (isset($detail->purchase_request_no)) {
+			$data['purchase_request_no'] = $detail->purchase_request_no;
 		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
+			$last_row_no = $this->crud_model->get_where_single_order_by('purchase_request', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->purchase_request_no)) {
 				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
+				$string = $last_row_no->purchase_request_no;
 				$explode = explode("-", $string);
 				$int_value = intval($explode[1]) + 1;
 				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+				$data['purchase_request_no'] = 'PR' . date('dmY') . '-' . sprintf("%04d", $int_value);
 			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+				$data['purchase_request_no'] = 'PR' . date('dmY') . '-0001';
 			}
 		}
 		$data['detail'] = $detail;
@@ -404,12 +404,11 @@ class Admin extends Auth_controller
 					}
 				}
 				$data = array(
-					'issue_slip_no' => $this->input->post('issue_slip_no'),
-					'issue_date' => $this->input->post('issue_date'),
+					'purchase_request_no ' => $this->input->post('purchase_request_no '),
 					'department_id' => $this->input->post('department_id'),
 					'staff_id' => $this->input->post('staff_id'),
-					'issued_by' => $this->input->post('issued_by'),
-					'issued_on' => $this->input->post('issued_on'),
+					'requested_by' => $this->input->post('requested_by'),
+					'requested_on' => $this->input->post('requested_on'),
 					'remarks' => $this->input->post('remarks'),
 				);
 
@@ -425,14 +424,14 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_qnty');
+						$requested_qty =  $this->input->post('requested_qty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['requested_qty'] = $requested_qty[$i];
 								$insert_detail['remarks'] = $remark[$i];
 
 								$this->crud_model->insert('issue_slip_details', $insert_detail);
@@ -460,14 +459,14 @@ class Admin extends Auth_controller
 
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_qnty');
+						$requested_qty =  $this->input->post('requested_qty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['issue_slip_no'] = $detail->issue_slip_no;
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
+								$insert_detail['requested_qty'] = $requested_qty[$i];
 								$insert_detail['remarks'] = $remark[$i];
 
 								$this->crud_model->insert('issue_slip_details', $insert_detail);
@@ -525,16 +524,6 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function requisition_date_check($str)
-	{
-		if ($str != '') {
-			$this->form_validation->set_message("requisition_date_check", "The 	field must be empty");
-			return FALSE;
-		} else {
-			return TRUE;
-		}
-	}
-
 	public function soft_delete($id)
 	{
 		if ($id == '' || $id == 0) {
@@ -580,7 +569,7 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
-				$issued_date = $this->input->post('issued_date');
+				$requested_date = $this->input->post('requested_date');
 
 				if ($val) {
 					// var_dump($val);
@@ -591,9 +580,9 @@ class Admin extends Auth_controller
 					if ($item_detail) {
 						$where_stock = array(
 							'item_code' => $val,
-							'transaction_date <=' => $issued_date,
+							'transaction_date <=' => $requested_date,
 						);
-						$total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+						$total_item_stock_before_requested_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
@@ -603,10 +592,10 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="issued_qnty[]" max="' . $total_item_stock_before_issue_slip_date . '" id="issue_' . $val . '" class="form-control qty_iss" placeholder="Issued Quantity" required>
+										<input type="number" name="requested_qty[]" max="' . $total_item_stock_before_requested_date . '" id="pr_' . $val . '" class="form-control qty_pr" placeholder="Requested Quantity" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_issue_slip_date . '" readonly>
+										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_requested_date . '" readonly>
 									</div>
 									<div class="col-md-4">
 										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
