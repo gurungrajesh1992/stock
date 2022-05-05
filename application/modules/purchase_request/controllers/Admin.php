@@ -70,43 +70,68 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function add($requisition_no = '')
+	public function add($code = '', $type = '')
 	{
-		if (empty($requisition_no)) {
-			$this->session->set_flashdata('error', 'Requisition Number Required.');
+		if ($code == '' || $type == '') {
+			$this->session->set_flashdata('error', 'Data Not Found.');
 			redirect($this->redirect . '/admin/form');
 		}
-		$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $requisition_no));
-		// echo "<pre>";
-		// var_dump($requisition_detail);
-		// exit;
-		if (!$requisition_detail) {
-			$this->session->set_flashdata('error', 'Record Not Found!!!');
-			redirect($this->redirect . '/admin/form');
+		if ($type == 'REQ') {
+			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $code));
+			// echo "<pre>";
+			// var_dump($requisition_detail);
+			// exit;
+			if (!$requisition_detail) {
+				$this->session->set_flashdata('error', 'Record Not Found!!!');
+				redirect($this->redirect . '/admin/form');
+			}
+
+			if ($requisition_detail->cancel_tag == '1') {
+				$this->session->set_flashdata('error', 'Requisition Cancelled');
+				redirect($this->redirect . '/admin/form');
+			} else if ($requisition_detail->approved_by == '') {
+				$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add Purchase Request');
+				redirect($this->redirect . '/admin/form');
+			} else {
+			}
+
+			$data['main_detail'] = $requisition_detail;
+		} else {
+			$mrn_detail = $this->crud_model->get_where_single('mrn_master', array('mrn_no' => $code));
+			// echo "<pre>";
+			// var_dump($requisition_detail);
+			// exit;
+			if (!$mrn_detail) {
+				$this->session->set_flashdata('error', 'Record Not Found!!!');
+				redirect($this->redirect . '/admin/form');
+			}
+
+			if ($mrn_detail->cancel_tag == '1') {
+				$this->session->set_flashdata('error', 'Mrn Cancelled');
+				redirect($this->redirect . '/admin/form');
+			} else if ($mrn_detail->approved_by == '') {
+				$this->session->set_flashdata('error', 'Mrn is not Approved, Can not add issue');
+				redirect($this->redirect . '/admin/form');
+			} else {
+			}
+
+			$data['main_detail'] = $mrn_detail;
 		}
 
-		if ($requisition_detail->cancel_tag == '1') {
-			$this->session->set_flashdata('error', 'Requisition Cancelled');
-			redirect($this->redirect . '/admin/form');
-		} else if ($requisition_detail->approved_by == '') {
-			$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add issue');
-			redirect($this->redirect . '/admin/form');
-		} else {
-		}
 		// echo "here";
 		// exit;
 
-		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-		if (isset($last_row_no->issue_slip_no)) {
-			$string = $last_row_no->issue_slip_no;
+		$last_row_no = $this->crud_model->get_where_single_order_by('purchase_request', array('status' => '1'), 'id', 'DESC');
+		if (isset($last_row_no->purchase_request_no)) {
+			$string = $last_row_no->purchase_request_no;
 			$explode = explode("-", $string);
 			$int_value = intval($explode[1]) + 1;
 			// var_dump(sprintf("%04d", $int_value));
-			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			$data['purchase_request_no'] = 'PR' . date('dmY') . '-' . sprintf("%04d", $int_value);
 		} else {
-			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+			$data['purchase_request_no'] = 'PR' . date('dmY') . '-0001';
 		}
-		$data['requisition_detail'] = $requisition_detail;
+
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
@@ -175,7 +200,8 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['title'] = 'Add Requested ' . $this->title;
+		$data['type'] = $type;
+		$data['title'] = 'Add ' . $type . ' ' . $this->title;
 		$data['page'] = 'add';
 		$this->load->view('layouts/admin/index', $data);
 	}
@@ -385,11 +411,10 @@ class Admin extends Auth_controller
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
+			$this->form_validation->set_rules('requested_on', 'Requested Date', 'required|trim');
 			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
 			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -404,7 +429,7 @@ class Admin extends Auth_controller
 					}
 				}
 				$data = array(
-					'purchase_request_no ' => $this->input->post('purchase_request_no '),
+					'purchase_request_no' => $this->input->post('purchase_request_no'),
 					'department_id' => $this->input->post('department_id'),
 					'staff_id' => $this->input->post('staff_id'),
 					'requested_by' => $this->input->post('requested_by'),
@@ -415,7 +440,7 @@ class Admin extends Auth_controller
 
 				if ($id == '') {
 
-					$data['issue_type'] = "DR";
+					$data['request_type'] = "DR";
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
@@ -424,17 +449,22 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
+						$item_name =  $this->input->post('item_name');
 						$requested_qty =  $this->input->post('requested_qty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['purchase_request_no'] = $data['purchase_request_no'];
 								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['item_name'] = $item_name[$i];
 								$insert_detail['requested_qty'] = $requested_qty[$i];
+								$insert_detail['received_qty'] = 0;
 								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['created_on'] = date('Y-m-d H:i:s');
+								$insert_detail['created_by'] = $this->current_user->id;
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('purchase_request_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
@@ -455,21 +485,26 @@ class Admin extends Auth_controller
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						//delete all child before update
-						$this->db->delete('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+						$this->db->delete('purchase_request_details', array('purchase_request_no' => $detail->purchase_request_no));
 
 
 						$item_code =  $this->input->post('item_code');
+						$item_name =  $this->input->post('item_name');
 						$requested_qty =  $this->input->post('requested_qty');
 						$remark =  $this->input->post('remark');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $detail->issue_slip_no;
+								$insert_detail['purchase_request_no'] = $detail->purchase_request_no;
 								$insert_detail['item_code'] = $item_code[$i];
+								$insert_detail['item_name'] = $item_name[$i];
 								$insert_detail['requested_qty'] = $requested_qty[$i];
+								$insert_detail['received_qty'] = 0;
 								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['created_on'] = date('Y-m-d H:i:s');
+								$insert_detail['created_by'] = $this->current_user->id;
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('purchase_request_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -498,22 +533,24 @@ class Admin extends Auth_controller
 				if ($p_request_type == "DR") {
 					$this->session->set_flashdata('success', 'Create Issue Slip Dierectly');
 					redirect($this->redirect . '/admin/direct_add/');
-				} else if ($p_request_type == "MRN") {
-					$mrn_no = $this->input->post('mrn_no');
-					if (!isset($mrn_no) && $mrn_no == '') {
-						$this->session->set_flashdata('error', 'Mrn Number Required');
-						redirect($this->redirect . '/admin/form');
-					}
-					$this->session->set_flashdata('success', 'Mrn Retrieved Successfully');
-					redirect($this->redirect . '/admin/add_mrn/' . $mrn_no);
 				} else {
-					$requisition_no = $this->input->post('requisition_no');
-					if (!isset($requisition_no) && $requisition_no == '') {
-						$this->session->set_flashdata('error', 'Requisition Number Required');
+					if ($p_request_type == "REQ") {
+						// echo "here";
+						// exit;
+						$code = $this->input->post('requisition_no');
+					} else {
+						// echo "down";
+						// exit;
+						$code = $this->input->post('mrn_no');
+					}
+					// var_dump($code);
+					// exit;
+					if (!isset($code) && $code == '') {
+						$this->session->set_flashdata('error', 'Data Not Found!!!');
 						redirect($this->redirect . '/admin/form');
 					}
-					$this->session->set_flashdata('success', 'Requisition Retrieved Successfully');
-					redirect($this->redirect . '/admin/add/' . $requisition_no);
+					$this->session->set_flashdata('success', 'Data Retrieved Successfully');
+					redirect($this->redirect . '/admin/add/' . $code . '/' . $p_request_type);
 				}
 			}
 		}
@@ -592,7 +629,7 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="requested_qty[]" max="' . $total_item_stock_before_requested_date . '" id="pr_' . $val . '" class="form-control qty_pr" placeholder="Requested Quantity" required>
+										<input type="number" name="requested_qty[]" min="1" id="pr_' . $val . '" class="form-control qty_pr" placeholder="Requested Quantity" required>
 									</div>
 									<div class="col-md-2">
 										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_requested_date . '" readonly>
@@ -629,316 +666,6 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Item First',
-					);
-				}
-			}
-		} catch (Exception $e) {
-			$response = array(
-				'status' => 'error',
-				'status_message' => $e->getMessage()
-			);
-		}
-		header('Content-Type: application/json');
-		echo json_encode($response);
-	}
-
-	public function getAllStock()
-	{
-		try {
-
-			if (!$this->input->is_ajax_request()) {
-				exit('No direct script access allowed');
-			} else {
-
-				$issue_slip_date = $this->input->post('issue_slip_date');
-
-				if ($issue_slip_date) {
-					$where = array(
-						'transaction_date <=' => $issue_slip_date,
-					);
-					$all_stock = $this->crud_model->get_all_total_stock('stock_ledger', $where, 'item_code');
-					// echo "<pre>";
-					// var_dump($all_stock);
-					// exit;
-					if ($all_stock) {
-
-						$response = array(
-							'status' => 'success',
-							'status_code' => 200,
-							'status_message' => 'Successfully retrived',
-							'data' => $all_stock,
-						);
-					} else {
-						$response = array(
-							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Unable To Get All Stock',
-						);
-					}
-				} else {
-					$response = array(
-						'status' => 'error',
-						'status_code' => 300,
-						'status_message' => 'No Issue Slip Date Selected',
-					);
-				}
-			}
-		} catch (Exception $e) {
-			$response = array(
-				'status' => 'error',
-				'status_message' => $e->getMessage()
-			);
-		}
-		header('Content-Type: application/json');
-		echo json_encode($response);
-	}
-
-	public function getStaffOfDepartment()
-	{
-		try {
-
-			if (!$this->input->is_ajax_request()) {
-				exit('No direct script access allowed');
-			} else {
-				//access ok 
-				// echo "here";
-				// exit;
-				// $check = $this->load->view('listall/image_form');  
-				$val = $this->input->post('val');
-				$total = $this->input->post('total');
-
-				if ($val) {
-					// var_dump($val);
-					// exit;
-					$item_detail = $this->crud_model->get_where_order_by('item_infos', array('item_code' => $val));
-					$html = '';
-
-					if ($item_detail) {
-						$html .= '';
-					}
-
-
-					if ($html) {
-
-						$response = array(
-							'status' => 'success',
-							'status_code' => 200,
-							'status_message' => 'Successfully retrived',
-							'data' => $html,
-						);
-					} else {
-						$response = array(
-							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Unable To Get Form',
-						);
-					}
-				} else {
-					$response = array(
-						'status' => 'error',
-						'status_code' => 300,
-						'status_message' => 'Please Select Item First',
-					);
-				}
-			}
-		} catch (Exception $e) {
-			$response = array(
-				'status' => 'error',
-				'status_message' => $e->getMessage()
-			);
-		}
-		header('Content-Type: application/json');
-		echo json_encode($response);
-	}
-
-	public function issue_post()
-	{
-		try {
-			if (!$this->input->is_ajax_request()) {
-				exit('No direct script access allowed');
-			} else {
-				$table = $this->input->post('table');
-				$row_id = $this->input->post('row_id');
-				// var_dump($table, $row_id);
-				// exit;
-
-				if ($table || $row_id) {
-					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
-					if (isset($detail->approved_by) && $detail->approved_by != '') {
-						if (isset($detail->posted_by) && $detail->posted_by != '') {
-							$response = array(
-								'status' => 'error',
-								'status_code' => 300,
-								'status_message' => 'Already Posted !!',
-							);
-						} else {
-							if (isset($detail->cancel_tag) && $detail->cancel_tag == '1') {
-								$response = array(
-									'status' => 'error',
-									'status_code' => 300,
-									'status_message' => 'Can not be posted, Already Cancelled !!',
-								);
-							} else {
-								$issue_details = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
-
-								if (isset($issue_details)) {
-									$batch_data = array();
-									foreach ($issue_details as $key => $value) {
-										$data = array(
-											'item_code' =>  $value->item_code,
-											'transaction_date' => $detail->issue_date,
-											'transaction_type' => 'ISS',
-											'in_qty' => 0,
-											'out_qty' => $value->issued_qnty,
-											'rem_qty' => 0,
-											'in_unit_price' => 0,
-											'in_total_price' => 0,
-											'in_actual_unit_price' => 0,
-											'in_actual_total_price' => 0,
-											'out_unit_price' => 0,
-											'out_total_price' => 0,
-											'out_actual_unit_price' => 0,
-											'out_actual_total_price' => 0,
-											// 'location_id' => $value->location_id,
-											// 'batch_no' => '',
-											// 'vendor_id' => '???',
-											// 'client_id' => '???',
-											'remarks' => 'posted from issue',
-											'transactioncode' => $detail->issue_slip_no,
-											'created_on' => date('Y-m-d'),
-											'created_by' => $this->current_user->id,
-											// 'updated_on' => '???',
-											// 'updated_by' => '???',
-											// 'staff_id' => '???',
-											// 'status' => '1',
-										);
-										$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
-										if (isset($last_row_no->ledger_code)) {
-											$string = $last_row_no->ledger_code;
-											$explode = explode("-", $string);
-											$int_value = intval($explode[1]) + intval($key) + 1;
-											// var_dump(sprintf("%04d", $int_value));
-											// exit;
-											$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
-										} else {
-											$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
-										}
-
-										$batch_data[] = $data;
-
-										// $this->crud_model->insert('stock_ledger', $data);
-
-										// if (isset($detail->requisition_no)) {
-										// 	//by request 
-										// 	$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-										// 	$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$value->issued_qnty);
-										// 	$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$value->issued_qnty);
-
-										// 	$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-										// } else {
-										// 	// direct
-										// }
-									}
-									// echo "<pre>";
-									// var_dump($batch_data);
-									// exit;
-									$batch_result = $this->db->insert_batch('stock_ledger', $batch_data);
-
-									if ($batch_result) {
-										//update remaining and received qty in requisition table
-										foreach ($issue_details as $ku => $vu) {
-
-											if (isset($detail->requisition_no)) {
-												//by request 
-												$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-												$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$vu->issued_qnty);
-												$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$vu->issued_qnty);
-
-												$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-											} else {
-												// direct
-											}
-										}
-
-										//update stock_ledger remaining qty
-										foreach ($batch_data as $k_batch => $v_batch) {
-											$issued_qty = $v_batch['out_qty'];
-											$transaction_date = ((isset($v_batch['transaction_date'])) && $v_batch['transaction_date'] != '') ? $v_batch['transaction_date'] : date('Y-m-d');
-											// $where_stock1 = array(
-											// 	'item_code' => $v_batch['item_code'],
-											// 	'transaction_date <=' => $transaction_date,
-											// );
-											// $total_item_stock_before_issue_slip_date_1 = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock1);
-											$offset = 0;
-											while ($issued_qty > 0) {
-												$where_loop = array(
-													'item_code' => $v_batch['item_code'],
-													'transaction_date <=' => $transaction_date,
-													'rem_qty >=' => 0
-												);
-												$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
-												if (isset($first_inserted_product_qty->rem_qty)) {
-													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$issued_qty;
-													if ($remaining >= 0) {
-														$update_old['rem_qty'] = $remaining;
-														$issued_qty = 0;
-													} else {
-														$update_old['rem_qty'] = 0;
-														$issued_qty = (int)$issued_qty - (int)$first_inserted_product_qty->rem_qty;
-													}
-
-													$this->crud_model->update('stock_ledger', $update_old, array('id' => $first_inserted_product_qty->id));
-												} else {
-													$issued_qty = 0;
-												}
-
-												$offset = $offset + 1;
-											}
-										}
-
-										//update posted tag  on issue_slip_master
-										$update['posted_tag'] = '1';
-										$update['posted_by'] = $this->current_user->id;
-										$update['posted_on'] = date('Y-m-d');
-
-										$this->crud_model->update('issue_slip_master', $update, array('id' => $detail->id));
-
-
-
-										$response = array(
-											'status' => 'success',
-											'status_code' => 200,
-											'status_message' => 'Successfully Posted !!!',
-										);
-									} else {
-
-										$response = array(
-											'status' => 'error',
-											'status_code' => 200,
-											'status_message' => 'Unable To Post !!!',
-										);
-									}
-								} else {
-									$response = array(
-										'status' => 'error',
-										'status_code' => 300,
-										'status_message' => 'No Details Available !!!',
-									);
-								}
-							}
-						}
-					} else {
-						$response = array(
-							'status' => 'error',
-							'status_code' => 300,
-							'status_message' => 'Record is not approved yet !!!',
-						);
-					}
-				} else {
-					$response = array(
-						'status' => 'error',
-						'status_code' => 300,
-						'status_message' => 'table and row invalid !!!',
 					);
 				}
 			}

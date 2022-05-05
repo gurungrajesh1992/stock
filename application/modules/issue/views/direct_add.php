@@ -47,7 +47,7 @@
                                 <select name="staff_id" class="form-control selct2" id="requested_by" required>
                                     <option value>Select Staff</option>
                                     <?php foreach ($staffs as $key => $value) { ?>
-                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->staff_id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
+                                        <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
