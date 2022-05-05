@@ -23,7 +23,7 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label>Select Purchase Order Type</label>
+                <label>Select Purchase Request Type</label>
                 <select name="p_request_type" class="form-control selct2" id="p_request_type" required>
                   <option value>Select</option>
                   <option value="DR">Direct</option>

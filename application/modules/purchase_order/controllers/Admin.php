@@ -9,9 +9,9 @@ class Admin extends Auth_controller
 		parent::__construct();
 		$this->load->library(array('my_form_validation'));
 		$this->form_validation->run($this);
-		$this->table = 'purchase_request';
-		$this->title = 'Purchase Request';
-		$this->redirect = 'purchase_request';
+		$this->table = 'purchase_order';
+		$this->title = 'Purchase Order';
+		$this->redirect = 'purchase_order';
 	}
 
 	public function all($page = '')
@@ -538,22 +538,23 @@ class Admin extends Auth_controller
 	public function form()
 	{
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('p_request_type', 'Purchase Request Type', 'required|trim');
+			$this->form_validation->set_rules('po_request_type', 'Purchase Order Type', 'required|trim');
 			if ($this->form_validation->run()) {
-				$p_request_type = $this->input->post('p_request_type');
+				$po_request_type = $this->input->post('po_request_type');
 
-				if ($p_request_type == "DR") {
-					$this->session->set_flashdata('success', 'Create Purchase Dierectly');
+				if ($po_request_type == "DR") {
+					$this->session->set_flashdata('success', 'Create Purchase Order Dierectly');
 					redirect($this->redirect . '/admin/direct_add/');
 				} else {
-					if ($p_request_type == "REQ") {
+					if ($po_request_type == "REQ") {
 						// echo "here";
 						// exit;
 						$code = $this->input->post('requisition_no');
-					} else {
+					} else if ($po_request_type == "MRN") {
 						// echo "down";
 						// exit;
 						$code = $this->input->post('mrn_no');
+					} else {
 					}
 					// var_dump($code);
 					// exit;
@@ -562,13 +563,13 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 					$this->session->set_flashdata('success', 'Data Retrieved Successfully');
-					redirect($this->redirect . '/admin/add/' . $code . '/' . $p_request_type);
+					redirect($this->redirect . '/admin/add/' . $code . '/' . $po_request_type);
 				}
 			}
 		}
 		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['mrns'] = $this->crud_model->get_where('mrn_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
-		$data['title'] = 'Select Type For Purchase Request ';
+		$data['title'] = 'Select Type For Purchase Order';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
