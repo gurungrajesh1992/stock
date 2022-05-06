@@ -12,16 +12,9 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Issue Slip No</th>
-                  <th>Issue Slip Date</th>
-                  <th>Issue Type</th>
-                  <th>Requisition No</th>
-                  <th>Department</th>
-                  <th>Issued To</th>
-                  <th>Issued By</th>
-                  <th>Issued On</th>
-                  <th>Is Cancelled</th>
-                  <th>Is Approved</th>
+                  <th>Invoice No</th>
+                  <th>Invoice Type</th>
+                  <th>Supplier Name</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -31,41 +24,30 @@
                 if ($items) {
                   foreach ($items as $key => $value) {
 
-                    $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
-                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
-                    // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
+                    $supplier_detail = $this->crud_model->get_where_single_order_by('supplier_infos', array('id' => $value->supplier_id), 'id', 'DECS');
+                    // var_dump($supplier_detail);
+                    // exit;
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
                       $status = 'Inactive';
                     }
 
-                    if ($value->cancel_tag == '1') {
-                      $cancel_tag = 'Yes';
-                    } else {
-                      $cancel_tag = 'No';
-                    }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->issue_slip_no; ?></td>
-                      <td><?php echo $value->issue_date; ?></td>
-                      <td><?php echo $value->issue_type; ?></td>
-                      <td><?php echo $value->requisition_no; ?></td>
-                      <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
-                      <td><?php echo isset($staff_detail->full_name) ? $staff_detail->full_name : ''; ?></td>
-                      <td><?php echo $value->issued_by; ?></td>
-                      <td><?php echo $value->issued_on; ?></td>
-                      <td><?php echo $cancel_tag; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
+                      <td><?php echo $value->invoice_no; ?></td>
+                      <td><?php echo $value->type; ?></td>
+                      <td><?php echo isset($supplier_detail->supplier_name) ? $supplier_detail->supplier_name : ''; ?></td>
+
                       <td>
-                        <?php if ($value->requisition_no == NULL) { ?>
+                        <?php if ($value->invoice_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } else { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/edit/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } ?>
 
-                        <?php if ($value->requisition_no == NULL) { ?>
+                        <?php if ($value->invoice_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
                         <?php } else { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>

@@ -102,15 +102,17 @@
 
               text: resp.status_message,
 
-              duration: 1000,
+              duration: 5000,
 
               style: {
                 background: "linear-gradient(to right, #00b09b, #96c93d)",
               },
 
             }).showToast();
-            // location.reload();
+
             $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
           } else {
             Toastify({
 
@@ -124,6 +126,7 @@
 
             }).showToast();
             // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
           }
         }
       });
@@ -222,7 +225,11 @@
 
               text: resp.status_message,
 
-              duration: 5000
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
 
             }).showToast();
             // alert(resp.status_message);
@@ -231,6 +238,60 @@
       });
 
     });
+
+    //cancel row
+    $(document).off('click', '#cancel').on('click', '#cancel', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
     //check greater than stock
     $(document).off('change', '.qty_iss').on('change', '.qty_iss', function(e) {
       var issued = $(this).val();
@@ -376,6 +437,29 @@
       }
     });
 
+    //onchange purchase request type
+
+    $(document).off('change', '#p_request_type').on('change', '#p_request_type', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);
+      if (val == "DR") {
+        // alert('top');
+        $("#reqsn").addClass("reqsn_cls");
+        $("#mrn").addClass("reqsn_cls");
+      }
+      if (val == "REQ") {
+        // alert('mid');
+        $("#reqsn").removeClass("reqsn_cls");
+        $("#mrn").addClass("reqsn_cls");
+      }
+      if (val == "MRN") {
+        // alert('bot');
+        $("#reqsn").addClass("reqsn_cls");
+        $("#mrn").removeClass("reqsn_cls");
+      }
+    });
+
     // REMOVE item
 
     $(document).off('click', '.rmv').on('click', '.rmv', function(e) {
@@ -475,6 +559,49 @@
       $.ajax({
 
         url: '<?php echo base_url('issue/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "total": already_items.length,
+          "issued_date": issued_date,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            alert(resp.status_message);
+          }
+        }
+      });
+    });
+
+    //invoice items
+    //issue items
+    $(document).off('change', '#invoice_items').on('change', '#invoice_items', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        alert('already selected, you can change quantity');
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+
+      var issued_date = $('#issue_date_direct').val();
+      // alert(issued_date);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('invoice/admin/getForm'); ?>',
         type: "POST",
         // contentType: "application/json",  
         dataType: "json",

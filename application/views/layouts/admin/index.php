@@ -80,6 +80,7 @@ $site_settings = $this->session->userdata('site_settings');
 
 
   <?php echo $this->load->view('layouts/admin/partials/script'); ?>
+  <?php echo $this->load->view('layouts/admin/partials/rosan_script'); ?>
 </body>
 
 </html>

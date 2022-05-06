@@ -9,9 +9,9 @@ class Admin extends Auth_controller
 		parent::__construct();
 		$this->load->library(array('my_form_validation'));
 		$this->form_validation->run($this);
-		$this->table = 'issue_slip_master';
-		$this->title = 'Issue Slip';
-		$this->redirect = 'issue';
+		$this->table = 'invoice_master';
+		$this->title = 'Invoice';
+		$this->redirect = 'invoice';
 	}
 
 	public function all($page = '')
@@ -53,7 +53,7 @@ class Admin extends Auth_controller
 
 
 		// $items = $this->crud_model->get_where_pagination('user_role', array('status !=' => '2'), $config["per_page"], $page);
-		$items = $this->crud_model->get_where_pagination('issue_slip_master', array('status !=' => '2'), $config['per_page'], $page);
+		$items = $this->crud_model->get_where_pagination('invoice_master', array('status !=' => '2'), $config['per_page'], $page);
 
 		// echo "<pre>";
 		// var_dump($this->db->last_query());
@@ -70,52 +70,49 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function add($requisition_no = '')
+	public function add($purchase_order_no = '')
 	{
-		if (empty($requisition_no)) {
-			$this->session->set_flashdata('error', 'Requisition Number Required.');
+		if (empty($purchase_order_no)) {
+			$this->session->set_flashdata('error', 'Purchases Order Number Required.');
 			redirect($this->redirect . '/admin/form');
 		}
-		$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $requisition_no));
+		$purchases_detail = $this->crud_model->get_where_single('purchase_order', array('purchase_order_no' => $purchase_order_no));
 		// echo "<pre>";
-		// var_dump($requisition_detail);
+		// var_dump($purchases_detail);
 		// exit;
-		if (!$requisition_detail) {
+		if (!$purchases_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/form');
 		}
 
-		if ($requisition_detail->cancel_tag == '1') {
-			$this->session->set_flashdata('error', 'Requisition Cancelled');
+		if ($purchases_detail->cancel_tag == '1') {
+			$this->session->set_flashdata('error', 'Purchases Order  Cancelled');
 			redirect($this->redirect . '/admin/form');
-		} else if ($requisition_detail->approved_by == '') {
-			$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add issue');
+		} else if ($purchases_detail->approved_by == '') {
+			$this->session->set_flashdata('error', 'Purchases Order  is not Approved, Can not add issue');
 			redirect($this->redirect . '/admin/form');
 		} else {
 		}
 		// echo "here";
 		// exit;
 
-		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-		if (isset($last_row_no->issue_slip_no)) {
-			$string = $last_row_no->issue_slip_no;
+		$last_row_no = $this->crud_model->get_where_single_order_by('invoice_master', array('status' => '1'), 'id', 'DESC');
+		if (isset($last_row_no->invoice_no)) {
+			$string = $last_row_no->invoice_no;
 			$explode = explode("-", $string);
 			$int_value = intval($explode[1]) + 1;
 			// var_dump(sprintf("%04d", $int_value));
-			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			$data['invoice_no'] = 'IN' . date('dmY') . '-' . sprintf("%04d", $int_value);
 		} else {
-			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+			$data['invoice_no'] = 'IN' . date('dmY') . '-0001';
 		}
-		$data['requisition_detail'] = $requisition_detail;
+		$data['purchases_detail'] = $purchases_detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
-			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('invoice_no', 'Invoice No', 'required|trim');
+
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -131,20 +128,15 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'issue_slip_no' => $this->input->post('issue_slip_no'),
-					'requisition_no' => $this->input->post('requisition_no'),
-					'issue_date' => $this->input->post('issue_date'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'issued_by' => $this->input->post('issued_by'),
-					'issued_on' => $this->input->post('issued_on'),
-					'remarks' => $this->input->post('remarks'),
+					'invoice_no' => $this->input->post('invoice_no'),
+					'supplier_id' => $this->input->post('supplier_id'),
+
 				);
 
 
 				if ($id == '') {
 
-					$data['issue_type'] = "RQ";
+					$data['type'] = "RQ";
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
@@ -153,17 +145,17 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_quantity');
-						$issued_remark =  $this->input->post('issued_remark');
+						$qty =  $this->input->post('qty');
+						$amount =  $this->input->post('amount');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['invoice_no'] = $data['invoice_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
-								$insert_detail['remarks'] = $issued_remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['amount'] = $amount[$i];
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('invoice_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
@@ -175,6 +167,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
 		$data['title'] = 'Add Requested ' . $this->title;
 		$data['page'] = 'add';
 		$this->load->view('layouts/admin/index', $data);
@@ -182,38 +175,40 @@ class Admin extends Auth_controller
 
 	public function edit($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('invoice_master', array('id' => $id));
+		// var_dump($master_detail);
+		// exit;
 		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
 			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
-			redirect($this->redirect . '/admin/all');
+			redirect($this->redirect . '/admin/edit/' . $id);
 		}
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
+			$invoice_detail = $this->crud_model->get_where_single('invoice_master', array('invoice_no' => $master_detail->invoice_no));
 		}
 
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
-		if (!$requisition_detail) {
-			$this->session->set_flashdata('error', 'Record Not Found!!!');
+		if (!$invoice_detail) {
+			$this->session->set_flashdata('error', 'Record Not haaha Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
+		$data['invoice_detail'] = $invoice_detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
-			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('invoice_no', 'Invoice No', 'required|trim');
+			// $this->form_validation->set_rules('department_id', 'Department', 'required|trim');
+			// $this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
+			// $this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
+			// $this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -229,21 +224,15 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'issue_slip_no' => $this->input->post('issue_slip_no'),
-					'requisition_no' => $this->input->post('requisition_no'),
-					'issue_date' => $this->input->post('issue_date'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'issued_by' => $this->input->post('issued_by'),
-					'issued_on' => $this->input->post('issued_on'),
-					'remarks' => $this->input->post('remarks'),
+					'invoice_no' => $this->input->post('invoice_no'),
+					'supplier_id' => $this->input->post('supplier_id'),
 				);
 
 
 				if ($id == '') {
 				} else {
 
-					$this->db->delete('issue_slip_details', array('issue_slip_no' => $master_detail->issue_slip_no));
+					$this->db->delete('invoice_details', array('invoice_no' => $master_detail->invoice_no));
 
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
@@ -253,17 +242,17 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_quantity');
-						$issued_remark =  $this->input->post('issued_remark');
+						$qty =  $this->input->post('qty');
+						$amount =  $this->input->post('amount');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['invoice_no'] = $data['invoice_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
-								$insert_detail['remarks'] = $issued_remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['amount'] = $amount[$i];
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('invoice_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -275,6 +264,8 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+
 		$data['title'] = 'Edit Requested ' . $this->title;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
@@ -282,70 +273,69 @@ class Admin extends Auth_controller
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('invoice_master', array('id' => $id));
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
+			$invoice_details = $this->crud_model->get_where_single('invoice_details', array('invoice_no' => $master_detail->invoice_no));
 		}
 
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
-		if (!$requisition_detail) {
+		if (!$invoice_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
-
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
+		$data['invoice_details'] = $invoice_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function direct_view($id = '')
-	{
-		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if ($detail) {
-			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
-			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
-		} else {
-			$data['staffs'] = array();
-		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
-		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
-				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
-				$explode = explode("-", $string);
-				$int_value = intval($explode[1]) + 1;
-				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
-			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
-			}
-		}
-		$data['detail'] = $detail;
+	// public function direct_view($id = '')
+	// {
+	// 	$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+	// 	// echo "<pre>";
+	// 	// var_dump($detail);
+	// 	// exit;
+	// 	if ($detail) {
+	// 		$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
+	// 		$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+	// 		if ($staffs) {
+	// 			$data['staffs'] = $staffs;
+	// 		} else {
+	// 			$data['staffs'] = array();
+	// 		}
+	// 	} else {
+	// 		$data['staffs'] = array();
+	// 	}
+	// 	if (isset($detail->issue_slip_no)) {
+	// 		$data['issue_slip_no'] = $detail->issue_slip_no;
+	// 	} else {
+	// 		$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
+	// 		if (isset($last_row_no->issue_slip_no)) {
+	// 			// $string = "IS07042022-0006";
+	// 			$string = $last_row_no->issue_slip_no;
+	// 			$explode = explode("-", $string);
+	// 			$int_value = intval($explode[1]) + 1;
+	// 			// var_dump(sprintf("%04d", $int_value));
+	// 			$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+	// 		} else {
+	// 			$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+	// 		}
+	// 	}
+	// 	$data['detail'] = $detail;
 
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
-		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'View ' . $this->title;
-		$data['page'] = 'direct_view';
-		$this->load->view('layouts/admin/index', $data);
-	}
+	// 	$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+	// 	$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+	// 	$data['title'] = 'View ' . $this->title;
+	// 	$data['page'] = 'direct_view';
+	// 	$this->load->view('layouts/admin/index', $data);
+	// }
 
 
 	public function direct_add($id = '')
@@ -355,29 +345,21 @@ class Admin extends Auth_controller
 		// var_dump($detail);
 		// exit;
 		if ($detail) {
-			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
-			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
-		} else {
-			$data['staffs'] = array();
+			$supplier_detail = $this->crud_model->get_where_single('supplier_infos', array('id' => $detail->id));
 		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
+		if (isset($detail->invoice_no)) {
+			$data['invoice_no'] = $detail->invoice_no;
 		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
+			$last_row_no = $this->crud_model->get_where_single_order_by('invoice_master', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->invoice_no)) {
 				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
+				$string = $last_row_no->invoice_no;
 				$explode = explode("-", $string);
 				$int_value = intval($explode[1]) + 1;
 				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
+				$data['invoice_no'] = 'IN' . date('dmY') . '-' . sprintf("%04d", $int_value);
 			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
+				$data['invoice_no'] = 'IN' . date('dmY') . '-0001';
 			}
 		}
 		$data['detail'] = $detail;
@@ -385,11 +367,11 @@ class Admin extends Auth_controller
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('issue_date', 'Issue Slip Date', 'required|trim');
-			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('invoice_no', 'Invoice No', 'required|trim');
+			// $this->form_validation->set_rules('department_id', 'Department', 'required|trim');
+			// $this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
+			// $this->form_validation->set_rules('issued_on', 'Issued Date', 'required|trim');
+			// $this->form_validation->set_rules('issued_by', 'Issued By', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -404,38 +386,32 @@ class Admin extends Auth_controller
 					}
 				}
 				$data = array(
-					'issue_slip_no' => $this->input->post('issue_slip_no'),
-					'issue_date' => $this->input->post('issue_date'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'issued_by' => $this->input->post('issued_by'),
-					'issued_on' => $this->input->post('issued_on'),
-					'remarks' => $this->input->post('remarks'),
+					'invoice_no' => $this->input->post('invoice_no'),
+					'supplier_id' => $this->input->post('supplier_id'),
+					'type' => "DR",
 				);
-
 
 				if ($id == '') {
 
-					$data['issue_type'] = "DR";
+					// $data['type'] = "DR";
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
-					$data['cancel_tag'] = '0';
 
 					$result = $this->crud_model->insert($this->table, $data);
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_qnty');
-						$remark =  $this->input->post('remark');
+						$qty =  $this->input->post('qty');
+						$amount =  $this->input->post('amount');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $data['issue_slip_no'];
+								$insert_detail['invoice_no'] = $data['invoice_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['amount'] = $amount[$i];
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('invoice_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
@@ -445,32 +421,26 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/direct_add');
 					}
 				} else {
-
-					if (isset($detail->approved_by) && $detail->approved_by != '') {
-						$this->session->set_flashdata('error', 'Can not edit, Already Approved');
-						redirect($this->redirect . '/admin/direct_add/' . $id);
-					}
-
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						//delete all child before update
-						$this->db->delete('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+						$this->db->delete('invoice_details', array('id' => $detail->id));
 
 
 						$item_code =  $this->input->post('item_code');
-						$issued_qnty =  $this->input->post('issued_qnty');
-						$remark =  $this->input->post('remark');
+						$qty =  $this->input->post('qty');
+						$amount =  $this->input->post('amount');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_slip_no'] = $detail->issue_slip_no;
+								$insert_detail['invoice_no'] = $data['invoice_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['issued_qnty'] = $issued_qnty[$i];
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['amount'] = $amount[$i];
 
-								$this->crud_model->insert('issue_slip_details', $insert_detail);
+								$this->crud_model->insert('invoice_details', $insert_detail);
 							}
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -483,7 +453,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
-		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
 		$data['title'] = 'Add/Edit Direct ' . $this->title;
 		$data['page'] = 'direct_add';
 		$this->load->view('layouts/admin/index', $data);
@@ -492,26 +462,26 @@ class Admin extends Auth_controller
 	public function form()
 	{
 		if ($this->input->post()) {
-			$this->form_validation->set_rules('issue_type', 'Issue Type', 'required|trim');
+			$this->form_validation->set_rules('type', 'Invoice Type', 'required|trim');
 			if ($this->form_validation->run()) {
-				$issue_type = $this->input->post('issue_type');
+				$type = $this->input->post('type');
 
-				if ($issue_type == "DR") {
-					$this->session->set_flashdata('success', 'Create Issue Slip Dierectly');
+				if ($type == "DR") {
+					$this->session->set_flashdata('success', 'Create Invoice Dierectly');
 					redirect($this->redirect . '/admin/direct_add/');
 				} else {
-					$requisition_no = $this->input->post('requisition_no');
-					if (!isset($requisition_no) && $requisition_no == '') {
-						$this->session->set_flashdata('error', 'Requisition Number Required');
+					$purchase_order_no = $this->input->post('purchase_order_no');
+					if (!isset($purchase_order_no) && $purchase_order_no == '') {
+						$this->session->set_flashdata('error', 'Purchases Number Required');
 						redirect($this->redirect . '/admin/form');
 					}
-					$this->session->set_flashdata('success', 'Requisition Retrieved Successfully');
-					redirect($this->redirect . '/admin/add/' . $requisition_no);
+					$this->session->set_flashdata('success', 'Purchases Order No Retrieved Successfully');
+					redirect($this->redirect . '/admin/add/' . $purchase_order_no);
 				}
 			}
 		}
-		$data['requisitions'] = $this->crud_model->get_where('requisition_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
-		$data['title'] = 'Select Issue Type for Issue Slip';
+		$data['purchase_order_no'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => ''));
+		$data['title'] = 'Select Invoice Type for Invoice Slip';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
@@ -577,14 +547,17 @@ class Admin extends Auth_controller
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+
 					$html = '';
 
 					if ($item_detail) {
 						$where_stock = array(
 							'item_code' => $val,
-							'transaction_date <=' => $issued_date,
+							// 'transaction_date <=' => $issued_date,
 						);
+
 						$total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
@@ -594,14 +567,12 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="issued_qnty[]" max="' . $total_item_stock_before_issue_slip_date . '" id="issue_' . $val . '" class="form-control qty_iss" placeholder="Issued Quantity" required>
+										<input type="number" name="qty[]" id="qty_' . $val . '" class="form-control qty_iss" placeholder="Quantity" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_issue_slip_date . '" readonly>
+										<input type="number" name="amount[]" id="amount_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Amount"  required>
 									</div>
-									<div class="col-md-4">
-										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
-									</div>
+							
 									<div class="col-md-1">
 										<div class="rmv">
 											<span class="rmv_itm">X</span>
@@ -781,11 +752,11 @@ class Admin extends Auth_controller
 									'status_message' => 'Can not be posted, Already Cancelled !!',
 								);
 							} else {
-								$issue_details = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+								$invoice_detail = $this->crud_model->get_where('issue_slip_details', array('invoice_master' => $detail->invoice_no));
 
-								if (isset($issue_details)) {
+								if (isset($invoice_detail)) {
 									$batch_data = array();
-									foreach ($issue_details as $key => $value) {
+									foreach ($invoice_detail as $key => $value) {
 										$data = array(
 											'item_code' =>  $value->item_code,
 											'transaction_date' => $detail->issue_date,
@@ -806,7 +777,7 @@ class Admin extends Auth_controller
 											// 'vendor_id' => '???',
 											// 'client_id' => '???',
 											'remarks' => 'posted from issue',
-											'transactioncode' => $detail->issue_slip_no,
+											// 'transactioncode' => $detail->issue_slip_no,
 											'created_on' => date('Y-m-d'),
 											'created_by' => $this->current_user->id,
 											// 'updated_on' => '???',
@@ -872,8 +843,6 @@ class Admin extends Auth_controller
 											// );
 											// $total_item_stock_before_issue_slip_date_1 = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock1);
 											$offset = 0;
-											$total_out_price = 0;
-											$total_actual_out_price = 0;
 											while ($issued_qty > 0) {
 												$where_loop = array(
 													'item_code' => $v_batch['item_code'],
@@ -881,23 +850,13 @@ class Admin extends Auth_controller
 													'rem_qty >=' => 0
 												);
 												$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
-
 												if (isset($first_inserted_product_qty->rem_qty)) {
-
 													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$issued_qty;
 													if ($remaining >= 0) {
 														$update_old['rem_qty'] = $remaining;
-
-														$total_out_price = $total_out_price + ((int)$issued_qty * $first_inserted_product_qty->in_unit_price);
-														$total_actual_out_price = $total_actual_out_price + ((int)$issued_qty * $first_inserted_product_qty->in_actual_unit_price);
-
 														$issued_qty = 0;
 													} else {
 														$update_old['rem_qty'] = 0;
-
-														$total_out_price = $total_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_unit_price);
-														$total_actual_out_price = $total_actual_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_actual_unit_price);
-
 														$issued_qty = (int)$issued_qty - (int)$first_inserted_product_qty->rem_qty;
 													}
 
@@ -908,15 +867,6 @@ class Admin extends Auth_controller
 
 												$offset = $offset + 1;
 											}
-
-											$out_unit_price = $total_out_price / $v_batch['out_qty'];
-											$out_actual_unit_price = $total_actual_out_price / $v_batch['out_qty'];
-
-											$update_own['out_unit_price'] = $out_unit_price;
-											$update_own['out_total_price'] = $out_unit_price * $v_batch['out_qty'];
-											$update_own['out_actual_unit_price'] = $out_actual_unit_price;
-											$update_own['out_actual_total_price'] = $out_actual_unit_price * $v_batch['out_qty'];
-											$this->crud_model->update('stock_ledger', $update_own, array('transactioncode' => $v_batch['transactioncode'], 'item_code' => $v_batch['item_code']));
 										}
 
 										//update posted tag  on issue_slip_master

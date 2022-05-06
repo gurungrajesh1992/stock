@@ -206,12 +206,12 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	
+
 
 	public function view($id = '')
 	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-		
+
 		if (isset($detail->mrn_no)) {
 			$data['mrn_no'] = $detail->mrn_no;
 		} else {
@@ -230,7 +230,7 @@ class Admin extends Auth_controller
 
 
 		$data['detail'] = $detail;
-		
+
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
 		$data['title'] = 'View ' . $this->title;
@@ -254,6 +254,18 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Select Atleast One');
 			redirect($this->redirect . '/admin/all');
 		}
+
+		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
+		if ($detail) {
+			if (isset($detail->approved_by) && $detail->approved_by != '') {
+				$this->session->set_flashdata('error', 'Can not Delete, Already Approved');
+				redirect($this->redirect . '/admin/all');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Record Not Found');
+			redirect($this->redirect . '/admin/all');
+		}
+
 		$data = array(
 			'status' => '2',
 		);

@@ -4,10 +4,10 @@
       <div class="card card-default">
         <div class="card-header">
           <h3 class="card-title"><?php echo $title ?></h3>
-            <div class="card-tools"> 
-                <a class="btn btn-sm btn-info" id="approve_open">Approve</a>
-              
-            </div>
+          <div class="card-tools">
+            <a class="btn btn-sm btn-info" id="approve" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+            <a class="btn btn-sm btn-danger" id="cancel" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+          </div>
         </div>
         <div class="card-body">
           <div class="row">
@@ -15,15 +15,15 @@
               <div class="form-group">
                 <label>MRN Date : </label>
                 <?php echo set_value('mrn_date', (((isset($detail->mrn_date)) && $detail->mrn_date != '') ? $detail->mrn_date : '')); ?>
-              
+
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label>MRN No. : </label>
                 <?php echo set_value('mrn_no', (((isset($mrn_no)) && $mrn_no != '') ? $mrn_no : '')); ?>
-                
-               
+
+
               </div>
             </div>
           </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              
+
               <div class="row">
                 <div class="col-md-12">
                   <div class="req_item" id="items">
@@ -74,7 +74,7 @@
                             <div class="col-md-6">
                               <?php echo $value->remark; ?>
                             </div>
-                            
+
                           </div>
                     <?php }
                       }
@@ -101,12 +101,12 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Prepared By : </label>
-             <?php echo set_value('prepared_by', (((isset($detail->prepared_by)) && $detail->prepared_by != '') ? $detail->prepared_by : '')); ?>
+                <?php echo set_value('prepared_by', (((isset($detail->prepared_by)) && $detail->prepared_by != '') ? $detail->prepared_by : '')); ?>
               </div>
             </div>
           </div>
 
-          
+
         </div>
       </div>
     </form>

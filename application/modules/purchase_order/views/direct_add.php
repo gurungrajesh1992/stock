@@ -18,19 +18,12 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Issue Slip No. <span class="req">*</span></label>
-                                <input type="text" name="issue_slip_no" class="form-control" id="issue_slip_no" placeholder="Requisition" value="<?php echo set_value('issue_slip_no', (((isset($issue_slip_no)) && $issue_slip_no != '') ? $issue_slip_no : '')); ?>" readonly>
-                                <?php echo form_error('issue_slip_no', '<div class="error_message">', '</div>'); ?>
+                                <label>Purchase Request No. <span class="req">*</span></label>
+                                <input type="text" name="purchase_request_no" class="form-control" id="purchase_request_no" placeholder="Requisition" value="<?php echo set_value('purchase_request_no', (((isset($purchase_request_no)) && $purchase_request_no != '') ? $purchase_request_no : '')); ?>" readonly>
+                                <?php echo form_error('purchase_request_no', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Issue Slip Date <span class="req">*</span></label>
-                                <input type="date" name="issue_date" class="form-control" id="issue_date_direct" placeholder="Country Name" value="<?php echo set_value('issue_date', (((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d'))); ?>" required>
-                                <?php echo form_error('issue_date', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Select Department <span class="req">*</span></label>
                                 <select name="department_id" class="form-control selct2" id="department_id" required>
@@ -41,7 +34,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Select Staff <span class="req">*</span></label>
                                 <select name="staff_id" class="form-control selct2" id="requested_by" required>
@@ -50,6 +43,20 @@
                                         <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                                     <?php } ?>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Request Date <span class="req">*</span></label>
+                                <input type="date" name="requested_on" class="form-control" id="requested_on" placeholder="Country Name" value="<?php echo set_value('requested_on', (((isset($detail->requested_on)) && $detail->requested_on != '') ? $detail->requested_on : date('Y-m-d'))); ?>" required>
+                                <?php echo form_error('requested_on', '<div class="error_message">', '</div>'); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Requested By <span class="req">*</span></label>
+                                <input type="text" name="requested_by" class="form-control" id="requested_by" placeholder="Requested By" value="<?php echo set_value('requested_by', (((isset($detail->requested_by)) && $detail->requested_by != '') ? $detail->requested_by : '')); ?>" required>
+                                <?php echo form_error('requested_by', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
                     </div>
@@ -64,7 +71,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Select To Add Items</label>
-                                        <select name="item" class="form-control selct2" id="item_isuue">
+                                        <select name="item" class="form-control selct2" id="item_purchase_req">
                                             <option value>Select item</option>
                                             <?php foreach ($items as $key => $value) { ?>
                                                 <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
@@ -99,16 +106,16 @@
                                             </div>
                                         </div>
                                         <?php
-                                        if (isset($detail->issue_slip_no)) {
-                                            $childs = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+                                        if (isset($detail->purchase_request_no)) {
+                                            $childs = $this->crud_model->get_where('purchase_request_details', array('purchase_request_no' => $detail->purchase_request_no));
                                             if ($childs) {
-                                                $issue_slip_date = ((isset($detail->issue_date)) && $detail->issue_date != '') ? $detail->issue_date : date('Y-m-d');
+                                                $requisition_date = ((isset($detail->requested_on)) && $detail->requested_on != '') ? $detail->requested_on : date('Y-m-d');
                                                 foreach ($childs as $key => $value) {
                                                     $where_stock = array(
                                                         'item_code' => $value->item_code,
-                                                        'transaction_date <=' => $issue_slip_date,
+                                                        'transaction_date <=' => $requisition_date,
                                                     );
-                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+                                                    $total_item_stock_before_requisition_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                         ?>
                                                     <div class="row" style="margin-bottom: 15px;">
@@ -120,10 +127,10 @@
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="issued_qnty[]" max="<?php echo $total_item_stock_before_issue_slip_date; ?>" id="issue_<?php echo $value->item_code; ?>" class="form-control qty_iss" placeholder="Issued Quantity" value="<?php echo $value->issued_qnty; ?>" required>
+                                                            <input type="number" name="requested_qty[]" min="1" id="pr_<?php echo $value->item_code; ?>" class="form-control qty_pr" placeholder="Requested Quantity" value="<?php echo $value->requested_qty; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_issue_slip_date; ?>" readonly>
+                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_requisition_date; ?>" readonly>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
@@ -155,20 +162,8 @@
                                                                                                                                 ?></textarea>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Issued Date <span class="req">*</span></label>
-                                <input type="date" name="issued_on" class="form-control" id="issued_on" placeholder="Country Name" value="<?php echo set_value('issued_on', (((isset($detail->issued_on)) && $detail->issued_on != '') ? $detail->issued_on : '')); ?>" required>
-                                <?php echo form_error('issued_on', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Issued By <span class="req">*</span></label>
-                                <input type="text" name="issued_by" class="form-control" id="issued_by" placeholder="Country Name" value="<?php echo set_value('issued_by', (((isset($detail->issued_by)) && $detail->issued_by != '') ? $detail->issued_by : '')); ?>" required>
-                                <?php echo form_error('issued_by', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"></div>
                     </div>
                     <div class=" row">
                         <div class="col-md-4">
