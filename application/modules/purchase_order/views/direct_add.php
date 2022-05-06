@@ -18,9 +18,9 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Purchase Request No. <span class="req">*</span></label>
-                                <input type="text" name="purchase_request_no" class="form-control" id="purchase_request_no" placeholder="Requisition" value="<?php echo set_value('purchase_request_no', (((isset($purchase_request_no)) && $purchase_request_no != '') ? $purchase_request_no : '')); ?>" readonly>
-                                <?php echo form_error('purchase_request_no', '<div class="error_message">', '</div>'); ?>
+                                <label>Purchase Order No. <span class="req">*</span></label>
+                                <input type="text" name="purchase_order_no" class="form-control" id="purchase_order_no" placeholder="Requisition" value="<?php echo set_value('purchase_order_no', (((isset($purchase_order_no)) && $purchase_order_no != '') ? $purchase_order_no : '')); ?>" readonly>
+                                <?php echo form_error('purchase_order_no', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -39,7 +39,7 @@
                                 <label>Select Staff <span class="req">*</span></label>
                                 <select name="staff_id" class="form-control selct2" id="requested_by" required>
                                     <option value>Select Staff</option>
-                                    <?php foreach ($staffs as $key => $value) { ?>
+                                    <?php foreach ($staffs_det as $key => $value) { ?>
                                         <option value="<?php echo $value->id; ?>" <?php echo  set_select('staff_id', $value->id, (isset($detail->staff_id) && $detail->staff_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                                     <?php } ?>
                                 </select>
@@ -47,14 +47,14 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label>Request Date <span class="req">*</span></label>
+                                <label>Order Date <span class="req">*</span></label>
                                 <input type="date" name="requested_on" class="form-control" id="requested_on" placeholder="Country Name" value="<?php echo set_value('requested_on', (((isset($detail->requested_on)) && $detail->requested_on != '') ? $detail->requested_on : date('Y-m-d'))); ?>" required>
                                 <?php echo form_error('requested_on', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Requested By <span class="req">*</span></label>
+                                <label>Order By <span class="req">*</span></label>
                                 <input type="text" name="requested_by" class="form-control" id="requested_by" placeholder="Requested By" value="<?php echo set_value('requested_by', (((isset($detail->requested_by)) && $detail->requested_by != '') ? $detail->requested_by : '')); ?>" required>
                                 <?php echo form_error('requested_by', '<div class="error_message">', '</div>'); ?>
                             </div>
@@ -71,7 +71,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Select To Add Items</label>
-                                        <select name="item" class="form-control selct2" id="item_purchase_req">
+                                        <select name="item" class="form-control selct2" id="pur_order_items">
                                             <option value>Select item</option>
                                             <?php foreach ($items as $key => $value) { ?>
                                                 <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
@@ -93,11 +93,11 @@
                                                 <label>Product</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Quantity</label>
+                                                <label>Requested Quantity</label>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label>Stock</label>
-                                            </div>
+                                            <!-- <div class="col-md-2">
+                                                <label>Received Quantity</label>
+                                            </div> -->
                                             <div class="col-md-4">
                                                 <label>Remarks</label>
                                             </div>
@@ -106,8 +106,8 @@
                                             </div>
                                         </div>
                                         <?php
-                                        if (isset($detail->purchase_request_no)) {
-                                            $childs = $this->crud_model->get_where('purchase_request_details', array('purchase_request_no' => $detail->purchase_request_no));
+                                        if (isset($detail->purchase_order_no)) {
+                                            $childs = $this->crud_model->get_where('purchase_order_details', array('purchase_order_no' => $detail->purchase_order_no));
                                             if ($childs) {
                                                 $requisition_date = ((isset($detail->requested_on)) && $detail->requested_on != '') ? $detail->requested_on : date('Y-m-d');
                                                 foreach ($childs as $key => $value) {
@@ -129,9 +129,9 @@
                                                         <div class="col-md-2">
                                                             <input type="number" name="requested_qty[]" min="1" id="pr_<?php echo $value->item_code; ?>" class="form-control qty_pr" placeholder="Requested Quantity" value="<?php echo $value->requested_qty; ?>" required>
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_requisition_date; ?>" readonly>
-                                                        </div>
+                                                        <!-- <div class="col-md-2">
+                                                            <input type="number" name="received_qty[]" id="pr_<?php echo $value->item_code; ?>" class="form-control qty_pr" placeholder="Received Quantity" value="<?php echo $value->received_qty; ?>" required>
+                                                        </div> -->
                                                         <div class="col-md-4">
                                                             <textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
                                                         </div>

@@ -18,27 +18,11 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Purchase Request No. <span class="req">*</span></label>
-                                <input type="text" name="purchase_request_no" class="form-control" id="purchase_request_no" placeholder="Purchase Request" value="<?php echo set_value('purchase_request_no', (((isset($purchase_request_no)) && $purchase_request_no != '') ? $purchase_request_no : '')); ?>" readonly>
-                                <?php echo form_error('purchase_request_no', '<div class="error_message">', '</div>'); ?>
+                                <label>Purchase Order No. <span class="req">*</span></label>
+                                <input type="text" name="purchase_order_no" class="form-control" id="purchase_order_no" placeholder="Requisition" value="<?php echo set_value('purchase_order_no', (((isset($purchase_order_no)) && $purchase_order_no != '') ? $purchase_order_no : '')); ?>" readonly>
+                                <?php echo form_error('purchase_order_no', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Request Date <span class="req">*</span></label>
-                                <input type="date" name="requested_on" class="form-control" id="requested_on" placeholder="Country Name" value="<?php echo set_value('requested_on', date('Y-m-d')); ?>" required>
-                                <?php echo form_error('requested_on', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Requested By <span class="req">*</span></label>
-                                <input type="text" name="requested_by" class="form-control" id="requested_by" placeholder="Requested By" value="<?php echo set_value('requested_by', ''); ?>" required>
-                                <?php echo form_error('requested_by', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <?php if ($type == "REQ") { ?>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -76,7 +60,22 @@
                                 </div>
                             </div>
                         <?php } ?>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Order Date <span class="req">*</span></label>
+                                <input type="date" name="requested_on" class="form-control" id="requested_on" placeholder="Country Name" value="<?php echo set_value('requested_on', date('Y-m-d')); ?>" required>
+                                <?php echo form_error('requested_on', '<div class="error_message">', '</div>'); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Order By <span class="req">*</span></label>
+                                <input type="text" name="requested_by" class="form-control" id="requested_by" placeholder="Requested By" value="<?php echo set_value('requested_by', ''); ?>" required>
+                                <?php echo form_error('requested_by', '<div class="error_message">', '</div>'); ?>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <div style="border: 1px solid #ddd;margin-bottom: 10px;"></div>

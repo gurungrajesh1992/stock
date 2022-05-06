@@ -29,6 +29,7 @@
                   <option value="DR">Direct</option>
                   <option value="REQ">By Request</option>
                   <option value="MRN">By MRN</option>
+                  <option value="PR">By Purchase Request</option>
                 </select>
               </div>
             </div>
