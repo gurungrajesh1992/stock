@@ -119,12 +119,21 @@
             if (val == 'DR') {
                 $("#reqsn").addClass("reqsn_cls");
                 $("#mrn").addClass("reqsn_cls");
+                $("#pr").addClass("reqsn_cls");
             } else if (val == 'MRN') {
                 $("#mrn").removeClass("reqsn_cls");
                 $("#reqsn").addClass("reqsn_cls");
+                $("#pr").addClass("reqsn_cls");
+
+            } else if (val == 'PR') {
+                $("#pr").removeClass("reqsn_cls");
+                $("#reqsn").addClass("reqsn_cls");
+                $("#mrn").addClass("reqsn_cls");
+
             } else {
                 $("#reqsn").removeClass("reqsn_cls");
                 $("#mrn").addClass("reqsn_cls");
+                $("#pr").addClass("reqsn_cls");
             }
         });
 

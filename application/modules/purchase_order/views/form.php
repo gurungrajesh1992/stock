@@ -53,6 +53,16 @@
                 </select>
               </div>
             </div>
+            <div class="col-md-3 reqsn_cls" id="pr">
+              <div class="form-group">
+                <label>Select Purchase Request</label>
+                <select name="purchase_request_no" class="form-control selct2" id="purchase_request_no">
+                  <?php foreach ($purchases_req as $key => $value) { ?>
+                    <option value="<?php echo $value->purchase_request_no; ?>"><?php echo $value->purchase_request_no; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-md-3">
