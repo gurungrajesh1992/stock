@@ -12,9 +12,10 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Country Code</th>
-                  <th>Country Name</th>
-                  <th>Nationality</th>
+                  <th>Charge Code</th>
+                  <th>Charge Name</th>
+                  <th>Description</th>
+                  <th>Display in list?</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -32,9 +33,10 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->country_code; ?></td>
-                      <td><?php echo $value->country_name; ?></td>
-                      <td><?php echo $value->nationality; ?></td>
+                      <td><?php echo $value->charge_code; ?></td>
+                      <td><?php echo $value->charge_name; ?></td>
+                      <td><?php echo $value->description; ?></td>
+                      <td><?php echo $value->display_in_list; ?></td>
                       <td><?php echo $status; ?></td>
                       <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a></td>
                     </tr>

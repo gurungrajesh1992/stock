@@ -19,7 +19,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Charge Name <span class="req">*</span></label>
-                <input type="text" name="charge_name" class="form-control" id="charge_name" placeholder="Country Name" value="<?php echo set_value('charge_name', (((isset($detail->charge_name)) && $detail->charge_name != '') ? $detail->charge_name : '')); ?>">
+                <input type="text" name="charge_name" class="form-control" id="charge_name" placeholder="Charge Name" value="<?php echo set_value('charge_name', (((isset($detail->charge_name)) && $detail->charge_name != '') ? $detail->charge_name : '')); ?>">
                 <?php echo form_error('charge_name', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
@@ -28,7 +28,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Charge Code</label>
-                <input type="text" name="charge_code" class="form-control" id="charge_code" placeholder="charge_code" value="<?php echo set_value('charge_code', (((isset($charge_code)) && $charge_code != '') ? $charge_code : '')); ?>" readonly>
+                <input type="text" name="charge_code" class="form-control" id="charge_code" placeholder="Charge Code" value="<?php echo set_value('charge_code', (((isset($charge_code)) && $charge_code != '') ? $charge_code : '')); ?>" readonly>
                 <?php echo form_error('charge_code', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
@@ -46,7 +46,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Display In List</label>
-                <select name="display_in_list" class="form-control selct2" id="status">
+                <select name="display_in_list" class="form-control selct2" id="display_in_list">
                   <option value="Yes" <?php echo  set_select('display_in_list', 'Yes', (isset($detail->display_in_list) && $detail->display_in_list == 'Yes') ? TRUE : ''); ?>>Yes</option>
                   <option value="No" <?php echo  set_select('display_in_list', 'No', (isset($detail->display_in_list) && $detail->display_in_list == 'No') ? TRUE : ''); ?>>No</option>
                 </select>

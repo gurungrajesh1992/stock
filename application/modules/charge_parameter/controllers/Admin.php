@@ -99,9 +99,6 @@ class Admin extends Auth_controller
 					'display_in_list' => $this->input->post('display_in_list'),
 					'status' => $this->input->post('status'),
 				);
-
-				$country_code = substr($data['country_name'], 0, 4);
-				$data['country_code'] = $country_code;
 				$id = $this->input->post('id');
 				if ($id == '') {
 					$data['created_on'] = date('Y-m-d H:i:s');
