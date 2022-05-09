@@ -61,9 +61,9 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Staff <span class="req">*</span></label>
-                                    <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $main_detail->requested_by), 'id', 'DESC') ?>
+                                    <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $main_detail->staff_id), 'id', 'DESC') ?>
                                     <input type="text" name="staff_name" class="form-control" id="staff_name" placeholder="Staff" value="<?php echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>" readonly>
-                                    <input type="hidden" name="staff_id" class="form-control" id="staff_id" placeholder="Staff" value="<?php echo set_value('staff_id', (((isset($main_detail->requested_by)) && $main_detail->requested_by != '') ? $main_detail->requested_by : '')); ?>" readonly>
+                                    <input type="hidden" name="staff_id" class="form-control" id="staff_id" placeholder="Staff" value="<?php echo set_value('staff_id', (((isset($main_detail->staff_id)) && $main_detail->staff_id != '') ? $main_detail->staff_id : '')); ?>" readonly>
                                     <?php echo form_error('staff_id', '<div class="error_message">', '</div>'); ?>
                                 </div>
                             </div>
