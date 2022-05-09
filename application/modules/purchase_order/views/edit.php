@@ -246,7 +246,7 @@
                                                 }
                                             } ?>
                                             <?php } else if ($master_detail->request_type == "PR") {
-                                            if (isset($master_detail->mrn_no)) {
+                                            if (isset($master_detail->purchase_order_no)) {
                                                 $childs = $this->crud_model->get_where('purchase_order_details', array('purchase_order_no' => $master_detail->purchase_order_no));
                                                 if ($childs) {
                                                     $purchase_request_date = ((isset($master_detail->requested_on)) && $master_detail->requested_on != '') ? $master_detail->requested_on : date('Y-m-d');
