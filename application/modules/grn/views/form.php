@@ -43,7 +43,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3 reqsn_cls" id="mrn">
+            <div class="col-md-3 reqsn_cls" id="po">
               <div class="form-group">
                 <label>Select Purchase Order no</label>
                 <select name="purchase_order_no" class="form-control selct2" id="purchase_order_no">
@@ -53,7 +53,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3 reqsn_cls" id="mrn">
+            <div class="col-md-3 reqsn_cls" id="prq">
               <div class="form-group">
                 <label>Select Purchase Request no</label>
                 <select name="purchase_request_no" class="form-control selct2" id="purchase_request_no">
