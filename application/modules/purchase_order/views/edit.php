@@ -88,7 +88,28 @@
                                     <?php echo form_error('staff_id', '<div class="error_message">', '</div>'); ?>
                                 </div>
                             </div>
-                        <?php  }
+                        <?php  } elseif ($master_detail->request_type   == "MRN") { ?>
+
+                        <?php    } else { ?>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Department <span class="req">*</span></label>
+                                    <?php $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $master_detail->department_id), 'id', 'DESC') ?>
+                                    <input type="text" name="department_name" class="form-control" id="department_name" placeholder="Department" value="<?php echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : '')); ?>" readonly>
+                                    <input type="hidden" name="department_id" class="form-control" id="department_id" placeholder="Department" value="<?php echo set_value('department_id', (((isset($master_detail->department_id)) && $master_detail->department_id != '') ? $master_detail->department_id : '')); ?>" readonly>
+                                    <?php echo form_error('department_id', '<div class="error_message">', '</div>'); ?>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Staff <span class="req">*</span></label>
+                                    <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $master_detail->staff_id), 'id', 'DESC') ?>
+                                    <input type="text" name="staff_name" class="form-control" id="staff_name" placeholder="Staff" value="<?php echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>" readonly>
+                                    <input type="hidden" name="staff_id" class="form-control" id="staff_id" placeholder="Staff" value="<?php echo set_value('staff_id', (((isset($master_detail->staff_id)) && $master_detail->staff_id != '') ? $master_detail->staff_id : '')); ?>" readonly>
+                                    <?php echo form_error('staff_id', '<div class="error_message">', '</div>'); ?>
+                                </div>
+                            </div>
+                        <?php    }
                         ?>
 
                         <div class="col-md-4">
@@ -125,16 +146,25 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label><?php if ($master_detail->request_type == "REQ") {
-                                                            echo "REQ";
+                                                            echo "REQ Quantity";
                                                         } else if ($master_detail->request_type == "MRN") {
-                                                            echo "MRN";
+                                                            echo "MRN Quantity";
+                                                        } else if ($master_detail->request_type == "PR") {
+                                                            echo "PR Quantity";
                                                         } else {
-                                                            echo "PR";
                                                         }
-                                                        ?> Quantity</label>
+                                                        ?> </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Stock</label>
+                                                <label><?php if ($master_detail->request_type == "REQ") {
+                                                            echo "Stock";
+                                                        } else if ($master_detail->request_type == "MRN") {
+                                                            echo "Stock";
+                                                        } else if ($master_detail->request_type == "PR") {
+                                                            echo "Stock";
+                                                        } else {
+                                                        }
+                                                        ?></label>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Remarks</label>
@@ -251,6 +281,35 @@
                                             <?php }
                                                 }
                                             } ?>
+                                            <?php } else {
+                                            $childs = $this->crud_model->get_where('purchase_order_details', array('purchase_order_no' => $master_detail->purchase_order_no));
+                                            if ($childs) {
+                                                $purchase_request_date = ((isset($master_detail->requested_on)) && $master_detail->requested_on != '') ? $master_detail->requested_on : date('Y-m-d');
+                                                foreach ($childs as $key => $value) {
+                                                    $where_stock = array(
+                                                        'item_code' => $value->item_code,
+                                                        'transaction_date <=' => $purchase_request_date,
+                                                    );
+                                                    $total_item_stock_before_purchase_request_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+                                                    $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+
+                                                    $mrn_detail_item = $this->crud_model->get_where_single('purchase_request_details', array('item_code' => $value->item_code, 'purchase_request_no' => $master_detail->purchase_request_no));
+                                            ?>
+                                                    <div class="row" style="margin-bottom: 15px;">
+                                                        <div class="col-md-2">
+                                                            <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                                                            <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input type="number" name="requested_qty[]" min="1" id="PR_<?php echo $value->id; ?>" class="form-control pr" placeholder="Quantity" value="<?php echo ((isset($value->requested_qty)) && $value->requested_qty != '') ? $value->requested_qty : ''; ?>" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <textarea name="pr_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"><?php echo ((isset($value->remarks)) && $value->remarks != '') ? $value->remarks : ''; ?></textarea>
+                                                        </div>
+                                                    </div>
+                                            <?php }
+                                            }
+                                            ?>
                                         <?php } ?>
                                     </div>
                                 </div>
