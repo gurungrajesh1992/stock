@@ -353,23 +353,18 @@ class Admin extends Auth_controller
 		}
 
 		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
-			$mrn_detail = $this->crud_model->get_where_single('mrn_master', array('mrn_no' => $master_detail->mrn_no));
-			$purchase_req_detail = $this->crud_model->get_where_single('purchase_request', array('purchase_request_no' => $master_detail->purchase_request_no));
+			$purchase_order_detail = $this->crud_model->get_where_single('purchase_order_details', array('purchase_order_no' => $master_detail->purchase_order_no));
 		}
 
 		// echo "<pre>";
 		// var_dump($detail);
 		// exit;
-		if (!$requisition_detail && !$mrn_detail && !$purchase_req_detail) {
-			$this->session->set_flashdata('error', 'Record Req Not Found!!!');
+		if (!$purchase_order_detail) {
+			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
-		$data['mrn_detail'] = $mrn_detail;
-		$data['purchase_req_detail'] = $purchase_req_detail;
 
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
