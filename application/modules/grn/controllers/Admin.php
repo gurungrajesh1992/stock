@@ -571,7 +571,7 @@ class Admin extends Auth_controller
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
-		$data['title'] = 'Select Type For Purchase Request ';
+		$data['title'] = 'Select Type For Goods Receive';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
 	}
