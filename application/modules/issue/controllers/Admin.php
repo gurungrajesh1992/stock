@@ -357,6 +357,9 @@ class Admin extends Auth_controller
 		if ($detail) {
 			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
 			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
+			// echo "<pre>";
+			// var_dump($staffs);
+			// exit;
 			if ($staffs) {
 				$data['staffs'] = $staffs;
 			} else {

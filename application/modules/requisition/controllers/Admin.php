@@ -114,7 +114,7 @@ class Admin extends Auth_controller
 			// exit;
 			$this->form_validation->set_rules('requisition_date', 'Requisition Date', 'required|trim');
 			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -132,7 +132,9 @@ class Admin extends Auth_controller
 					'requisition_date' => $this->input->post('requisition_date'),
 					'requisition_no' => $this->input->post('requisition_no'),
 					'department_id' => $this->input->post('department_id'),
+					'staff_id' => $this->input->post('staff_id'),
 					'requested_by' => $this->input->post('requested_by'),
+					'requested_date' => $this->input->post('requested_date'),
 					'remarks' => $this->input->post('remarks'),
 				);
 

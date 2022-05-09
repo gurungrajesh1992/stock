@@ -46,7 +46,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Staff : </label>
-                                <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $requisition_detail->requested_by), 'id', 'DESC');
+                                <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $requisition_detail->staff_id), 'id', 'DESC');
                                 echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>
                             </div>
                         </div>

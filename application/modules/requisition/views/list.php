@@ -16,7 +16,7 @@
                   <th>Requisition Date</th>
                   <th>Remarks</th>
                   <th>Department</th>
-                  <th>Requested By</th>
+                  <th>Staff</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
                   <th>Action</th>
@@ -29,7 +29,7 @@
                   foreach ($items as $key => $value) {
 
                     $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
-                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->requested_by), 'id', 'DECS');
+                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
                     // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
                     if ($value->status == '1') {
                       $status = 'Active';

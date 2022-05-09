@@ -37,10 +37,10 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Select Staff</label>
-                <select name="requested_by" class="form-control selct2" id="requested_by">
+                <select name="staff_id" class="form-control selct2" id="requested_by">
                   <option value>Select Staff</option>
                   <?php foreach ($staffs as $key => $value) { ?>
-                    <option value="<?php echo $value->staff_id; ?>" <?php echo  set_select('requested_by', $value->staff_id, (isset($detail->requested_by) && $detail->requested_by  == $value->staff_id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
+                    <option value="<?php echo $value->staff_id; ?>" <?php echo  set_select('staff_id', $value->staff_id, (isset($detail->staff_id) && $detail->staff_id  == $value->staff_id) ? TRUE : ''); ?>><?php echo $value->full_name; ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -53,15 +53,15 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label>remarks</label>
-                <textarea name="remarks" id="remarks" class="form-control" rows="5" cols="80" autocomplete="off"><?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')
+                <textarea name="remarks" id="remarks" class="form-control" rows="5" cols="80" autocomplete="off"><?php //echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')
                                                                                                                   ?></textarea>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col-md-12">
               <div style="border: 1px solid #ddd;margin-bottom: 10px;"></div>
@@ -133,6 +133,29 @@
                     } ?>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class=" col-md-4">
+              <div class="form-group">
+                <label>remarks</label>
+                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"><?php echo (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')
+                                                                                                                ?></textarea>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Requested Date <span class="req">*</span></label>
+                <input type="date" name="requested_date" class="form-control" id="requested_date" placeholder="Country Name" value="<?php echo set_value('requested_date', (((isset($detail->requested_date)) && $detail->requested_date != '') ? $detail->requested_date : '')); ?>">
+                <?php echo form_error('requested_date', '<div class="error_message">', '</div>'); ?>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Requested By <span class="req">*</span></label>
+                <input type="text" name="requested_by" class="form-control" id="requested_by" placeholder="Issueed By" value="<?php echo set_value('requested_by', (((isset($detail->requested_by)) && $detail->requested_by != '') ? $detail->requested_by : '')); ?>">
+                <?php echo form_error('requested_by', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
           </div>

@@ -29,7 +29,7 @@
                 <label>Staff : </label>
                 <?php
                 if ((isset($detail->requested_by)) && $detail->requested_by != '') {
-                  $staff = $this->crud_model->get_where_single('staff_infos', array('id' => $detail->requested_by));
+                  $staff = $this->crud_model->get_where_single('staff_infos', array('id' => $detail->staff_id));
                   echo $staff->full_name;
                 }
                 ?>
