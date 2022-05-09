@@ -15,6 +15,8 @@
                   <th>Invoice No</th>
                   <th>Invoice Type</th>
                   <th>Supplier Name</th>
+                  <th>Is Cancelled</th>
+                  <th>Is Approved</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -33,13 +35,20 @@
                       $status = 'Inactive';
                     }
 
+                    if ($value->cancel_tag == '1') {
+                      $cancel_tag = 'Yes';
+                    } else {
+                      $cancel_tag = 'No';
+                    }
+
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
                       <td><?php echo $value->invoice_no; ?></td>
                       <td><?php echo $value->type; ?></td>
                       <td><?php echo isset($supplier_detail->supplier_name) ? $supplier_detail->supplier_name : ''; ?></td>
-
+                      <td><?php echo $cancel_tag; ?></td>
+                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td>
                         <?php if ($value->invoice_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>

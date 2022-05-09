@@ -12,6 +12,7 @@
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Purchase Order No</th>
                   <th>Purchase Req. No</th>
                   <th>Requested Date</th>
                   <th>Requested By</th>
@@ -48,6 +49,7 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
+                      <td><?php echo $value->purchase_order_no; ?></td>
                       <td><?php echo $value->purchase_request_no; ?></td>
                       <td><?php echo $value->requested_on; ?></td>
                       <td><?php echo $value->requested_by; ?></td>
