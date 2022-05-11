@@ -799,7 +799,7 @@ class Admin extends Auth_controller
 										<input type="number" name="qty[]" min="1"  class="form-control qty_grn" id="qty_grn-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
 									</div> 
 									<div class="col-md-2">
-										<input type="number" name="unit_price[]" min="1" class="form-control" id="unit_price_grn-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
+										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_grn" id="unit_price_grn-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
 									</div>
 									<div class="col-md-2">
 										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
