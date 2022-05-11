@@ -76,60 +76,78 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Data Not Found.');
 			redirect($this->redirect . '/admin/form');
 		}
-		if ($type == 'REQ') {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $code));
-			// echo "<pre>";
-			// var_dump($requisition_detail);
-			// exit;
-			if (!$requisition_detail) {
+		if ($type == 'INV') {
+			$inv_detail = $this->crud_model->get_where_single('invoice_master', array('invoice_no' => $code));
+			if (!$inv_detail) {
 				$this->session->set_flashdata('error', 'Record Not Found!!!');
 				redirect($this->redirect . '/admin/form');
 			}
 
-			if ($requisition_detail->cancel_tag == '1') {
-				$this->session->set_flashdata('error', 'Requisition Cancelled');
+			if ($inv_detail->cancel_tag == '1') {
+				$this->session->set_flashdata('error', 'Record Cancelled');
 				redirect($this->redirect . '/admin/form');
-			} else if ($requisition_detail->approved_by == '') {
-				$this->session->set_flashdata('error', 'Requisition is not Approved, Can not add Purchase Request');
+			} else if ($inv_detail->approved_by == '') {
+				$this->session->set_flashdata('error', 'Record is not Approved, Can not add');
 				redirect($this->redirect . '/admin/form');
 			} else {
 			}
-
-			$data['main_detail'] = $requisition_detail;
-		} else {
-			$mrn_detail = $this->crud_model->get_where_single('mrn_master', array('mrn_no' => $code));
-			// echo "<pre>";
-			// var_dump($requisition_detail);
-			// exit;
-			if (!$mrn_detail) {
+			$data['type_no'] = $inv_detail->invoice_no;
+			$data['transaction_level'] = 'Invoice Number';
+			$data['main_detail'] = $inv_detail;
+		} else if ($type == "PO") {
+			$purchase_order_detail = $this->crud_model->get_where_single('purchase_order', array('purchase_order_no' => $code));
+			if (!$purchase_order_detail) {
 				$this->session->set_flashdata('error', 'Record Not Found!!!');
 				redirect($this->redirect . '/admin/form');
 			}
 
-			if ($mrn_detail->cancel_tag == '1') {
+			if ($purchase_order_detail->cancel_tag == '1') {
+				$this->session->set_flashdata('error', 'Record Cancelled');
+				redirect($this->redirect . '/admin/form');
+			} else if ($purchase_order_detail->approved_by == '') {
+				$this->session->set_flashdata('error', 'Record is not Approved, Can not add');
+				redirect($this->redirect . '/admin/form');
+			} else {
+			}
+			$data['type_no'] = $purchase_order_detail->purchase_order_no;
+			$data['transaction_level'] = 'Purchase Order Number';
+			$data['main_detail'] = $purchase_order_detail;
+		} else {
+			$purchase_request_detail = $this->crud_model->get_where_single('purchase_request', array('purchase_request_no' => $code));
+			// echo "<pre>";
+			// var_dump($requisition_detail);
+			// exit;
+			if (!$purchase_request_detail) {
+				$this->session->set_flashdata('error', 'Record Not Found!!!');
+				redirect($this->redirect . '/admin/form');
+			}
+
+			if ($purchase_request_detail->cancel_tag == '1') {
 				$this->session->set_flashdata('error', 'Mrn Cancelled');
 				redirect($this->redirect . '/admin/form');
-			} else if ($mrn_detail->approved_by == '') {
+			} else if ($purchase_request_detail->approved_by == '') {
 				$this->session->set_flashdata('error', 'Mrn is not Approved, Can not add issue');
 				redirect($this->redirect . '/admin/form');
 			} else {
 			}
 
-			$data['main_detail'] = $mrn_detail;
+			$data['type_no'] = $purchase_request_detail->purchase_request_no;
+			$data['transaction_level'] = 'Purchase Request Number';
+			$data['main_detail'] = $purchase_request_detail;
 		}
 
 		// echo "here";
 		// exit;
 
-		$last_row_no = $this->crud_model->get_where_single_order_by('purchase_request', array('status' => '1'), 'id', 'DESC');
-		if (isset($last_row_no->purchase_request_no)) {
-			$string = $last_row_no->purchase_request_no;
+		$last_row_no = $this->crud_model->get_where_single_order_by('grn_master', array('status' => '1'), 'id', 'DESC');
+		if (isset($last_row_no->grn_no)) {
+			$string = $last_row_no->grn_no;
 			$explode = explode("-", $string);
 			$int_value = intval($explode[1]) + 1;
 			// var_dump(sprintf("%04d", $int_value));
-			$data['purchase_request_no'] = 'PR' . date('dmY') . '-' . sprintf("%04d", $int_value);
+			$data['grn_no'] = 'GRN' . date('dmY') . '-' . sprintf("%04d", $int_value);
 		} else {
-			$data['purchase_request_no'] = 'PR' . date('dmY') . '-0001';
+			$data['grn_no'] = 'GRN' . date('dmY') . '-0001';
 		}
 
 		if ($this->input->post()) {
@@ -202,9 +220,18 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+
+		// var_dump($type);
+		// exit;
+		$data['type'] = $type;
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['type'] = $type;
 		$data['title'] = 'Add ' . $this->title . ' From ' . $type;
 		$data['page'] = 'add';
+		$data['code'] = $code;
 		$this->load->view('layouts/admin/index', $data);
 	}
 
@@ -313,6 +340,9 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['title'] = 'Edit ' . $this->title . ' From ' . $master_detail->request_type;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
@@ -344,89 +374,34 @@ class Admin extends Auth_controller
 		$this->load->view('layouts/admin/index', $data);
 	}
 
-	public function direct_view($id = '')
-	{
-		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if ($detail) {
-			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
-			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
-		} else {
-			$data['staffs'] = array();
-		}
-		if (isset($detail->issue_slip_no)) {
-			$data['issue_slip_no'] = $detail->issue_slip_no;
-		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('issue_slip_master', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->issue_slip_no)) {
-				// $string = "IS07042022-0006";
-				$string = $last_row_no->issue_slip_no;
-				$explode = explode("-", $string);
-				$int_value = intval($explode[1]) + 1;
-				// var_dump(sprintf("%04d", $int_value));
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-' . sprintf("%04d", $int_value);
-			} else {
-				$data['issue_slip_no'] = 'IS' . date('dmY') . '-0001';
-			}
-		}
-		$data['detail'] = $detail;
-
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
-		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
-		$data['title'] = 'View ' . $this->title;
-		$data['page'] = 'direct_view';
-		$this->load->view('layouts/admin/index', $data);
-	}
-
 
 	public function direct_add($id = '')
 	{
 		$detail = $this->crud_model->get_where_single($this->table, array('id' => $id));
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if ($detail) {
-			$department_detqail = $this->crud_model->get_where_single('department_para', array('id' => $detail->department_id));
-			$staffs = $this->crud_model->joinDataMultiple('staff_desig_depart', 'staff_infos', array('staff_desig_depart.department_code' => $department_detqail->department_code), 'staff_id', 'id', 'full_name');
-			if ($staffs) {
-				$data['staffs'] = $staffs;
-			} else {
-				$data['staffs'] = array();
-			}
+		if (isset($detail->grn_no)) {
+			$data['grn_no'] = $detail->grn_no;
 		} else {
-			$data['staffs'] = array();
-		}
-		if (isset($detail->purchase_request_no)) {
-			$data['purchase_request_no'] = $detail->purchase_request_no;
-		} else {
-			$last_row_no = $this->crud_model->get_where_single_order_by('purchase_request', array('status' => '1'), 'id', 'DESC');
-			if (isset($last_row_no->purchase_request_no)) {
+			$last_row_no = $this->crud_model->get_where_single_order_by('grn_master', array('status' => '1'), 'id', 'DESC');
+			if (isset($last_row_no->grn_no)) {
 				// $string = "IS07042022-0006";
-				$string = $last_row_no->purchase_request_no;
+				$string = $last_row_no->grn_no;
 				$explode = explode("-", $string);
 				$int_value = intval($explode[1]) + 1;
 				// var_dump(sprintf("%04d", $int_value));
-				$data['purchase_request_no'] = 'PR' . date('dmY') . '-' . sprintf("%04d", $int_value);
+				$data['grn_no'] = 'GRN' . date('dmY') . '-' . sprintf("%04d", $int_value);
 			} else {
-				$data['purchase_request_no'] = 'PR' . date('dmY') . '-0001';
+				$data['grn_no'] = 'GRN' . date('dmY') . '-0001';
 			}
 		}
+
 		$data['detail'] = $detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('requested_on', 'Requested Date', 'required|trim');
-			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+			$this->form_validation->set_rules('grn_date', 'Grn Date', 'required|trim');
+			$this->form_validation->set_rules('supplier_id', 'Supplier', 'required|trim');
+			$this->form_validation->set_rules('payment_type', 'Payment Type', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -441,18 +416,20 @@ class Admin extends Auth_controller
 					}
 				}
 				$data = array(
-					'purchase_request_no' => $this->input->post('purchase_request_no'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'requested_by' => $this->input->post('requested_by'),
-					'requested_on' => $this->input->post('requested_on'),
-					'remarks' => $this->input->post('remarks'),
+					'grn_no' => $this->input->post('grn_no'),
+					'type' => $this->input->post('type'),
+					'grn_date' => $this->input->post('grn_date'),
+					'supplier_id' => $this->input->post('supplier_id'),
+					'type_no' => '',
+					'payment_type' => $this->input->post('payment_type'),
+					'bank_name' => $this->input->post('bank_name'),
+					'advance_paid' => $this->input->post('advance_paid'),
+					'discount_per' => $this->input->post('discount_per'),
+					'vat_percent' => $this->input->post('vat_percent'),
 				);
 
 
 				if ($id == '') {
-
-					$data['request_type'] = "DR";
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
@@ -461,23 +438,44 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$item_name =  $this->input->post('item_name');
-						$requested_qty =  $this->input->post('requested_qty');
-						$remark =  $this->input->post('remark');
+						$qty =  $this->input->post('qty');
+						$unit_price =  $this->input->post('unit_price');
 
 						if (count($item_code) > 0) {
+							$total = 0;
+							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['purchase_request_no'] = $data['purchase_request_no'];
+								$insert_detail['grn_no'] = $data['grn_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['item_name'] = $item_name[$i];
-								$insert_detail['requested_qty'] = $requested_qty[$i];
-								$insert_detail['received_qty'] = 0;
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
+								$insert_detail['status'] = '1';
 
-								$this->crud_model->insert('purchase_request_details', $insert_detail);
+								$total = $total + ($qty[$i] * $unit_price[$i]);
+								$batch_data[] = $insert_detail;
 							}
+
+							// echo "<pre>";
+							// var_dump($batch_data, $total);
+							// exit;
+							$discount_amount = ($total * $data['discount_per']) / 100;
+							$sub_total = $total - $discount_amount;
+							$vat_amount = ($sub_total * $data['vat_percent']) / 100;
+
+							$update_after_insert['total'] = $total;
+							$update_after_insert['discount_amt'] = $discount_amount;
+							$update_after_insert['sub_total'] = $sub_total;
+							$update_after_insert['vat_amount'] = $vat_amount;
+							$update_after_insert['grand_total'] = $total - $discount_amount + $vat_amount;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_after_insert, array('grn_no' => $data['grn_no']));
+
+							$this->db->insert_batch('grn_details', $batch_data);
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
@@ -497,27 +495,45 @@ class Admin extends Auth_controller
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						//delete all child before update
-						$this->db->delete('purchase_request_details', array('purchase_request_no' => $detail->purchase_request_no));
+						$this->db->delete('grn_details', array('grn_no' => $detail->grn_no));
 
 
 						$item_code =  $this->input->post('item_code');
-						$item_name =  $this->input->post('item_name');
-						$requested_qty =  $this->input->post('requested_qty');
-						$remark =  $this->input->post('remark');
+						$qty =  $this->input->post('qty');
+						$unit_price =  $this->input->post('unit_price');
 
 						if (count($item_code) > 0) {
+							$total = 0;
+							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['purchase_request_no'] = $detail->purchase_request_no;
+								$insert_detail['grn_no'] = $data['grn_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['item_name'] = $item_name[$i];
-								$insert_detail['requested_qty'] = $requested_qty[$i];
-								$insert_detail['received_qty'] = 0;
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
+								$insert_detail['status'] = '1';
 
-								$this->crud_model->insert('purchase_request_details', $insert_detail);
+								$total = $total + ($qty[$i] * $unit_price[$i]);
+								$batch_data[] = $insert_detail;
 							}
+
+							$discount_amount = ($total * $data['discount_per']) / 100;
+							$sub_total = $total - $discount_amount;
+							$vat_amount = ($sub_total * $data['vat_percent']) / 100;
+
+							$update_after_update['total'] = $total;
+							$update_after_update['discount_amt'] = $discount_amount;
+							$update_after_update['sub_total'] = $sub_total;
+							$update_after_update['vat_amount'] = $vat_amount;
+							$update_after_update['grand_total'] = $total - $discount_amount + $vat_amount;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_after_update, array('grn_no' => $data['grn_no']));
+
+							$this->db->insert_batch('grn_details', $batch_data);
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
 						redirect($this->redirect . '/admin/all');
@@ -528,8 +544,12 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['type'] = 'DR';
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
-		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
+		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['title'] = 'Add/Edit Direct ' . $this->title;
 		$data['page'] = 'direct_add';
 		$this->load->view('layouts/admin/index', $data);
@@ -551,11 +571,11 @@ class Admin extends Auth_controller
 						// exit;
 						$code = $this->input->post('invoice_no');
 					} else if ($grn_request_type == "PO") {
-						$code = $this->input->post('requisition_no');
+						$code = $this->input->post('purchase_order_no');
 					} else {
 						// echo "down";
 						// exit;
-						$code = $this->input->post('mrn_no');
+						$code = $this->input->post('purchase_request_no');
 					}
 					// var_dump($code);
 					// exit;
@@ -630,27 +650,22 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
-						$where_stock = array(
-							'item_code' => $val,
-							'transaction_date <=' => $requested_date,
-						);
-						$total_item_stock_before_requested_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-2">
+									<div class="col-md-5">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
+									<div class="col-md-1">
+										<input type="number" name="qty[]" min="1"  class="form-control" placeholder="Quantity" value="1" required>
+									</div> 
 									<div class="col-md-2">
-										<input type="number" name="requested_qty[]" min="1" id="pr_' . $val . '" class="form-control qty_pr" placeholder="Requested Quantity" required>
+										<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="0" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_requested_date . '" readonly>
-									</div>
-									<div class="col-md-4">
-										<textarea name="remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+										<input type="number" name="total_price[]" min="1" class="form-control" placeholder="Total Price" value="0" readonly>
 									</div>
 									<div class="col-md-1">
 										<div class="rmv">
