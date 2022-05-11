@@ -154,8 +154,9 @@ class Admin extends Auth_controller
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;	
-			$this->form_validation->set_rules('requested_on', 'Requested Date', 'required|trim');
-			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+			$this->form_validation->set_rules('grn_date', 'Grn Date', 'required|trim');
+			$this->form_validation->set_rules('supplier_id', 'Supplier', 'required|trim');
+			$this->form_validation->set_rules('payment_type', 'Payment Type', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$selected_items = $this->input->post('item_code');
@@ -165,53 +166,88 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'purchase_request_no' => $this->input->post('purchase_request_no'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'requested_by' => $this->input->post('requested_by'),
-					'requested_on' => $this->input->post('requested_on'),
-					'remarks' => $this->input->post('remarks'),
+					'grn_no' => $this->input->post('grn_no'),
+					'type' => $this->input->post('type'),
+					'grn_date' => $this->input->post('grn_date'),
+					'supplier_id' => $this->input->post('supplier_id'),
+					'type_no' => $this->input->post('type_no'),
+					'payment_type' => $this->input->post('payment_type'),
+					'bank_name' => $this->input->post('bank_name'),
+					'advance_paid' => $this->input->post('advance_paid'),
+					'discount_per' => $this->input->post('discount_per'),
+					'vat_percent' => $this->input->post('vat_percent'),
+					'created_on' => date('Y-m-d H:i:s'),
+					'created_by' => $this->current_user->id,
+					'cancel_tag' => '0',
 				);
-
-				if ($type == 'REQ') {
-					$data['requisition_no'] = $this->input->post('requisition_no');
-				} else if ($type == 'MRN') {
-					$data['mrn_no'] = $this->input->post('mrn_no');
-				} else {
-				}
-
-				$data['request_type'] = $type;
-				$data['created_on'] = date('Y-m-d H:i:s');
-				$data['created_by'] = $this->current_user->id;
-				$data['cancel_tag'] = '0';
 
 				$result = $this->crud_model->insert($this->table, $data);
 				if ($result == true) {
 
 					$item_code =  $this->input->post('item_code');
-					$item_name =  $this->input->post('item_name');
-					$requested_qty =  $this->input->post('requested_qty');
-					$remark =  $this->input->post('pr_remark');
+					$qty =  $this->input->post('qty');
+					$unit_price =  $this->input->post('unit_price');
 
 					if (count($item_code) > 0) {
+						$total = 0;
 						$batch_data = array();
 						for ($i = 0; $i < count($item_code); $i++) {
-							$insert_detail['purchase_request_no'] = $data['purchase_request_no'];
+							$insert_detail['grn_no'] = $data['grn_no'];
 							$insert_detail['item_code'] = $item_code[$i];
-							$insert_detail['item_name'] = $item_name[$i];
-							$insert_detail['requested_qty'] = $requested_qty[$i];
-							$insert_detail['received_qty'] = 0;
-							$insert_detail['remarks'] = $remark[$i];
+							$insert_detail['qty'] = $qty[$i];
+							$insert_detail['unit_price'] = $unit_price[$i];
+							$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
 							$insert_detail['created_on'] = date('Y-m-d H:i:s');
 							$insert_detail['created_by'] = $this->current_user->id;
+							$insert_detail['status'] = '1';
 
+							$total = $total + ($qty[$i] * $unit_price[$i]);
 							$batch_data[] = $insert_detail;
-
-							// $this->crud_model->insert('purchase_request_details', $insert_detail);
 						}
 
-						$batch_result = $this->db->insert_batch('purchase_request_details', $batch_data);
+						// echo "<pre>";
+						// var_dump($batch_data, $total);
+						// exit;
+						$discount_amount = ($total * $data['discount_per']) / 100;
+						$sub_total = $total - $discount_amount;
+						$vat_amount = ($sub_total * $data['vat_percent']) / 100;
+
+						$update_after_insert['total'] = $total;
+						$update_after_insert['discount_amt'] = $discount_amount;
+						$update_after_insert['sub_total'] = $sub_total;
+						$update_after_insert['vat_amount'] = $vat_amount;
+						$update_after_insert['grand_total'] = $total - $discount_amount + $vat_amount;
+
+						// Update main table
+						$this->crud_model->update($this->table, $update_after_insert, array('grn_no' => $data['grn_no']));
+
+						$this->db->insert_batch('grn_details', $batch_data);
 					}
+
+					$charge_code = $this->input->post('charge_code');
+					$charge_amount = $this->input->post('charge_amount');
+
+					if (count($charge_code) > 0) {
+						$total_charge = 0;
+						$batch_data_grn_charges = array();
+						for ($i = 0; $i < count($charge_code); $i++) {
+							$insert_grn_charges['grn_no'] = $data['grn_no'];
+							$insert_grn_charges['charge_code'] = $charge_code[$i];
+							$insert_grn_charges['amount'] = $charge_amount[$i];
+
+							$total_charge = $total_charge + $charge_amount[$i];
+							$batch_data_grn_charges[] = $insert_grn_charges;
+						}
+
+						$update_total_charges['total_charge'] = $total_charge;
+
+						// Update main table
+						$this->crud_model->update($this->table, $update_total_charges, array('grn_no' => $data['grn_no']));
+
+						$this->db->insert_batch('grn_charges', $batch_data_grn_charges);
+					}
+
 					$this->session->set_flashdata('success', 'Successfully Inserted.');
 					redirect($this->redirect . '/admin/all');
 				} else {
@@ -225,11 +261,12 @@ class Admin extends Auth_controller
 		// exit;
 		$data['type'] = $type;
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
-		$data['type'] = $type;
-		$data['title'] = 'Add ' . $this->title . ' From ' . $type;
+
+		$data['title'] = 'Add ' . $this->title;
 		$data['page'] = 'add';
 		$data['code'] = $code;
 		$this->load->view('layouts/admin/index', $data);
@@ -237,7 +274,7 @@ class Admin extends Auth_controller
 
 	public function edit($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('purchase_request', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('grn_master', array('id' => $id));
 		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
 			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
 			redirect($this->redirect . '/admin/all');
@@ -246,26 +283,15 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
-		// if ($master_detail) {
-		// 	$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
-		// }
-
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		// if (!$requisition_detail) {
-		// 	$this->session->set_flashdata('error', 'Record Not Found!!!');
-		// 	redirect($this->redirect . '/admin/all');
-		// }
 
 		$data['master_detail'] = $master_detail;
-		// $data['requisition_detail'] = $requisition_detail;
 		if ($this->input->post()) {
 			// echo "<pre>";
 			// var_dump($this->input->post());
 			// exit;
-			$this->form_validation->set_rules('requested_on', 'Requested Date', 'required|trim');
-			$this->form_validation->set_rules('requested_by', 'Requested By', 'required|trim');
+			$this->form_validation->set_rules('grn_date', 'Grn Date', 'required|trim');
+			$this->form_validation->set_rules('supplier_id', 'Supplier', 'required|trim');
+			$this->form_validation->set_rules('payment_type', 'Payment Type', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -281,22 +307,17 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'purchase_request_no' => $this->input->post('purchase_request_no'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'requested_by' => $this->input->post('requested_by'),
-					'requested_on' => $this->input->post('requested_on'),
-					'remarks' => $this->input->post('remarks'),
+					'grn_no' => $this->input->post('grn_no'),
+					'type' => $this->input->post('type'),
+					'grn_date' => $this->input->post('grn_date'),
+					'supplier_id' => $this->input->post('supplier_id'),
+					'type_no' => $this->input->post('type_no'),
+					'payment_type' => $this->input->post('payment_type'),
+					'bank_name' => $this->input->post('bank_name'),
+					'advance_paid' => $this->input->post('advance_paid'),
+					'discount_per' => $this->input->post('discount_per'),
+					'vat_percent' => $this->input->post('vat_percent'),
 				);
-
-				if ($master_detail->request_type == 'REQ') {
-					$data['requisition_no'] = $this->input->post('requisition_no');
-				} else if ($master_detail->request_type == 'MRN') {
-					$data['mrn_no'] = $this->input->post('mrn_no');
-				} else {
-				}
-
-				$data['request_type'] = $master_detail->request_type;
 
 				if ($id == '') {
 				} else {
@@ -306,31 +327,73 @@ class Admin extends Auth_controller
 					// $result = $this->crud_model->insert($this->table, $data);
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
-						$this->db->delete('purchase_request_details', array('purchase_request_no' => $master_detail->purchase_request_no));
+						$this->db->delete('grn_details', array('grn_no' => $data['grn_no']));
+
 						$item_code =  $this->input->post('item_code');
-						$item_name =  $this->input->post('item_name');
-						$requested_qty =  $this->input->post('requested_qty');
-						$remark =  $this->input->post('pr_remark');
+						$qty =  $this->input->post('qty');
+						$unit_price =  $this->input->post('unit_price');
 
 						if (count($item_code) > 0) {
+							$total = 0;
 							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['purchase_request_no'] = $data['purchase_request_no'];
+								$insert_detail['grn_no'] = $data['grn_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['item_name'] = $item_name[$i];
-								$insert_detail['requested_qty'] = $requested_qty[$i];
-								$insert_detail['received_qty'] = 0;
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['qty'] = $qty[$i];
+								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
 
+								$total = $total + ($qty[$i] * $unit_price[$i]);
 								$batch_data[] = $insert_detail;
-
-								// $this->crud_model->insert('purchase_request_details', $insert_detail);
 							}
 
-							$batch_result = $this->db->insert_batch('purchase_request_details', $batch_data);
+							// echo "<pre>";
+							// var_dump($batch_data, $total);
+							// exit;
+							$discount_amount = ($total * $data['discount_per']) / 100;
+							$sub_total = $total - $discount_amount;
+							$vat_amount = ($sub_total * $data['vat_percent']) / 100;
+
+							$update_after_insert['total'] = $total;
+							$update_after_insert['discount_amt'] = $discount_amount;
+							$update_after_insert['sub_total'] = $sub_total;
+							$update_after_insert['vat_amount'] = $vat_amount;
+							$update_after_insert['grand_total'] = $total - $discount_amount + $vat_amount;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_after_insert, array('grn_no' => $data['grn_no']));
+
+							$this->db->insert_batch('grn_details', $batch_data);
 						}
+						// delete grn_charges before update
+						$this->db->delete('grn_charges', array('grn_no' => $data['grn_no']));
+
+						$charge_code = $this->input->post('charge_code');
+						$charge_amount = $this->input->post('charge_amount');
+
+						if (count($charge_code) > 0) {
+							$total_charge = 0;
+							$batch_data_grn_charges = array();
+							for ($i = 0; $i < count($charge_code); $i++) {
+								$insert_grn_charges['grn_no'] = $data['grn_no'];
+								$insert_grn_charges['charge_code'] = $charge_code[$i];
+								$insert_grn_charges['amount'] = $charge_amount[$i];
+
+								$total_charge = $total_charge + $charge_amount[$i];
+								$batch_data_grn_charges[] = $insert_grn_charges;
+							}
+
+							$update_total_charges['total_charge'] = $total_charge;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_total_charges, array('grn_no' => $data['grn_no']));
+
+							$this->db->insert_batch('grn_charges', $batch_data_grn_charges);
+						}
+
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
 					} else {
@@ -340,10 +403,25 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$type = isset($master_detail->type) ? $master_detail->type : '';
+		$data['type'] = $type;
+
+		if ($type == 'INV') {
+			$data['transaction_level'] = 'Invoice Number';
+		} else if ($type == "PO") {
+			$data['transaction_level'] = 'Purchase Order Number';
+		} else {
+			$data['transaction_level'] = 'Purchase Request Number';
+		}
+
+		$data['type_no'] = isset($master_detail->type_no) ? $master_detail->type_no : '';
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
+
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
-		$data['title'] = 'Edit ' . $this->title . ' From ' . $master_detail->request_type;
+		$data['title'] = 'Edit ' . $this->title;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
 	}
@@ -477,6 +555,29 @@ class Admin extends Auth_controller
 
 							$this->db->insert_batch('grn_details', $batch_data);
 						}
+
+						$charge_code = $this->input->post('charge_code');
+						$charge_amount = $this->input->post('charge_amount');
+
+						if (count($charge_code) > 0) {
+							$total_charge = 0;
+							$batch_data_grn_charges = array();
+							for ($i = 0; $i < count($charge_code); $i++) {
+								$insert_grn_charges['grn_no'] = $data['grn_no'];
+								$insert_grn_charges['charge_code'] = $charge_code[$i];
+								$insert_grn_charges['amount'] = $charge_amount[$i];
+
+								$total_charge = $total_charge + $charge_amount[$i];
+								$batch_data_grn_charges[] = $insert_grn_charges;
+							}
+
+							$update_total_charges['total_charge'] = $total_charge;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_total_charges, array('grn_no' => $data['grn_no']));
+
+							$this->db->insert_batch('grn_charges', $batch_data_grn_charges);
+						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
 					} else {
@@ -535,6 +636,40 @@ class Admin extends Auth_controller
 
 							$this->db->insert_batch('grn_details', $batch_data);
 						}
+
+						//delete all child grn charges before update
+						$this->db->delete('grn_charges', array('grn_no' => $detail->grn_no));
+
+						$charge_code = $this->input->post('charge_code');
+						$charge_amount = $this->input->post('charge_amount');
+
+						if (count($charge_code) > 0) {
+							$total_charge = 0;
+							$batch_data_grn_charges = array();
+							for ($i = 0; $i < count($charge_code); $i++) {
+								$insert_grn_charges['grn_no'] = $data['grn_no'];
+								$insert_grn_charges['charge_code'] = $charge_code[$i];
+								$insert_grn_charges['amount'] = $charge_amount[$i];
+
+								$total_charge = $total_charge + $charge_amount[$i];
+								$batch_data_grn_charges[] = $insert_grn_charges;
+							}
+
+							$update_total_charges['total_charge'] = $total_charge;
+
+							// Update main table
+							$this->crud_model->update(
+								$this->table,
+								$update_total_charges,
+								array('grn_no' => $data['grn_no'])
+							);
+
+							$this->db->insert_batch(
+								'grn_charges',
+								$batch_data_grn_charges
+							);
+						}
+
 						$this->session->set_flashdata('success', 'Successfully Updated.');
 						redirect($this->redirect . '/admin/all');
 					} else {
@@ -546,6 +681,7 @@ class Admin extends Auth_controller
 		}
 		$data['type'] = 'DR';
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
@@ -641,6 +777,7 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
+				$next_key = $this->input->post('next_key');
 				$requested_date = $this->input->post('requested_date');
 
 				if ($val) {
@@ -659,13 +796,13 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-1">
-										<input type="number" name="qty[]" min="1"  class="form-control" placeholder="Quantity" value="1" required>
+										<input type="number" name="qty[]" min="1"  class="form-control qty_grn" id="qty_grn-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
 									</div> 
 									<div class="col-md-2">
-										<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="0" required>
+										<input type="number" name="unit_price[]" min="1" class="form-control" id="unit_price_grn-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="total_price[]" min="1" class="form-control" placeholder="Total Price" value="0" readonly>
+										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
 									</div>
 									<div class="col-md-1">
 										<div class="rmv">
@@ -673,6 +810,77 @@ class Admin extends Auth_controller
 										</div>
 									</div>
 									</div>';
+					}
+
+
+					if ($html) {
+
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully retrived',
+							'data' => $html,
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable To Get Form',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function getForm_charges()
+	{
+		try {
+
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				//access ok 
+				// echo "here";
+				// exit;
+				// $check = $this->load->view('listall/image_form');  
+				$val = $this->input->post('val');
+
+				if ($val) {
+					// var_dump($val);
+					// exit;
+					$charge_detail = $this->crud_model->get_where_single('charge_parameter', array('charge_code' => $val));
+					$html = '';
+
+					if ($charge_detail) {
+						$html .= '<div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-5"></div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label style="float: left;margin-right: 20px;">' . $charge_detail->charge_name . '</label>
+                                                <input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="' . $val . '">
+                                            </div>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <div class="form-group">
+                                                <input type="number" name="charge_amount[]" class="form-control" id="charge_amount" placeholder="Charge Amount" value="0">
+                                            </div>
+                                        </div>
+                                    </div>';
 					}
 
 
