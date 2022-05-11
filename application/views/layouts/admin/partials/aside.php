@@ -550,6 +550,35 @@ $current_user = $this->session->userdata('current_user');
             </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
+            <p>
+              GRN
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('charge_parameter/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>GRN Charges</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('grn/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('grn/admin/direct_add'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="nav-header">User Management</li>
         <li class="nav-item">
           <a href="#" class="nav-link ">

@@ -47,7 +47,7 @@
               <div class="form-group">
                 <label>Select Purchase Order no</label>
                 <select name="purchase_order_no" class="form-control selct2" id="purchase_order_no">
-                  <?php foreach ($purchase_order as $key => $value) { ?>
+                  <?php foreach ($pos as $key => $value) { ?>
                     <option value="<?php echo $value->purchase_order_no; ?>"><?php echo $value->purchase_order_no; ?></option>
                   <?php } ?>
                 </select>
