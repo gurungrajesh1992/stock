@@ -554,25 +554,19 @@ $current_user = $this->session->userdata('current_user');
           <a href="#" class="nav-link ">
             <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
             <p>
-              GRN
+              Sales
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo base_url('charge_parameter/admin/all'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>GRN Charges</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo base_url('grn/admin/all'); ?>" class="nav-link">
+              <a href="<?php echo base_url('sales/admin/all'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>List</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('grn/admin/direct_add'); ?>" class="nav-link">
+              <a href="<?php echo base_url('sales/admin/add'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
               </a>
