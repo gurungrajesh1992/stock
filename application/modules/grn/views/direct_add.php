@@ -5,6 +5,7 @@
 </style>
 <?php
 $total = 0;
+
 ?>
 <section class="content">
     <div class="container-fluid">
