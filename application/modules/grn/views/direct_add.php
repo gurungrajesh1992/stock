@@ -3,6 +3,9 @@
         display: none;
     }
 </style>
+<?php
+$total = 0;
+?>
 <section class="content">
     <div class="container-fluid">
         <form class="all_form" method="post" action="<?php echo base_url('grn/admin/form'); ?>" enctype="multipart/form-data">
@@ -159,7 +162,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="req_item">
+                                    <div class="req_item" id="items">
                                         <div class=" row">
                                             <div class="col-md-1">
                                                 <label>
@@ -182,68 +185,60 @@
 
                                             </div>
                                         </div>
-
-
                                         <?php
                                         if (isset($detail->grn_no)) {
                                             $childs = $this->crud_model->get_where('grn_details', array('grn_no' => $detail->grn_no));
                                             if ($childs) {
+                                                foreach ($childs as $key => $value) {
+                                                    $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                         ?>
-                                                <div id="items">
-                                                    <?php
-                                                    $total = 0;
-                                                    foreach ($childs as $key => $value) {
-                                                        $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
-                                                    ?> <div class="row" style="margin-bottom: 15px;">
-                                                            <div class="col-md-1">
-                                                                <?php echo ($key + 1) . '.'; ?>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
-                                                                <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="rmv">
-                                                                    <span class="rmv_itm">X</span>
-                                                                </div>
+                                                    <div class="row" style="margin-bottom: 15px;">
+                                                        <div class="col-md-1">
+                                                            <?php echo ($key + 1) . '.'; ?>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                                                            <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="rmv">
+                                                                <span class="rmv_itm">X</span>
                                                             </div>
                                                         </div>
-                                                    <?php
-                                                        $total = $total + $value->qty * $value->unit_price;
-                                                    }
-
-                                                    ?>
-                                                </div>
-                                                <div class=" row">
-                                                    <div class="col-md-1">
                                                     </div>
-                                                    <div class="col-md-5">
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label>Total =</label>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input type="number" name="total" class="form-control" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
-                                                    </div>
-                                                    <div class="col-md-1">
-
-                                                    </div>
-                                                </div>
                                         <?php
+                                                    $total = $total + $value->qty * $value->unit_price;
+                                                }
                                             }
                                         } ?>
                                     </div>
+
+                                </div>
+                            </div>
+                            <div class=" row">
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-5">
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Total =</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" name="total" class="form-control" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
+                                </div>
+                                <div class="col-md-1">
+
                                 </div>
                             </div>
                         </div>
