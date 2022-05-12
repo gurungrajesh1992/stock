@@ -58,10 +58,111 @@
 <script>
   $(document).ready(function() {
 
+    //on change qty change total price
+    $(document).off('change', '.qty_grn').on('change', '.qty_grn', function(e) {
+      e.preventDefault();
+      var qty = $(this).val();
+      var id = $(this).attr('id');
+      var split_by_dash = id.split("-");
+      var key = split_by_dash[1];
+      // alert(key);
+      var unit_price = $('#unit_price_grn-' + key).val();
+      var row_total_before_change = $('#each_total_grn-' + key).val();
+      var total = $('#total_price_grn').val();
+
+      $('#each_total_grn-' + key).val(unit_price * qty);
+      $('#total_price_grn').val(total - row_total_before_change + unit_price * qty);
+    });
+
+    //on change unit price change total price 
+    $(document).off('change', '.unit_price_grn').on('change', '.unit_price_grn', function(e) {
+      e.preventDefault();
+      var unit_price = $(this).val();
+      var id = $(this).attr('id');
+      var split_by_dash = id.split("-");
+      var key = split_by_dash[1];
+      // alert(key);
+      var qty = $('#qty_grn-' + key).val();
+      var row_total_before_change = $('#each_total_grn-' + key).val();
+      var total = $('#total_price_grn').val();
+
+      $('#each_total_grn-' + key).val(unit_price * qty);
+      $('#total_price_grn').val(total - row_total_before_change + unit_price * qty);
+    });
+
+    //charges
+    $(document).off('change', '#charges_grn').on('change', '#charges_grn', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var already_selected = $('input[name^=charge_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_selected) !== -1) {
+        // alert('already selected, you can change quantity');
+        Toastify({
+
+          text: 'already selected, you can change amount',
+
+          duration: 6000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          }
+
+        }).showToast();
+        return false;
+      }
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn/admin/getForm_charges'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#charges_append').append(resp.data);
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+          } else {
+            // alert(resp.status_message);
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+          }
+        }
+      });
+    });
+
     //direct grn receive items
     $(document).off('change', '#item_grn').on('change', '#item_grn', function(e) {
       e.preventDefault();
       var val = $(this).val();
+      var next_key = $('#next_key').val();
       var already_items = $('input[name^=item_code]').map(function(idx, elem) {
         return $(elem).val();
       }).get();
@@ -91,6 +192,7 @@
         data: {
           "val": val,
           "total": already_items.length,
+          "next_key": next_key,
         },
         success: function(resp) {
           // console.log(resp.data);return false;
@@ -98,6 +200,7 @@
           // console.log(resp.status);return false;
           if (resp.status == "success") {
             $('#items').append(resp.data);
+            $('#next_key').val(next_key + 1);
             Toastify({
 
               text: resp.status_message,

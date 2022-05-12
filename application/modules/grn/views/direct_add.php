@@ -202,13 +202,13 @@ $total = 0;
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                                                            <input type="number" name="qty[]" min="1" class="form-control qty_grn" id="qty_grn-<?php echo  $key + 1 ?>" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                                                            <input type="number" name="unit_price[]" min="1" class="form-control unit_price_grn" id="unit_price_grn-<?php echo $key + 1; ?>" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
+                                                            <input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
                                                         </div>
                                                         <div class="col-md-1">
                                                             <div class="rmv">
@@ -222,6 +222,7 @@ $total = 0;
                                             }
                                         } ?>
                                     </div>
+                                    <input type="hidden" name="next_key" class="form-control btn btn-sm btn-primary" id="next_key" value="<?php echo (((isset($childs)) && $childs != '') ? count($childs) : 0) ?>">
 
                                 </div>
                             </div>
@@ -236,7 +237,7 @@ $total = 0;
                                     <label>Total =</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" name="total" class="form-control" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
+                                    <input type="number" name="total" class="form-control" id="total_price_grn" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
                                 </div>
                                 <div class="col-md-1">
 
@@ -246,8 +247,56 @@ $total = 0;
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div style="border: 1px solid #ddd;margin-bottom: 10px;"></div>
+                            <div style="border: 1px solid #ddd;margin-bottom: 10px;margin-top: 13px;"></div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label style="float: left;margin-right: 20px;">Select Charges</label>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <select name="charges" class="form-control selct2" id="charges_grn">
+                                    <option value>Select Charges</option>
+                                    <?php foreach ($charges as $key => $value) { ?>
+                                        <option value="<?php echo $value->charge_code; ?>"><?php echo $value->charge_name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="charges_append">
+                        <?php
+                        if (isset($detail->grn_no)) {
+                            $charge_childs = $this->crud_model->get_where('grn_charges', array('grn_no' => $detail->grn_no));
+                            if ($charge_childs) {
+                                foreach ($charge_childs as $key => $value) {
+                                    $charge_detail = $this->crud_model->get_where_single('charge_parameter', array('charge_code' => $value->charge_code));
+                        ?>
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-5"></div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label style="float: left;margin-right: 20px;"><?php echo $charge_detail->charge_name; ?></label>
+                                                <input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="<?php echo $value->charge_code; ?>">
+                                            </div>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <div class="form-group">
+                                                <input type="number" name="charge_amount[]" class="form-control" id="charge_amount" placeholder="Charge Amount" value="<?php echo set_value('charge_amount', (((isset($value->amount)) && $value->amount != '') ? $value->amount : '')); ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                        <?php
+                                }
+                            }
+                        }
+                        ?>
                     </div>
                     <div class="row">
                         <div class="col-md-3"></div>
