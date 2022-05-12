@@ -805,7 +805,7 @@ class Admin extends Auth_controller
 										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
 									</div>
 									<div class="col-md-1">
-										<div class="rmv">
+										<div class="rmv_grn_direct" id="rm-' . ($next_key + 1) . '">
 											<span class="rmv_itm">X</span>
 										</div>
 									</div>

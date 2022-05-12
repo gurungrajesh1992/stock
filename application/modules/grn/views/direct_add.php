@@ -211,7 +211,7 @@ $total = 0;
                                                             <input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <div class="rmv">
+                                                            <div class="rmv_grn_direct" id="rm-<?php echo $key + 1; ?>">
                                                                 <span class="rmv_itm">X</span>
                                                             </div>
                                                         </div>

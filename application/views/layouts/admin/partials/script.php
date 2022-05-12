@@ -58,6 +58,22 @@
 <script>
   $(document).ready(function() {
 
+
+    // REMOVE item direct add grn
+
+    $(document).off('click', '.rmv_grn_direct').on('click', '.rmv_grn_direct', function(e) {
+      e.preventDefault();
+      var id = $(this).attr('id');
+      var split_by_dash = id.split("-");
+      var key = split_by_dash[1];
+      var row_total_before_change = $('#each_total_grn-' + key).val();
+      var total = $('#total_price_grn').val();
+      // alert(key);
+      // alert('hi');
+      $('#total_price_grn').val(total - row_total_before_change);
+      $(this).parent().parent().remove();
+    });
+
     //on change qty change total price
     $(document).off('change', '.qty_grn').on('change', '.qty_grn', function(e) {
       e.preventDefault();
