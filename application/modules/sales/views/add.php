@@ -157,14 +157,15 @@ $total = 0;
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" required>
+                                                            <input type="number" name="qty[]" min="1" class="form-control qty_sales" id="qty_sales-<?php echo  $key + 1 ?>" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" required>
+                                                            <input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-<?php echo $key + 1; ?>" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <input type="number" name="grand_total[]" min="1" class="form-control" placeholder="Total Price" readonly>
+                                                            <input type="number" name="grand_total[]" min="1" class="form-control" id="each_total_sales-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
                                                         </div>
+
                                                         <div class="col-md-1">
                                                             <div class="rmv">
                                                                 <span class="rmv_itm">X</span>
@@ -177,7 +178,7 @@ $total = 0;
                                             }
                                         } ?>
                                     </div>
-
+                                    <input type="hidden" name="next_key" class="form-control btn btn-sm btn-primary" id="next_key" value="<?php echo (((isset($childs)) && $childs != '') ? count($childs) : 0) ?>">
                                 </div>
                             </div>
                             <div class=" row">
@@ -191,7 +192,7 @@ $total = 0;
                                     <label>Total =</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" name="total" class="form-control" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
+                                    <input type="number" name="total" class="form-control" id="total_price_sales" placeholder="Total Price" value="<?php echo $total; ?>" readonly>
                                 </div>
                                 <div class="col-md-1">
 
@@ -214,8 +215,8 @@ $total = 0;
                         </div>
                         <div class=" col-md-2">
                             <div class="form-group">
-                                <input type="number" name="advance_paid" class="form-control" id="advance_paid" placeholder="Advanced Paid" value="<?php echo set_value('advance_paid', (((isset($detail->advance_paid)) && $detail->advance_paid != '') ? $detail->advance_paid : '')); ?>">
-                                <?php echo form_error('advance_paid', '<div class="error_message">', '</div>'); ?>
+                                <input type="number" name="advance_amt" class="form-control" id="advance_amt" placeholder="Advanced Paid" value="<?php echo set_value('advance_amt', (((isset($detail->advance_amt)) && $detail->advance_amt != '') ? $detail->advance_amt : '')); ?>">
+                                <?php echo form_error('advance_amt', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
                     </div>
@@ -264,7 +265,7 @@ $total = 0;
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-3"></div>
                         <div class="col-md-5"></div>
                         <div class="col-md-2">
@@ -278,7 +279,7 @@ $total = 0;
                                 <?php echo form_error('remaining_amt', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class=" row">
                         <div class="col-md-4">

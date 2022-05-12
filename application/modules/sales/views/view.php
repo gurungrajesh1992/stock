@@ -6,24 +6,73 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve" table_id="invoice_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel" table_id="invoice_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <a class="btn btn-sm btn-info" id="approve" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <a class="btn btn-sm btn-danger" id="cancel" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Invoice No. : </label>
-                                <?php echo set_value('invoice_no', (((isset($master_detail->invoice_no)) && $master_detail->invoice_no != '') ? $master_detail->invoice_no : '')); ?>
+                                <label>Sales No. : </label>
+                                <?php echo set_value('sale_no', (((isset($master_detail->sale_no)) && $master_detail->sale_no != '') ? $master_detail->sale_no : '')); ?>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Supplier Name : </label>
-                                <?php $suppliers_detail = $this->crud_model->get_where_single_order_by('supplier_infos', array('id' => $master_detail->supplier_id), 'id', 'DESC');
-
-                                echo set_value('supplier_name', (((isset($suppliers_detail->supplier_name)) && $suppliers_detail->supplier_name != '') ? $suppliers_detail->supplier_name : '')); ?>
+                                <label>Sales Code : </label>
+                                <?php echo set_value('sales_code', (((isset($master_detail->sales_code)) && $master_detail->sales_code != '') ? $master_detail->sales_code : '')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sales Date : </label>
+                                <?php echo set_value('sales_date', (((isset($master_detail->sales_date)) && $master_detail->sales_date != '') ? $master_detail->sales_date : date('Y-m-d'))); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Client Name : </label>
+                                <?php echo set_value('client_name', (((isset($master_detail->client_name)) && $master_detail->client_name != '') ? $master_detail->client_name : '')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Payment Type : </label>
+                                <?php
+                                if ($master_detail->payment_type == 'CH') {
+                                    $payment_type = 'Cash';
+                                } else if ($master_detail->payment_type == 'CQ') {
+                                    $payment_type = 'Cheque';
+                                } else {
+                                    $payment_type = 'Credit';
+                                }
+                                ?>
+                                <?php echo set_value('payment_type', (((isset($payment_type)) && $payment_type != '') ? $payment_type : '')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Bank Name : </label>
+                                <?php echo set_value('bank_name', (((isset($master_detail->bank_name)) && $master_detail->bank_name != '') ? $master_detail->bank_name : '')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Remarks : </label>
+                                <?php echo set_value('remarks', (((isset($master_detail->remarks)) && $master_detail->remarks != '') ? $master_detail->remarks : '')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Posted Date : </label>
+                                <?php echo set_value('posted_on', (((isset($master_detail->posted_on)) && $master_detail->posted_on != '') ? $master_detail->posted_on : date('Y-m-d'))); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Received By : </label>
+                                <?php echo set_value('received_by', (((isset($master_detail->received_by)) && $master_detail->received_by != '') ? $master_detail->received_by : '')); ?>
                             </div>
                         </div>
                     </div>

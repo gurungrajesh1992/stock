@@ -111,19 +111,31 @@
             });
         });
 
+        //direct grn receive items
         $(document).off('change', '#item_sales').on('change', '#item_sales', function(e) {
             e.preventDefault();
             var val = $(this).val();
+            var next_key = $('#next_key').val();
             var already_items = $('input[name^=item_code]').map(function(idx, elem) {
                 return $(elem).val();
             }).get();
 
-            // if (jQuery.inArray(val, already_items) !== -1) {
-            //     alert('already selected, you can change quantity');
-            //     return false;
-            // }
-            // console.log(already_items.length);
-            // return false;
+            if (jQuery.inArray(val, already_items) !== -1) {
+                // alert('already selected, you can change quantity');
+                Toastify({
+
+                    text: 'already selected, you can change quantity',
+
+                    duration: 6000,
+
+                    style: {
+                        background: "linear-gradient(to right, red, yellow)",
+                    }
+
+                }).showToast();
+                return false;
+            }
+
             $.ajax({
 
                 url: '<?php echo base_url('sales/admin/getForm'); ?>',
@@ -132,7 +144,8 @@
                 dataType: "json",
                 data: {
                     "val": val,
-                    // "total": already_items.length,
+                    "total": already_items.length,
+                    "next_key": next_key,
                 },
                 success: function(resp) {
                     // console.log(resp.data);return false;
@@ -140,8 +153,31 @@
                     // console.log(resp.status);return false;
                     if (resp.status == "success") {
                         $('#items').append(resp.data);
+                        $('#next_key').val(next_key + 1);
+                        Toastify({
+
+                            text: resp.status_message,
+
+                            duration: 5000,
+
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            },
+
+                        }).showToast();
                     } else {
-                        alert(resp.status_message);
+                        // alert(resp.status_message);
+                        Toastify({
+
+                            text: resp.status_message,
+
+                            duration: 5000,
+
+                            style: {
+                                background: "linear-gradient(to right, red, yellow)",
+                            }
+
+                        }).showToast();
                     }
                 }
             });
@@ -174,27 +210,36 @@
         });
 
 
-        $(document).ready(function() {
-            var i = 0;
-            $("#qty-" + i).change(function() {
-                upd_art(i)
-            });
-            $("#unit_price-" + i).change(function() {
-                upd_art(i)
-            });
+        //on change qty change total price
+        $(document).off('change', '.qty_sales').on('change', '.qty_sales', function(e) {
+            e.preventDefault();
+            var qty = $(this).val();
+            var id = $(this).attr('id');
+            var split_by_dash = id.split("-");
+            var key = split_by_dash[1];
+            // alert(key);
+            var unit_price = $('#unit_price_sales-' + key).val();
+            var row_total_before_change = $('#each_total_sales-' + key).val();
+            var total = $('#total_price_sales').val();
 
+            $('#each_total_sales-' + key).val(unit_price * qty);
+            $('#total_price_sales').val(total - row_total_before_change + unit_price * qty);
+        });
 
-            function upd_art(i) {
-                var qty = $('#qty-' + i).val();
-                var unit_price = $('#unit_price-' + i).val();
-                var totNumber = (qty * unit_price);
-                var tot = totNumber.toFixed(2);
-                $('#grand_total-' + i).val(tot);
-            }
+        //on change unit price change total price 
+        $(document).off('change', '.unit_price_sales').on('change', '.unit_price_sales', function(e) {
+            e.preventDefault();
+            var unit_price = $(this).val();
+            var id = $(this).attr('id');
+            var split_by_dash = id.split("-");
+            var key = split_by_dash[1];
+            // alert(key);
+            var qty = $('#qty_sales-' + key).val();
+            var row_total_before_change = $('#each_total_sales-' + key).val();
+            var total = $('#total_price_sales').val();
 
-
-
-            //  setInterval(upd_art, 1000);
+            $('#each_total_sales-' + key).val(unit_price * qty);
+            $('#total_price_sales').val(total - row_total_before_change + unit_price * qty);
         });
 
     });

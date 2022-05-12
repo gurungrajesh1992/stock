@@ -73,36 +73,46 @@ class Admin extends Auth_controller
 		} else {
 			$data['sale_no'] = 'SN' . date('dmY') . '-0001';
 		}
+
 		if ($this->input->post()) {
 			$this->form_validation->set_rules('sale_no', 'Invoice No', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
-				// $selected_items = $this->input->post('item_code');
-				// if (!isset($selected_items)) {
-				// 	$this->session->set_flashdata('error', 'Select atleast one product to continue.');
+				$selected_items = $this->input->post('item_code');
+				if (!isset($selected_items)) {
+					$this->session->set_flashdata('error', 'Select atleast one product to continue.');
 
-				// 	if ($id == '') {
-				// 		redirect($this->redirect . '/admin/add');
-				// 	} else {
-				// 		redirect($this->redirect . '/admin/edit/' . $id);
-				// 	}
-				// }
+					if ($id == '') {
+						redirect($this->redirect . '/admin/add');
+					} else {
+						redirect($this->redirect . '/admin/edit/' . $id);
+					}
+				}
+
 
 				$data = array(
 					'sale_no' => $this->input->post('sale_no'),
 					'sales_code' => $this->input->post('sales_code'),
 					'sales_date' => $this->input->post('sales_date'),
 					'client_id' => $this->input->post('client_id'),
-					'client_name' => $this->input->post('client_id'),
+					// 'client_name' => $client_details->client_name,
 					'remarks' => $this->input->post('remarks'),
 					'posted_on' => $this->input->post('posted_on'),
 					'received_by' => $this->input->post('received_by'),
 					'payment_type' => $this->input->post('payment_type'),
 					'bank_name' => $this->input->post('bank_name'),
+					'advance_amt' => $this->input->post('advance_amt'),
+					'discount_per' => $this->input->post('discount_per'),
+					'vat_percent' => $this->input->post('vat_percent'),
+					'other_charges' => $this->input->post('other_charges'),
+					// 'remaining_amt' => $this->input->post('remaining_amt'),
+
 				);
-				var_dump($data);
-				exit;
+				// var_dump($data['client_id']);
+				// exit;
+
+				$client_details = $this->crud_model->get_where_single('client_infos', array('id' => $data['client_id']));
 
 				if ($id == '') {
 
@@ -115,17 +125,43 @@ class Admin extends Auth_controller
 
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
-						$amount =  $this->input->post('amount');
+						$unit_price =  $this->input->post('unit_price');
 
 						if (count($item_code) > 0) {
+							$total = 0;
+							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['sale_no'] = $data['sale_no'];
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['qty'] = $qty[$i];
-								$insert_detail['amount'] = $amount[$i];
+								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['grand_total'] = ($qty[$i] * $unit_price[$i]);
+								$insert_detail['created_on'] = date('Y-m-d H:i:s');
+								$insert_detail['created_by'] = $this->current_user->id;
+								$insert_detail['status'] = '1';
 
-								$this->crud_model->insert('invoice_details', $insert_detail);
+								$total = $total + ($qty[$i] * $unit_price[$i]);
+								$batch_data[] = $insert_detail;
 							}
+							// echo "<pre>";
+							// var_dump($batch_data, $total);
+							// exit;
+							$discount_amount = ($total * $data['discount_per']) / 100;
+							$sub_total = $total - $discount_amount;
+							$vat_amount = ($sub_total * $data['vat_percent']) / 100;
+
+
+							$update_after_insert['total'] = $total;
+							$update_after_insert['discount_amt'] = $discount_amount;
+							// $update_after_insert['sub_total'] = $sub_total;
+							$update_after_insert['vat_amount'] = $vat_amount;
+							// $update_after_insert['grand_total'] = $total - $discount_amount + $vat_amount;
+							$update_after_insert['client_name'] = $client_details->client_name;
+
+							// Update main table
+							$this->crud_model->update($this->table, $update_after_insert, array('sale_no' => $data['sale_no']));
+
+							$this->db->insert_batch('sales_details', $batch_data);
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
 						redirect($this->redirect . '/admin/all');
@@ -243,24 +279,21 @@ class Admin extends Auth_controller
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('invoice_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('sales_master', array('id' => $id));
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$invoice_details = $this->crud_model->get_where_single('invoice_details', array('invoice_no' => $master_detail->invoice_no));
+			$sales_details = $this->crud_model->get_where_single('sales_details', array('sale_no' => $master_detail->sale_no));
 		}
 
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if (!$invoice_details) {
+		if (!$sales_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		$data['master_detail'] = $master_detail;
-		$data['invoice_details'] = $invoice_details;
+		$data['sales_details'] = $sales_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
@@ -511,6 +544,7 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
+				$next_key = $this->input->post('next_key');
 				$requested_date = $this->input->post('requested_date');
 
 				if ($val) {
@@ -529,13 +563,13 @@ class Admin extends Auth_controller
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-1">
-										<input type="number" id="qty-0" name="qty[]"  min="1"  class="form-control" placeholder="Quantity" value="0" required>
+										<input type="number" name="qty[]" min="1"  class="form-control qty_sales" id="qty_sales-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
 									</div> 
 									<div class="col-md-2">
-										<input type="number" id="unit_price-0" name="unit_price[]"  min="1" class="form-control" placeholder="Unit Price" value="0" required>
+										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" id="grand_total-0" name="grand_total[]"  min="1" class="form-control" placeholder="Total Price" readonly>
+										<input type="number" name="grand_total[]" min="1" class="form-control" id="each_total_sales-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
 									</div>
 									<div class="col-md-1">
 										<div class="rmv">
