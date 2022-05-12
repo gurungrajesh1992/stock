@@ -90,15 +90,22 @@ class Admin extends Auth_controller
 				// }
 
 				$data = array(
-					'invoice_no' => $this->input->post('invoice_no'),
-					'supplier_id' => $this->input->post('supplier_id'),
-
+					'sale_no' => $this->input->post('sale_no'),
+					'sales_code' => $this->input->post('sales_code'),
+					'sales_date' => $this->input->post('sales_date'),
+					'client_id' => $this->input->post('client_id'),
+					'client_name' => $this->input->post('client_id'),
+					'remarks' => $this->input->post('remarks'),
+					'posted_on' => $this->input->post('posted_on'),
+					'received_by' => $this->input->post('received_by'),
+					'payment_type' => $this->input->post('payment_type'),
+					'bank_name' => $this->input->post('bank_name'),
 				);
-
+				var_dump($data);
+				exit;
 
 				if ($id == '') {
 
-					$data['type'] = "RQ";
 					$data['created_on'] = date('Y-m-d H:i:s');
 					$data['created_by'] = $this->current_user->id;
 					$data['cancel_tag'] = '0';
@@ -112,7 +119,7 @@ class Admin extends Auth_controller
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['invoice_no'] = $data['invoice_no'];
+								$insert_detail['sale_no'] = $data['sale_no'];
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['amount'] = $amount[$i];
@@ -130,6 +137,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['clients'] = $this->crud_model->get_where('client_infos', array('status' => '1'));
+		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['title'] = 'Add Sales';
 		$data['page'] = 'add';
 		$this->load->view('layouts/admin/index', $data);
@@ -503,38 +511,32 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
-				$issued_date = $this->input->post('issued_date');
+				$requested_date = $this->input->post('requested_date');
 
 				if ($val) {
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
-
 					$html = '';
 
 					if ($item_detail) {
-						$where_stock = array(
-							'item_code' => $val,
-							// 'transaction_date <=' => $issued_date,
-						);
-
-						$total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
-
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-2">
+									<div class="col-md-5">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
+									<div class="col-md-1">
+										<input type="number" id="qty-0" name="qty[]"  min="1"  class="form-control" placeholder="Quantity" value="0" required>
+									</div> 
 									<div class="col-md-2">
-										<input type="number" name="qty[]" id="qty_' . $val . '" class="form-control qty_iss" placeholder="Quantity" required>
+										<input type="number" id="unit_price-0" name="unit_price[]"  min="1" class="form-control" placeholder="Unit Price" value="0" required>
 									</div>
 									<div class="col-md-2">
-										<input type="number" name="amount[]" id="amount_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Amount"  required>
+										<input type="number" id="grand_total-0" name="grand_total[]"  min="1" class="form-control" placeholder="Total Price" readonly>
 									</div>
-							
 									<div class="col-md-1">
 										<div class="rmv">
 											<span class="rmv_itm">X</span>
