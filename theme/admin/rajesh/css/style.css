@@ -105,6 +105,13 @@ span.rmv_itm {
     cursor: pointer;
 }
 
+.grn_item {
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+
 .out_of_stock {
     color: red;
 }
