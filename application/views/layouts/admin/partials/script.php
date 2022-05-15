@@ -58,6 +58,33 @@
 <script>
   $(document).ready(function() {
 
+    //charges
+    $(document).off('change', '.charge_amt').on('change', '.charge_amt', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var total_charges = 0;
+      var amount_list = $('input[name^=charge_amount]').map(function(idx, elem) {
+        total_charges = total_charges + parseInt($(elem).val());
+        return $(elem).val();
+      }).get();
+
+      $('#total_charges_grn').val(total_charges);
+    });
+    // REMOVE item direct add grn
+
+    $(document).off('click', '.rmv_grn_direct').on('click', '.rmv_grn_direct', function(e) {
+      e.preventDefault();
+      var id = $(this).attr('id');
+      var split_by_dash = id.split("-");
+      var key = split_by_dash[1];
+      var row_total_before_change = $('#each_total_grn-' + key).val();
+      var total = $('#total_price_grn').val();
+      // alert(key);
+      // alert('hi');
+      $('#total_price_grn').val(total - row_total_before_change);
+      $(this).parent().parent().remove();
+    });
+
     //on change qty change total price
     $(document).off('change', '.qty_grn').on('change', '.qty_grn', function(e) {
       e.preventDefault();
@@ -94,6 +121,7 @@
     $(document).off('change', '#charges_grn').on('change', '#charges_grn', function(e) {
       e.preventDefault();
       var val = $(this).val();
+      var sn = $('#next_sn').val();
       var already_selected = $('input[name^=charge_code]').map(function(idx, elem) {
         return $(elem).val();
       }).get();
@@ -122,6 +150,7 @@
         dataType: "json",
         data: {
           "val": val,
+          "sn": sn,
         },
         success: function(resp) {
           // console.log(resp.data);return false;
@@ -129,6 +158,7 @@
           // console.log(resp.status);return false;
           if (resp.status == "success") {
             $('#charges_append').append(resp.data);
+            $('#next_sn').val(sn + 1);
             Toastify({
 
               text: resp.status_message,

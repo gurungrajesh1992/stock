@@ -232,52 +232,100 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-5"></div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label style="float: left;margin-right: 20px;">Select Charges</label>
-                            </div>
-                        </div>
-                        <div class=" col-md-2">
-                            <div class="form-group">
-                                <select name="charges" class="form-control selct2" id="charges_grn">
-                                    <option value>Select Charges</option>
-                                    <?php foreach ($charges as $key => $value) { ?>
-                                        <option value="<?php echo $value->charge_code; ?>"><?php echo $value->charge_name; ?></option>
-                                    <?php } ?>
-                                </select>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="float: left;margin-right: 20px;">Select Charges</label>
+                                        <select name="charges" class="form-control selct2" id="charges_grn">
+                                            <option value>Select Charges</option>
+                                            <?php foreach ($charges as $key => $value) { ?>
+                                                <option value="<?php echo $value->charge_code; ?>"><?php echo $value->charge_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div id="charges_append">
-                        <?php
-                        if (isset($master_detail->grn_no)) {
-                            $charge_childs = $this->crud_model->get_where('grn_charges', array('grn_no' => $master_detail->grn_no));
-                            if ($charge_childs) {
-                                foreach ($charge_childs as $key => $value) {
-                                    $charge_detail = $this->crud_model->get_where_single('charge_parameter', array('charge_code' => $value->charge_code));
-                        ?>
-                                    <div class="row">
-                                        <div class="col-md-3"></div>
-                                        <div class="col-md-5"></div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label style="float: left;margin-right: 20px;"><?php echo $charge_detail->charge_name; ?></label>
-                                                <input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="<?php echo $value->charge_code; ?>">
-                                            </div>
-                                        </div>
-                                        <div class=" col-md-2">
-                                            <div class="form-group">
-                                                <input type="number" name="charge_amount[]" class="form-control" id="charge_amount" placeholder="Charge Amount" value="<?php echo set_value('charge_amount', (((isset($value->amount)) && $value->amount != '') ? $value->amount : '')); ?>">
-                                            </div>
-                                        </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="grn_item" id="grn_items">
+                                <div class=" row">
+                                    <div class="col-md-1">
+                                        <label>
+                                            #
+                                        </label>
                                     </div>
-                        <?php
-                                }
-                            }
-                        }
-                        ?>
+                                    <div class="col-md-4">
+                                        <label>Charge Name</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Remarks</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Amount</label>
+                                    </div>
+                                </div>
+                                <div id="charges_append">
+                                    <?php
+                                    if (isset($master_detail->grn_no)) {
+                                        $charge_childs = $this->crud_model->get_where('grn_charges', array('grn_no' => $master_detail->grn_no));
+                                        if ($charge_childs) {
+                                            $total_charges = 0;
+                                            foreach ($charge_childs as $key => $value) {
+                                                $charge_detail = $this->crud_model->get_where_single('charge_parameter', array('charge_code' => $value->charge_code));
+                                    ?>
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <?php echo ($key + 1); ?>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <?php echo $charge_detail->charge_name; ?>
+                                                            <input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="<?php echo $value->charge_code; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <textarea name="charge_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo (isset($value->remarks) && $value->remarks != '') ? $value->remarks : '' ?></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <input type="number" name="charge_amount[]" class="form-control charge_amt" id="charge_amount" placeholder="Charge Amount" value="<?php echo (isset($value->amount) && $value->amount) ? $value->amount : '' ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php
+                                                $total_charges = $total_charges + $value->amount;
+                                            }
+                                            ?>
+                                            <div class="row">
+                                                <div class="col-md-1">
+                                                </div>
+                                                <div class="col-md-4">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Total =</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <input type="number" name="total_charges" class="form-control" id="total_charges_grn" placeholder="Total Charges" value="<?php echo $total_charges; ?>" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+
+                                    <input type="hidden" name="next_sn" class="form-control btn btn-sm btn-primary" id="next_sn" value="<?php echo (((isset($charge_childs)) && $charge_childs != '') ? count($charge_childs) : 0) ?>">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3"></div>
