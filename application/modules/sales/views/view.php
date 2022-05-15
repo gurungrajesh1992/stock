@@ -95,14 +95,17 @@
                                                 <label>Quantity</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Amount</label>
+                                                <label>Unit Price</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Total Price</label>
                                             </div>
 
 
                                         </div>
                                         <?php
-                                        if (isset($master_detail->invoice_no)) {
-                                            $childs = $this->crud_model->get_where('invoice_details', array('invoice_no' => $master_detail->invoice_no));
+                                        if (isset($master_detail->sale_no)) {
+                                            $childs = $this->crud_model->get_where('sales_details', array('sale_no' => $master_detail->sale_no));
                                             if ($childs) {
                                                 $issue_slip_date = ((isset($master_detail->issue_date)) && $master_detail->issue_date != '') ? $master_detail->issue_date : date('Y-m-d');
 
@@ -131,7 +134,10 @@
                                                             <?php echo $value->qty; ?>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <?php echo $value->amount; ?>
+                                                            <?php echo $value->unit_price; ?>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <?php echo $value->grand_total; ?>
                                                         </div>
 
                                                     </div>
@@ -140,6 +146,80 @@
                                         } ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class=" row">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Total =</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" name="total" class="form-control" id="total_price_sales" placeholder="Total Price" value="<?php echo $master_detail->total; ?>" readonly>
+                                </div>
+                                <div class="col-md-1">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="border: 1px solid #ddd;margin-bottom: 10px;"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label style="float: left;margin-right: 20px;">Advanced Paid :</label>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <?php echo set_value('advance_amt', (((isset($master_detail->advance_amt)) && $master_detail->advance_amt != '') ? $master_detail->advance_amt : '')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label style="float: left;margin-right: 20px;">Discount Percent :</label>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <?php echo set_value('discount_per', (((isset($master_detail->discount_per)) && $master_detail->discount_per != '') ? $master_detail->discount_per : '')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label style="float: left;margin-right: 20px;">Vat Percent :</label>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <?php echo set_value('vat_percent', (((isset($master_detail->vat_percent)) && $master_detail->vat_percent != '') ? $master_detail->vat_percent : '')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label style="float: left;margin-right: 20px;">Other Charges :</label>
+                            </div>
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+                                <?php echo set_value('other_charges', (((isset($master_detail->other_charges)) && $master_detail->other_charges != '') ? $master_detail->other_charges : '')); ?>
                             </div>
                         </div>
                     </div>
