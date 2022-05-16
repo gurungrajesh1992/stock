@@ -30,9 +30,8 @@
                 if ($items) {
                   foreach ($items as $key => $value) {
 
-                    $supplier_detail = $this->crud_model->get_where_single_order_by('supplier_infos', array('id' => $value->supplier_id), 'id', 'DECS');
-                    // var_dump($supplier_detail);
-                    // exit;
+                    $client_detaile = $this->crud_model->get_where_single_order_by('client_infos', array('id' => $value->client_id), 'id', 'DECS');
+
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
@@ -45,26 +44,38 @@
                       $cancel_tag = 'No';
                     }
 
+                    if ($value->payment_type == 'CH') {
+                      $payment_type = 'Cash';
+                    } else if ($value->payment_type == 'CQ') {
+                      $payment_type = 'Cheque';
+                    } else {
+                      $payment_type = 'Credit';
+                    }
+
+
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->invoice_no; ?></td>
-                      <td><?php echo $value->type; ?></td>
-                      <td><?php echo isset($supplier_detail->supplier_name) ? $supplier_detail->supplier_name : ''; ?></td>
+                      <td><?php echo $value->sale_no; ?></td>
+                      <td><?php echo $value->sales_code; ?></td>
+                      <td><?php echo isset($client_detaile->client_name) ? $client_detaile->client_name : ''; ?></td>
+                      <td><?php echo $payment_type; ?></td>
+
+                      <td><?php echo $value->bank_name; ?></td>
+                      <td><?php echo $value->total; ?></td>
+                      <td><?php echo $value->advance_amt; ?></td>
+
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td>
-                        <?php if ($value->invoice_no == NULL) { ?>
+                        <?php if ($value->sale_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } else { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/edit/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } ?>
 
-                        <?php if ($value->invoice_no == NULL) { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
-                        <?php } else { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
-                        <?php } ?>
+
+                        <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
 
                         <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>'; ?>
 
