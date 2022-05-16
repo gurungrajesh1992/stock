@@ -260,7 +260,7 @@ $total = 0;
                         </div>
                         <div class=" col-md-2">
                             <div class="form-group">
-                                <input type="number" name="other_charges" class="form-control" id="other_charges" placeholder="Other Charges" value="<?php echo set_value('other_charges', ''); ?>" required>
+                                <input type="number" name="other_charges" class="form-control" id="other_charges" placeholder="Other Charges" value="<?php echo set_value('other_charges', ''); ?>">
                                 <?php echo form_error('other_charges', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>

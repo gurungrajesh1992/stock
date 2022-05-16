@@ -12,14 +12,13 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Sales No</th>
-                  <th>Sales Code</th>
-                  <th>Client Name</th>
-                  <th>Payment Type</th>
-                  <th>Bank Name</th>
-                  <th>Total Amt</th>
-                  <th>Advance Amt</th>
-                  <th>Is Cancelled</th>
+                  <th>Issue Return No</th>
+                  <th>Issue No</th>
+                  <th>Return Date</th>
+                  <th>Department</th>
+                  <th>Staff </th>
+                  <th>Issued By</th>
+                  <th>Issued On</th>
                   <th>Is Approved</th>
                   <th>Action</th>
                 </tr>
@@ -30,55 +29,45 @@
                 if ($items) {
                   foreach ($items as $key => $value) {
 
-                    $client_detaile = $this->crud_model->get_where_single_order_by('client_infos', array('id' => $value->client_id), 'id', 'DECS');
-
+                    $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $value->department_id), 'id', 'DECS');
+                    $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $value->staff_id), 'id', 'DECS');
+                    // $user_detail = $this->crud_model->joinDataSingle('users', 'staff_infos', array('users.status' => '1', 'staff_infos.status' => '1', 'users.id' => $value->requested_by), 'staff_id', 'id', 'full_name');
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
                       $status = 'Inactive';
                     }
 
-                    if ($value->cancel_tag == '1') {
-                      $cancel_tag = 'Yes';
-                    } else {
-                      $cancel_tag = 'No';
-                    }
-
-                    if ($value->payment_type == 'CH') {
-                      $payment_type = 'Cash';
-                    } else if ($value->payment_type == 'CQ') {
-                      $payment_type = 'Cheque';
-                    } else {
-                      $payment_type = 'Credit';
-                    }
-
-
+                    // if ($value->cancel_tag == '1') {
+                    //   $cancel_tag = 'Yes';
+                    // } else {
+                    //   $cancel_tag = 'No';
+                    // }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->sale_no; ?></td>
-                      <td><?php echo $value->sales_code; ?></td>
-                      <td><?php echo isset($client_detaile->client_name) ? $client_detaile->client_name : ''; ?></td>
-                      <td><?php echo $payment_type; ?></td>
-
-                      <td><?php echo $value->bank_name; ?></td>
-                      <td><?php echo $value->total; ?></td>
-                      <td><?php echo $value->advance_amt; ?></td>
-
-                      <td><?php echo $cancel_tag; ?></td>
+                      <td><?php echo $value->issue_return_no; ?></td>
+                      <td><?php echo $value->issue_no; ?></td>
+                      <td><?php echo $value->return_date; ?></td>
+                      <td><?php echo isset($depart_detail->department_name) ? $depart_detail->department_name : ''; ?></td>
+                      <td><?php echo isset($staff_detail->full_name) ? $staff_detail->full_name : ''; ?></td>
+                      <td><?php echo $value->prepared_by; ?></td>
+                      <td><?php echo $value->prepared_date; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td>
-                        <?php if ($value->sale_no == NULL) { ?>
+                        <?php if ($value->issue_return_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } else { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/edit/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
                         <?php } ?>
 
+                        <?php if ($value->issue_return_no == NULL) { ?>
+                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                        <?php } else { ?>
+                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                        <?php } ?>
 
-                        <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
-
-                        <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>'; ?>
-
+                        <a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>
                       </td>
                     </tr>
                   <?php }
@@ -93,13 +82,7 @@
             <!-- /.card-body -->
             <?php if ($items) { ?>
               <div class="card-footer clearfix">
-                <!-- <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                </ul> -->
+        
                 <?php echo $pagination; ?>
               </div>
             <?php } ?>
