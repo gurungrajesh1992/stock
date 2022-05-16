@@ -8,7 +8,6 @@
                     <div class="card-tools">
                         <a class="btn btn-sm btn-info" id="approve" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
                         <a class="btn btn-sm btn-success" id="post_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->posted_by) && $detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
                 <div class="card-body">
