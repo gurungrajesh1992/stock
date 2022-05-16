@@ -491,7 +491,7 @@ class Admin extends Auth_controller
 					redirect($this->redirect . '/admin/add/' . $sale_no);
 			}
 		}
-		$data['sales_det'] = $this->crud_model->get_where('sales_master', array('posted_tag' => '1'));
+		$data['sales_det'] = $this->crud_model->get_where('sales_master', array('posted_tag' => '1','approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['title'] = 'Sales Return Form';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);

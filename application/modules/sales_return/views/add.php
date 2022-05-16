@@ -47,7 +47,7 @@ $total = 0;
                         <div class=" col-md-4">
                             <div class="form-group">
                                 <label>remarks</label>
-                                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off" readonly><?php echo (((isset($sales_details->remarks)) && $sales_details->remarks != '') ? $sales_details->remarks : '') ?></textarea>
+                                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"></textarea>
                             </div>
                         </div>
                     </div>
