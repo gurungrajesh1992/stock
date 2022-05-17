@@ -80,13 +80,7 @@ $total = 0;
                                 <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="8" autocomplete="off"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Posted Date </label>
-                                <input type="date" name="posted_on" class="form-control" id="posted_on" placeholder="Posted Date" value="<?php echo set_value('posted_on', date('Y-m-d')); ?>" required>
-                                <?php echo form_error('posted_on', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Received By <span class="req">*</span></label>
@@ -167,7 +161,7 @@ $total = 0;
                                                         </div>
 
                                                         <div class="col-md-1">
-                                                            <div class="rmv">
+                                                            <div class="rmv_sales" id="rm-<?php echo $key + 1; ?>">
                                                                 <span class="rmv_itm">X</span>
                                                             </div>
                                                         </div>

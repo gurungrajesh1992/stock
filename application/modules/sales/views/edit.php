@@ -1,3 +1,7 @@
+<?php
+$total = 0;
+
+?>
 <section class="content">
     <div class="container-fluid">
         <form class="all_form" method="post" action enctype="multipart/form-data">
@@ -78,13 +82,6 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Posted Date </label>
-                                <input type="date" name="posted_on" class="form-control" id="posted_on" placeholder="Posted Date" value="<?php echo set_value('posted_on', (((isset($master_detail->posted_on)) && $master_detail->posted_on != '') ? $master_detail->posted_on : '')); ?>" required>
-                                <?php echo form_error('posted_on', '<div class="error_message">', '</div>'); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
                                 <label>Received By <span class="req">*</span></label>
                                 <input type="text" name="received_by" class="form-control" id="received_by" placeholder="Received By" value="<?php echo set_value('received_by', (((isset($master_detail->received_by)) && $master_detail->received_by != '') ? $master_detail->received_by : '')); ?>" required>
                                 <?php echo form_error('received_by', '<div class="error_message">', '</div>'); ?>
@@ -99,6 +96,19 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Select To Add Items</label>
+                                        <select name="item" class="form-control selct2" id="item_sales">
+                                            <option value>Select item</option>
+                                            <?php foreach ($items as $key => $value) { ?>
+                                                <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="req_item" id="items">
@@ -160,16 +170,19 @@
                                                         </div>
 
                                                         <div class="col-md-1">
-                                                            <div class="rmv">
+                                                            <div class="rmv_sales" id="rm-<?php echo $key + 1; ?>">
                                                                 <span class="rmv_itm">X</span>
                                                             </div>
                                                         </div>
 
                                                     </div>
-                                        <?php }
+                                        <?php
+                                                    $total = $total + $value->qty * $value->unit_price;
+                                                }
                                             }
                                         } ?>
                                     </div>
+                                    <input type="hidden" name="next_key" class="form-control btn btn-sm btn-primary" id="next_key" value="<?php echo (((isset($childs)) && $childs != '') ? count($childs) : 0) ?>">
                                 </div>
                             </div>
                             <div class=" row">
