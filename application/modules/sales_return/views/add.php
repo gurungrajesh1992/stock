@@ -59,6 +59,19 @@ $total = 0;
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Select To Add Items</label>
+                                        <select name="item" class="form-control selct2" id="item_sales_return">
+                                            <option value>Select item</option>
+                                            <?php foreach ($items as $key => $value) { ?>
+                                                <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="req_item" id="items">
                                         <div class=" row">
@@ -71,21 +84,21 @@ $total = 0;
                                                 <label>Product</label>
                                             </div>
                                             <div class="col-md-1">
-                                                <label>Quantity</label>
+                                                <label>Sales Quantity</label>
                                             </div>
                                             <div class="col-md-1">
                                                 <label>Returned Quantity</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Unit Price</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Total Price</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-4">
                                                 <label>Remarks</label>
                                             </div>
-                                         
+
                                         </div>
                                         <?php
                                         if (isset($sales_details->sale_no)) {
@@ -112,20 +125,25 @@ $total = 0;
                                                             <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <input type="number" name="qty_return[]" min="1" max="<?php echo $return_qty; ?>" class="form-control qty_sales" id="qty_sales-<?php echo  $key + 1 ?>" placeholder="R-Q"  required>
+                                                            <input type="number" name="qty_return[]" min="1" max="<?php echo $return_qty; ?>" class="form-control qty_sales" id="qty_sales-<?php echo  $key + 1 ?>" placeholder="R-Q" required>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-<?php echo $key + 1; ?>" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="total_price[]" min="1" class="form-control" id="each_total_sales-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-4">
                                                             <textarea name="return_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
                                                         </div>
 
-                                                        <div class="col-md-1">
+                                                        <!-- <div class="col-md-1">
                                                             <div class="rmv">
+                                                                <span class="rmv_itm">X</span>
+                                                            </div>
+                                                        </div> -->
+                                                        <div class="col-md-1">
+                                                            <div class="rmv_sales_return" id="rm-<?php echo $key + 1; ?>">
                                                                 <span class="rmv_itm">X</span>
                                                             </div>
                                                         </div>
@@ -140,7 +158,7 @@ $total = 0;
 
                                 </div>
                             </div>
-                            <div class=" row">
+                            <!-- <div class=" row">
                                 <div class="col-md-1">
                                 </div>
                                 <div class="col-md-5">
@@ -156,7 +174,7 @@ $total = 0;
                                 <div class="col-md-1">
 
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <br>
