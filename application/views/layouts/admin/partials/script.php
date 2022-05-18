@@ -58,6 +58,77 @@
 <script>
   $(document).ready(function() {
 
+    // goods return get item
+    //issue items
+    $(document).off('change', '#item_goods_return').on('change', '#item_goods_return', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      var grn_no = $('#grn_no').val();
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        Toastify({
+
+          text: 'already selected, you can change quantity',
+
+          duration: 6000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          }
+
+        }).showToast();
+        // alert('already selected, you can change quantity');
+        return false;
+      }
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn_return/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "grn_no": grn_no,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+          } else {
+            // alert(resp.status_message);
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+          }
+        }
+      });
+    });
+
     //charges
     $(document).off('change', '.charge_amt').on('change', '.charge_amt', function(e) {
       e.preventDefault();
@@ -70,6 +141,7 @@
 
       $('#total_charges_grn').val(total_charges);
     });
+
     // REMOVE item direct add grn
 
     $(document).off('click', '.rmv_grn_direct').on('click', '.rmv_grn_direct', function(e) {
