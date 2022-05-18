@@ -109,7 +109,7 @@ class Admin extends Auth_controller
 					'sales_rtn_date' => $this->input->post('sales_rtn_date'),
 					'remarks' => $this->input->post('remarks'),
 				);
-// var_dump($data); exit;
+				// var_dump($data); exit;
 
 				if ($id == '') {
 
@@ -144,11 +144,6 @@ class Admin extends Auth_controller
 								$batch_data[] = $insert_detail;
 							}
 
-							$update_after_insert['grand_total'] = $total;
-
-							// Update main table
-							$this->crud_model->update($this->table, $update_after_insert, array('s_return_no' => $data['s_return_no']));
-
 							$this->db->insert_batch('sales_return_details', $batch_data);
 						}
 						$this->session->set_flashdata('success', 'Successfully Inserted.');
@@ -168,7 +163,7 @@ class Admin extends Auth_controller
 
 	public function edit($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_return_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('sales_return', array('id' => $id));
 		if (isset($master_detail->approved_by) && $master_detail->approved_by != '') {
 			$this->session->set_flashdata('error', 'Can not edit, Already Approved');
 			redirect($this->redirect . '/admin/edit/' . $id);
@@ -178,29 +173,19 @@ class Admin extends Auth_controller
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$issue_return_details = $this->crud_model->get_where_single('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
+			$sales_return_details = $this->crud_model->get_where_single('sales_return_details', array('s_return_no' => $master_detail->s_return_no));
 		}
 
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if (!$issue_return_details) {
+		if (!$sales_return_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['issue_return_details'] = $issue_return_details;
+		$data['sales_return_details'] = $sales_return_details;
 		if ($this->input->post()) {
-			// echo "<pre>";
-			// var_dump($this->input->post());
-			// exit;
 
-			$this->form_validation->set_rules('return_date', 'Issue Slip Date', 'required|trim');
-			$this->form_validation->set_rules('department_id', 'Department', 'required|trim');
-			$this->form_validation->set_rules('staff_id', 'Staff', 'required|trim');
-			$this->form_validation->set_rules('prepared_date', 'Issued Date', 'required|trim');
-			$this->form_validation->set_rules('prepared_by', 'Issued By', 'required|trim');
+			$this->form_validation->set_rules('sales_rtn_date', 'Sales Return Date', 'required|trim');
 
 			if ($this->form_validation->run()) {
 				$id = $this->input->post('id');
@@ -216,44 +201,47 @@ class Admin extends Auth_controller
 				}
 
 				$data = array(
-					'issue_return_no' => $this->input->post('issue_return_no'),
-					'issue_no' => $this->input->post('issue_no'),
-					'return_date' => $this->input->post('return_date'),
-					'department_id' => $this->input->post('department_id'),
-					'staff_id' => $this->input->post('staff_id'),
-					'prepared_by' => $this->input->post('prepared_by'),
-					'prepared_date' => $this->input->post('prepared_date'),
+					's_return_no' => $this->input->post('s_return_no'),
+					'sale_no' => $this->input->post('sale_no'),
+					'sales_rtn_date' => $this->input->post('sales_rtn_date'),
 					'remarks' => $this->input->post('remarks'),
 				);
-
 
 				if ($id == '') {
 				} else {
 
-					$this->db->delete('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
+					$this->db->delete('sales_return_details', array('s_return_no' => $master_detail->s_return_no));
 
 					$data['updated_on'] = date('Y-m-d H:i:s');
 					$data['updated_by'] = $this->current_user->id;
 
-					// $result = $this->crud_model->insert($this->table, $data);
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
-
 						$item_code =  $this->input->post('item_code');
-						$returned_qty =  $this->input->post('returned_qty');
-						$issued_qty =  $this->input->post('issued_qty');
-						$remarks =  $this->input->post('detail_remarks');
+						$qty_return =  $this->input->post('qty_return');
+						$unit_price =  $this->input->post('unit_price');
+						$return_remarks =  $this->input->post('return_remarks');
 
 						if (count($item_code) > 0) {
+							$total = 0;
+							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
-								$insert_detail['issue_return_no'] = $data['issue_return_no'];
+								$insert_detail['s_return_no'] = $data['s_return_no'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['returned_qty'] = $returned_qty[$i];
-								$insert_detail['issued_qty'] = $issued_qty[$i];
-								$insert_detail['remarks'] = $remarks[$i];
+								$insert_detail['qty_return'] = $qty_return[$i];
+								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['return_remarks'] = $return_remarks[$i];
 
-								$this->crud_model->insert('issue_return_details', $insert_detail);
+								$insert_detail['total_price'] = ($qty_return[$i] * $unit_price[$i]);
+								$insert_detail['updated_on'] = date('Y-m-d H:i:s');
+								$insert_detail['updated_by'] = $this->current_user->id;
+								$insert_detail['status'] = '1';
+
+								$total = $total + ($qty_return[$i] * $unit_price[$i]);
+								$batch_data[] = $insert_detail;
 							}
+
+							$this->db->insert_batch('sales_return_details', $batch_data);
 						}
 						$this->session->set_flashdata('success', 'Successfully Updated.');
 						redirect($this->redirect . '/admin/all');
@@ -264,32 +252,33 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['title'] = 'Edit Requested ' . $this->title;
+		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		$data['title'] = 'Edit ' . $this->title;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
 	}
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_return_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('sales_return', array('id' => $id));
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		if ($master_detail) {
-			$issue_return_details = $this->crud_model->get_where_single('issue_return_details', array('issue_return_no' => $master_detail->issue_return_no));
+			$sales_return_details = $this->crud_model->get_where_single('sales_return_details', array('s_return_no' => $master_detail->s_return_no));
 		}
 
 		// echo "<pre>";
-		// var_dump($issue_return_details);
+		// var_dump($sales_return_details);
 		// exit;
-		if (!$issue_return_details) {
+		if (!$sales_return_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['issue_return_details'] = $issue_return_details;
+		$data['sales_return_details'] = $sales_return_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
@@ -482,16 +471,16 @@ class Admin extends Auth_controller
 		if ($this->input->post()) {
 			$this->form_validation->set_rules('sale_no', 'Sales Number', 'required|trim');
 			if ($this->form_validation->run()) {
-					$sale_no = $this->input->post('sale_no');
-					if (!isset($sale_no) && $sale_no == '') {
-						$this->session->set_flashdata('error', 'Sales Number Required');
-						redirect($this->redirect . '/admin/form');
-					}
-					$this->session->set_flashdata('success', 'Sales Number Retrieved Successfully');
-					redirect($this->redirect . '/admin/add/' . $sale_no);
+				$sale_no = $this->input->post('sale_no');
+				if (!isset($sale_no) && $sale_no == '') {
+					$this->session->set_flashdata('error', 'Sales Number Required');
+					redirect($this->redirect . '/admin/form');
+				}
+				$this->session->set_flashdata('success', 'Sales Number Retrieved Successfully');
+				redirect($this->redirect . '/admin/add/' . $sale_no);
 			}
 		}
-		$data['sales_det'] = $this->crud_model->get_where('sales_master', array('posted_tag' => '1'));
+		$data['sales_det'] = $this->crud_model->get_where('sales_master', array('posted_tag' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['title'] = 'Sales Return Form';
 		$data['page'] = 'form';
 		$this->load->view('layouts/admin/index', $data);
@@ -548,34 +537,40 @@ class Admin extends Auth_controller
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+					$sales_detail = $this->crud_model->get_where_single('sales_details', array('item_code' => $val));
+					// var_dump($sales_detail);
+					// exit;
 					$html = '';
+					if ($item_detail && $sales_detail) {
 
-					if ($item_detail) {
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-5">
+									<div class="col-md-2">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-1">
-										<input type="number" name="qty[]" min="1"  class="form-control" placeholder="Quantity readonly>
-									</div> 
+										<input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="' . $sales_detail->qty . '" readonly>
+									</div>
+
 									<div class="col-md-1">
-										<input type="number" name="qty_return[]" min="1"  class="form-control qty_sales" id="qty_sales-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
-									</div> 
-									<div class="col-md-2">
-										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" readonly>
+										<input type="number" name="qty_return[]" min="1" max="<?php echo $return_qty; ?>" class="form-control qty_sales" id="qty_sales-' . ($next_key + 1) . '" placeholder="R-Q" required>
 									</div>
-									<div class="col-md-2">
-										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_sales-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
+
+
+									<div class="col-md-1">
+										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-' . ($next_key + 1) . '" placeholder="Unit Price" value="' . $sales_detail->unit_price . '" readonly>
 									</div>
-									<div class="col-md-2">
+									<div class="col-md-1">
+										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_sales-' . ($next_key + 1) . '" placeholder="Total Price" value="' . $sales_detail->grand_total . '" readonly>
+									</div>
+									<div class="col-md-4">
 										<textarea name="return_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
 									</div>
 									<div class="col-md-1">
-										<div class="rmv">
+										<div class="rmv_sales_return" id="rm-' . ($next_key + 1) . '">
 											<span class="rmv_itm">X</span>
 										</div>
 									</div>

@@ -98,7 +98,7 @@ class Admin extends Auth_controller
 					'client_id' => $this->input->post('client_id'),
 					// 'client_name' => $client_details->client_name,
 					'remarks' => $this->input->post('remarks'),
-					'posted_on' => $this->input->post('posted_on'),
+					// 'posted_on' => $this->input->post('posted_on'),
 					'received_by' => $this->input->post('received_by'),
 					'payment_type' => $this->input->post('payment_type'),
 					'bank_name' => $this->input->post('bank_name'),
@@ -606,13 +606,13 @@ class Admin extends Auth_controller
 										<input type="number" name="grand_total[]" min="1" class="form-control" id="each_total_sales-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
 									</div>
 									<div class="col-md-1">
-										<div class="rmv">
+										<div class="rmv_sales" id="rm-' . ($next_key + 1) . '">
 											<span class="rmv_itm">X</span>
 										</div>
 									</div>
+									
 									</div>';
 					}
-
 
 					if ($html) {
 

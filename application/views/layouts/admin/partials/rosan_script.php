@@ -280,7 +280,33 @@
             }
         });
 
+        // REMOVE item direct add sales return
 
+        $(document).off('click', '.rmv_sales_return').on('click', '.rmv_sales_return', function(e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var split_by_dash = id.split("-");
+            var key = split_by_dash[1];
+            var row_total_before_change = $('#each_total_sales-' + key).val();
+            var total = $('#total_price_sales').val();
+
+            $('#total_price_sales').val(total - row_total_before_change);
+            $(this).parent().parent().remove();
+        });
+
+        // REMOVE item direct add sales
+
+        $(document).off('click', '.rmv_sales').on('click', '.rmv_sales', function(e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var split_by_dash = id.split("-");
+            var key = split_by_dash[1];
+            var row_total_before_change = $('#each_total_sales-' + key).val();
+            var total = $('#total_price_sales').val();
+
+            $('#total_price_sales').val(total - row_total_before_change);
+            $(this).parent().parent().remove();
+        });
         //on change qty change total price
         $(document).off('change', '.qty_sales').on('change', '.qty_sales', function(e) {
             e.preventDefault();

@@ -63,12 +63,13 @@
                                 <?php echo set_value('remarks', (((isset($master_detail->remarks)) && $master_detail->remarks != '') ? $master_detail->remarks : '')); ?>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label>Posted Date : </label>
-                                <?php echo set_value('posted_on', (((isset($master_detail->posted_on)) && $master_detail->posted_on != '') ? $master_detail->posted_on : date('Y-m-d'))); ?>
+                                <?php // echo set_value('posted_on', (((isset($master_detail->posted_on)) && $master_detail->posted_on != '') ? $master_detail->posted_on : date('Y-m-d'))); 
+                                ?>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Received By : </label>
