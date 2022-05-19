@@ -75,6 +75,11 @@ class Admin extends Auth_controller
 			redirect($this->redirect . '/admin/form');
 		}
 
+		if ($sale_no) {
+			$childs = $this->crud_model->get_where('sales_details', array('sale_no' => $sale_no));
+			$data['items'] = $childs;
+		}
+
 		$last_row_no = $this->crud_model->get_where_single_order_by('sales_return', array(''), 'id', 'DESC');
 		if (isset($last_row_no->s_return_no)) {
 			$string = $last_row_no->s_return_no;
@@ -155,7 +160,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		// $data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['title'] = 'Add ' . $this->title;
 		$data['page'] = 'add';
 		$this->load->view('layouts/admin/index', $data);
@@ -182,6 +187,10 @@ class Admin extends Auth_controller
 		}
 
 		$data['master_detail'] = $master_detail;
+		if ($master_detail->sale_no) {
+			$childs = $this->crud_model->get_where('sales_details', array('sale_no' => $master_detail->sale_no));
+			$data['items'] = $childs;
+		}
 		$data['sales_return_details'] = $sales_return_details;
 		if ($this->input->post()) {
 
@@ -252,7 +261,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		// $data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['title'] = 'Edit ' . $this->title;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
