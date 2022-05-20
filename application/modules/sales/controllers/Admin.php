@@ -124,6 +124,7 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
+						var_dump($item_code);exit;
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
 
