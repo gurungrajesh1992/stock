@@ -23,43 +23,27 @@
                 <?php echo form_error('scrap_code', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Select Item<span class="req">*</span></label>
                 <select name="item_code" class="form-control selct2" id="item_code">
                   <?php
-                  foreach ($items_in_stock as $key => $value) {
-                    $item_detail = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1', 'item_code' => $value->item_code), 'id', 'DESC');
+                  // foreach ($items_in_stock as $key => $value) {
+                  //   $item_detail = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1', 'item_code' => $value->item_code), 'id', 'DESC');
                   ?>
-                    <option value="<?php echo $value->item_code; ?>" <?php echo  set_select('item_code', $value->item_code, (isset($detail->item_code) && $detail->item_code == $value->item_code) ? TRUE : ''); ?>><?php echo $item_detail->item_name; ?></option>
-                  <?php } ?>
+                    <option value="<?php //echo $value->item_code; 
+                                    ?>" <?php //echo  set_select('item_code', $value->item_code, (isset($detail->item_code) && $detail->item_code == $value->item_code) ? TRUE : ''); 
+                                        ?>><?php //echo $item_detail->item_name; 
+                                            ?></option>
+                  <?php //} 
+                  ?>
                 </select>
               </div>
-            </div>
+            </div>  -->
             <div class="col-md-4">
               <div class="form-group">
-                <label>Date</label>
-                <input type="date" name="date" class="form-control" id="date" placeholder="D  ate" value="<?php echo set_value('date', (((isset($detail->date)) && $detail->date != '') ? $detail->date : date('Y-m-d'))); ?>">
-                <?php echo form_error('date', '<div class="error_message">', '</div>'); ?>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Select Type</label>
-                <select name="type" class="form-control selct2" id="type">
-                  <option value="Scrap" <?php echo  set_select('type', 'Scrap', (isset($detail->type) && $detail->type == 'Scrap') ? TRUE : ''); ?>>Scrap</option>
-                  <option value="Damage" <?php echo  set_select('type', 'Damage', (isset($detail->type) && $detail->type == 'Damage') ? TRUE : ''); ?>>Damage</option>
-                  <option value="Lost" <?php echo  set_select('type', 'Lost', (isset($detail->type) && $detail->type == 'Lost') ? TRUE : ''); ?>>Lost</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Quantity</label>
-                <input type="number" name="qty" class="form-control" id="qty" placeholder="Quantity" value="<?php echo set_value('qty', (((isset($detail->qty)) && $detail->qty != '') ? $detail->qty : 0)); ?>">
-                <?php echo form_error('qty', '<div class="error_message">', '</div>'); ?>
+                <label>Remarks</label>
+                <textarea name="remarks" id="remarks" class="form-control" rows="1" cols="80" autocomplete="off"><?php echo set_value('remarks', (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')); ?></textarea>
               </div>
             </div>
             <div class="col-md-4">
@@ -74,9 +58,92 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
-                <label>Remarks</label>
-                <textarea name="remarks" id="description" class="form-control" rows="5" cols="80" autocomplete="off"><?php echo set_value('remarks', (((isset($detail->remarks)) && $detail->remarks != '') ? $detail->remarks : '')); ?></textarea>
+              <div style="border: 1px solid #ddd;margin-bottom: 10px;"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Select Item To Proceed</label>
+                    <select name="item" class="form-control selct2" id="item_scrap">
+                      <option value>Select item</option>
+                      <?php
+                      foreach ($items as $key => $value) {
+                        $item_detail = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1', 'item_code' => $value->item_code), 'id', 'DESC');
+                      ?>
+                        <option value="<?php echo $value->item_code . ',' . $value->unit_price; ?>"><?php echo $item_detail->item_name; ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="req_item" id="items">
+                    <div class=" row">
+                      <div class="col-md-1">
+                        <label>
+                          #
+                        </label>
+                      </div>
+                      <div class="col-md-2">
+                        <label>Product</label>
+                      </div>
+                      <div class="col-md-2">
+                        <label>Type</label>
+                      </div>
+                      <div class="col-md-1">
+                        <label>Quantity</label>
+                      </div>
+                      <div class="col-md-5">
+                        <label>Remarks</label>
+                      </div>
+                      <div class="col-md-1">
+
+                      </div>
+                    </div>
+                    <?php
+                    if (isset($detail->scrap_code)) {
+                      $childs = $this->crud_model->get_where('item_scrap_detail', array('scrap_code' => $detail->scrap_code));
+                      if ($childs) {
+                        foreach ($childs as $key => $value) {
+                          $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                    ?>
+                          <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-1">
+                              <?php echo ($key + 1) . '.'; ?>
+                            </div>
+                            <div class="col-md-2">
+                              <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                              <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                              <input type="hidden" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>">
+                            </div>
+                            <div class="col-md-2">
+                              <select name="type[]" class="form-control" id="type" required>
+                                <option value="Scrap" <?php echo (isset($value->type) && $value->type == 'Scrap') ? 'selected' : ''; ?>>Scrap</option>
+                                <option value="Damage" <?php echo (isset($value->type) && $value->type == 'Damage') ? 'selected' : ''; ?>>Damage</option>
+                                <option value="Lost" <?php echo (isset($value->type) && $value->type == 'Lost') ? 'selected' : ''; ?>>Lost</option>
+                              </select>
+                            </div>
+                            <div class="col-md-1">
+                              <input type="number" name="qty[]" class="form-control" placeholder="Scrap Quantity" value="<?php echo $value->qty; ?>" required>
+                            </div>
+                            <div class="col-md-5">
+                              <textarea name="item_remark[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Item Remarks"><?php echo $value->remarks; ?></textarea>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="rmv">
+                                <span class="rmv_itm">X</span>
+                              </div>
+                            </div>
+                          </div>
+                    <?php }
+                      }
+                    } ?>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -93,11 +160,3 @@
     </form>
   </div>
 </section>
-<script>
-  function responsive_filemanager_callback(field_id) {
-    var url = $('#' + field_id).val();
-    // alert('yo'); 
-    $('#' + field_id).next().next().attr('src', url);
-    $('#' + field_id).next().next().show();
-  }
-</script>

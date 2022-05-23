@@ -134,6 +134,10 @@ class Admin extends Auth_controller
 						$remark =  $this->input->post('remarks');
 						$unit_price = $this->input->post('unit_price');
 						$location = $this->input->post('location_id');
+						$supplier_id = $this->input->post('supplier_id');
+						$depreciated_amt = $this->input->post('depreciated_amt');
+						$book_value = $this->input->post('book_value');
+						$purchase_date = $this->input->post('purchase_date');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
@@ -144,6 +148,10 @@ class Admin extends Auth_controller
 								$insert_detail['total_price'] = $unit_price[$i] * $qty[$i];
 								$insert_detail['location_id'] = $location[$i];
 								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['supplier_id'] = $supplier_id[$i];
+								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
+								$insert_detail['book_value'] = $book_value[$i];
+								$insert_detail['purchase_date'] = $purchase_date[$i];
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}
@@ -173,6 +181,10 @@ class Admin extends Auth_controller
 						$remark =  $this->input->post('remarks');
 						$unit_price = $this->input->post('unit_price');
 						$location = $this->input->post('location_id');
+						$supplier_id = $this->input->post('supplier_id');
+						$depreciated_amt = $this->input->post('depreciated_amt');
+						$book_value = $this->input->post('book_value');
+						$purchase_date = $this->input->post('purchase_date');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
@@ -183,6 +195,10 @@ class Admin extends Auth_controller
 								$insert_detail['total_price'] = $unit_price[$i] * $qty[$i];
 								$insert_detail['location_id'] = $location[$i];
 								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['supplier_id'] = $supplier_id[$i];
+								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
+								$insert_detail['book_value'] = $book_value[$i];
+								$insert_detail['purchase_date'] = $purchase_date[$i];
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}
@@ -254,6 +270,7 @@ class Admin extends Auth_controller
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
 					$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
+					$suppliers = $this->crud_model->get_where_order_by('supplier_infos', array('status' => '1'), 'id', 'DESC');
 					$html = '';
 					if ($item_detail) {
 						$html .= '
@@ -262,15 +279,30 @@ class Admin extends Auth_controller
 								<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 								<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
                             </div>
-                            <div class="col-md-2">
-                              <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="" required>
+                            <div class="col-md-1">
+                              <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="1" required>
                             </div>
-                            <div class="col-md-2">
-                              <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="" required>
+                            <div class="col-md-1">
+                              <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="0" required>
                             </div>
-                            <div class="col-md-3">
-                            <select name="location_id[]" class="form-control" id="location_id" required>
-								<option value>Select Location</option>';
+							<div class="col-md-1">
+                          <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="0" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="0" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="' . date('Y-m-d') . '" required>
+                        </div>
+                        <div class="col-md-1">
+                          <select name="supplier_id[]" class="form-control" id="supplier_id" required>';
+						foreach ($suppliers as $key_s => $value_s) {
+							$html   .=   '<option value="' . $value_s->id . '" >' . $value_s->supplier_name . '</option>';
+						}
+						$html   .= '</select>
+                        </div>
+                            <div class="col-md-1">
+                            <select name="location_id[]" class="form-control" id="location_id" required>';
 						foreach ($locations as $key => $value) {
 							$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
 						}

@@ -12,10 +12,11 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Scrap Code</th>
-                  <th>Is Cancelled</th>
-                  <th>Is Approved</th>
-                  <th>Is Posted</th>
+                  <th>Fiscal Year</th>
+                  <th>Rate</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Remarks</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -31,26 +32,16 @@
                       $status = 'Inactive';
                     }
 
-                    if ($value->cancel_tag == '1') {
-                      $cancel_tag = 'Cancelled';
-                    } else {
-                      $cancel_tag = 'Not Cancelled';
-                    }
-
-                    if ($value->posted_tag == '1') {
-                      $posted_tag = 'Posted';
-                    } else {
-                      $posted_tag = 'Not Posted';
-                    }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->scrap_code; ?></td>
-                      <td><?php echo $cancel_tag; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Approved' : 'Not Approved'; ?></td>
-                      <td><?php echo $posted_tag; ?></td>
+                      <td><?php echo $value->fiscal_year; ?></td>
+                      <td><?php echo $value->depreciation_rate; ?></td>
+                      <td><?php echo $value->from; ?></td>
+                      <td><?php echo $value->to; ?></td>
+                      <td><?php echo $value->remarks; ?></td>
                       <td><?php echo $status; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?><a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>'; ?></td>
+                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" STYLE="margin: 5px;">Edit</a>'; ?><a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" STYLE="margin: 5px;">Delete</a>'; ?>
                     </tr>
                   <?php }
                 } else { ?>

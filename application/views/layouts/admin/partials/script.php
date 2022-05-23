@@ -58,7 +58,69 @@
 <script>
   $(document).ready(function() {
 
-    // goods return get item
+    // scarp get form
+    $(document).off('change', '#item_scrap').on('change', '#item_scrap', function(e) {
+      e.preventDefault();
+      var selected_val = $(this).val();
+      var splited = selected_val.split(",");
+      var val = splited[0];
+      var unit_price = splited[1];
+      // alert(unit_price);
+      // return false;
+      var already_items = $('input[name^=item_code]').map(function(idx, elem) {
+        return $(elem).val();
+      }).get();
+
+      if (jQuery.inArray(val, already_items) !== -1) {
+        Toastify({
+
+          text: 'already selected, you can change quantity',
+
+          duration: 6000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          }
+
+        }).showToast();
+        return false;
+      }
+      // console.log(already_items.length);
+      // return false;
+      $.ajax({
+
+        url: '<?php echo base_url('scrap/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "val": val,
+          "unit_price": unit_price,
+          "total": already_items.length,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').append(resp.data);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+    });
     //issue items
     $(document).off('change', '#item_goods_return').on('change', '#item_goods_return', function(e) {
       e.preventDefault();

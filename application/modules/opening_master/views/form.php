@@ -85,9 +85,18 @@
                     <label>Unit Price</label>
                   </div>
                   <div class="col-md-1">
+                    <label>Depreciated Amount</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Book Value</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Purchase Date</label>
+                  </div>
+                  <div class="col-md-1">
                     <label>Supplier</label>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label>Location</label>
                   </div>
                   <div class="col-md-2">
@@ -116,6 +125,15 @@
                           <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
                         </div>
                         <div class="col-md-1">
+                          <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="<?php echo $value->depreciated_amt; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="<?php echo $value->book_value; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="<?php echo $value->purchase_date; ?>" required>
+                        </div>
+                        <div class="col-md-1">
                           <select name="supplier_id[]" class="form-control" id="supplier_id" required>
                             <option value>Select Location</option>
                             <?php foreach ($suppliers as $key_s => $value_s) { ?>
@@ -123,7 +141,7 @@
                             <?php } ?>
                           </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                           <select name="location_id[]" class="form-control" id="location_id" required>
                             <option value>Select Location</option>
                             <?php foreach ($locations as $key_l => $value_l) { ?>
