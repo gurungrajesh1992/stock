@@ -64,8 +64,11 @@ $total = 0;
                                         <label>Select To Add Items</label>
                                         <select name="item" class="form-control selct2" id="item_sales_return">
                                             <option value>Select item</option>
-                                            <?php foreach ($items as $key => $value) { ?>
-                                                <option value="<?php echo $value->item_code; ?>"><?php echo $value->item_name; ?></option>
+                                            <?php
+                                            foreach ($items as $key => $value) {
+                                                $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                                            ?>
+                                                <option value="<?php echo $item_detail->item_code; ?>"><?php echo $item_detail->item_name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

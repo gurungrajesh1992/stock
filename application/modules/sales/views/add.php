@@ -118,8 +118,11 @@ $total = 0;
                                                     #
                                                 </label>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-3">
                                                 <label>Product</label>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <label>Stock</label>
                                             </div>
                                             <div class="col-md-1">
                                                 <label>Quantity</label>
@@ -135,10 +138,20 @@ $total = 0;
                                             </div>
                                         </div>
                                         <?php
+
                                         if (isset($detail->sale_no)) {
                                             $childs = $this->crud_model->get_where('sales_details', array('sale_no' => $detail->sale_no));
                                             if ($childs) {
+                                                $issue_slip_date = ((isset($detail->sales_date)) && $detail->sales_date != '') ? $detail->sales_date : date('Y-m-d');
+
                                                 foreach ($childs as $key => $value) {
+
+                                                    $where_stock = array(
+                                                        'item_code' => $value->item_code,
+                                                        // 'transaction_date <=' => $issue_slip_date,
+                                                    );
+
+                                                    $total_item_stock_before_sales_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                         ?>
@@ -146,12 +159,15 @@ $total = 0;
                                                         <div class="col-md-1">
                                                             <?php echo ($key + 1) . '.'; ?>
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-3">
                                                             <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-1">
-                                                            <input type="number" name="qty[]" min="1" class="form-control qty_sales" id="qty_sales-<?php echo  $key + 1 ?>" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                                                            <input type="number" name="in_stock[]" id="stock_<?php echo $value->item_code; ?>" class="form-control stcks stock_<?php echo $value->item_code; ?>" placeholder="Stock" value="<?php echo $total_item_stock_before_sales_date; ?>" readonly>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <input type="number" name="qty[]" min="1" max="<?php echo $total_item_stock_before_sales_date; ?>" class="form-control qty_sales" id="qty_sales-<?php echo  $key + 1 ?>" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
                                                         </div>
                                                         <div class="col-md-2">
                                                             <input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-<?php echo $key + 1; ?>" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>

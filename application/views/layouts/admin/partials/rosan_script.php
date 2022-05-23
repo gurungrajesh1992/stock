@@ -182,6 +182,7 @@
                 }
             });
         });
+
         //sales Return items
         $(document).off('change', '#item_sales_return').on('change', '#item_sales_return', function(e) {
             e.preventDefault();

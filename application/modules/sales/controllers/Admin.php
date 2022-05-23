@@ -124,6 +124,7 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
+						var_dump($item_code);exit;
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
 
@@ -579,25 +580,32 @@ class Admin extends Auth_controller
 				$val = $this->input->post('val');
 				$total = $this->input->post('total');
 				$next_key = $this->input->post('next_key');
-				$requested_date = $this->input->post('requested_date');
+				$issued_date = date('Y-m-d');
 
 				if ($val) {
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
 					$html = '';
-
 					if ($item_detail) {
+						$where_stock = array(
+							'item_code' => $val,
+							'transaction_date <=' => $issued_date,
+						);
+						$total_item_stock_before_sales_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-5">
+									<div class="col-md-3">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-1">
-										<input type="number" name="qty[]" min="1"  class="form-control qty_sales" id="qty_sales-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
+										<input type="number" name="in_stock[]" id="stock_' . $val . '" class="form-control stcks stock_' . $val . '" placeholder="Stock" value="' . $total_item_stock_before_sales_date . '" readonly>
+									</div>
+									<div class="col-md-1">
+										<input type="number" name="qty[]" min="1" max="' . $total_item_stock_before_sales_date . '"  class="form-control qty_sales" id="qty_sales-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
 									</div> 
 									<div class="col-md-2">
 										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_sales" id="unit_price_sales-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
