@@ -85,6 +85,9 @@
                     <label>Unit Price</label>
                   </div>
                   <div class="col-md-1">
+                    <label>Actual Unit Price</label>
+                  </div>
+                  <div class="col-md-1">
                     <label>Depreciated Amount</label>
                   </div>
                   <div class="col-md-1">
@@ -99,8 +102,8 @@
                   <div class="col-md-1">
                     <label>Location</label>
                   </div>
-                  <div class="col-md-2">
-                    <label>Remarks</label>
+                  <div class="col-md-1">
+                    <label>Batch No</label>
                   </div>
                   <div class="col-md-1">
 
@@ -123,6 +126,9 @@
                         </div>
                         <div class="col-md-1">
                           <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="<?php echo $value->actual_unit_price; ?>" required>
                         </div>
                         <div class="col-md-1">
                           <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="<?php echo $value->depreciated_amt; ?>" required>
@@ -149,8 +155,8 @@
                             <?php } ?>
                           </select>
                         </div>
-                        <div class="col-md-2">
-                          <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
+                        <div class="col-md-1">
+                          <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
                         </div>
                         <div class="col-md-1">
                           <div class="rmv">

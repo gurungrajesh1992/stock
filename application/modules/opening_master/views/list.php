@@ -17,6 +17,7 @@
                   <th>Remarks</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
+                  <th>Is Posted</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -37,6 +38,12 @@
                       $cancel_tag = 'No';
                     }
 
+                    if ($value->posted_tag == '1') {
+                      $posted_tag = 'Yes';
+                    } else {
+                      $posted_tag = 'No';
+                    }
+
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
@@ -44,7 +51,8 @@
                       <td><?php echo $value->opening_date; ?></td>
                       <td><?php echo $value->remarks; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Approved' : 'Not Approved' ?></td>
+                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No' ?></td>
+                      <td><?php echo $posted_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" STYLE="margin: 5px;">Edit</a>'; ?><a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" STYLE="margin: 5px;">Delete</a>'; ?>
                     </tr>
                   <?php }

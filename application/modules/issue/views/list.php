@@ -22,6 +22,7 @@
                   <th>Issued On</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
+                  <th>Is Posted</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -45,6 +46,12 @@
                     } else {
                       $cancel_tag = 'No';
                     }
+
+                    if ($value->posted_tag == '1') {
+                      $posted_tag = 'Yes';
+                    } else {
+                      $posted_tag = 'No';
+                    }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
@@ -58,6 +65,7 @@
                       <td><?php echo $value->issued_on; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
+                      <td><?php echo $posted_tag; ?></td>
                       <td>
                         <?php if ($value->requisition_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>

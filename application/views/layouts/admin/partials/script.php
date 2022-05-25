@@ -1065,7 +1065,17 @@
         return $(elem).val();
       }).get();
       if (jQuery.inArray(val, already_items) !== -1) {
-        alert('already selected, you can change quantity');
+        Toastify({
+
+          text: 'already selected, you can change quantity',
+
+          duration: 6000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          }
+
+        }).showToast();
         return false;
       }
       // console.log(already_items);
@@ -1084,7 +1094,17 @@
           if (resp.status == "success") {
             $('#items_opening').append(resp.data);
           } else {
-            alert(resp.status_message);
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
           }
         }
       });
