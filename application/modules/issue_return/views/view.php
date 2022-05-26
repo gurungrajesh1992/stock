@@ -7,7 +7,7 @@
 
                     <div class="card-tools">
                         <a class="btn btn-sm btn-info" id="approve" table_id="issue_return_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-success" id="post_issue" table_id="issue_return_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_by) && $master_detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
+                        <a class="btn btn-sm btn-success" id="post_issue_return" table_id="issue_return_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
                         <a class="btn btn-sm btn-danger" id="cancel" table_id="issue_return_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issue Return Date : </label>
+                                <label>Issue Return Slip Date : </label>
                                 <?php echo set_value('return_date', (((isset($master_detail->return_date)) && $master_detail->return_date != '') ? $master_detail->return_date : date('Y-m-d'))); ?>
 
 
@@ -130,13 +130,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued Date : </label>
+                                <label>Issue Returned Date : </label>
                                 <?php echo set_value('prepared_date', (((isset($master_detail->prepared_date)) && $master_detail->prepared_date != '') ? $master_detail->prepared_date : '')); ?>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued By : </label>
+                                <label>Issue Returned By : </label>
                                 <?php echo set_value('prepared_by', (((isset($master_detail->prepared_by)) && $master_detail->prepared_by != '') ? $master_detail->prepared_by : '')); ?>
                             </div>
                         </div>

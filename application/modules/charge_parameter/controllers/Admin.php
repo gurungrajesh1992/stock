@@ -16,6 +16,7 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
+
 		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;

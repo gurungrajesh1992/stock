@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issue Return Date <span class="req">*</span></label>
+                                <label>Issue Return Slip Date <span class="req">*</span></label>
                                 <input type="date" name="return_date" class="form-control" id="return_date" value="<?php echo set_value('return_date', (((isset($detail->return_date)) && $detail->return_date != '') ? $detail->return_date : date('Y-m-d'))); ?>">
                                 <?php echo form_error('return_date', '<div class="error_message">', '</div>'); ?>
                             </div>
@@ -145,14 +145,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued Date <span class="req">*</span></label>
+                                <label>Issue Returned Date <span class="req">*</span></label>
                                 <input type="date" name="prepared_date" class="form-control" id="prepared_date" placeholder="Country Name" value="<?php echo set_value('prepared_date', (((isset($detail->prepared_date)) && $detail->prepared_date != '') ? $detail->prepared_date : '')); ?>">
                                 <?php echo form_error('prepared_date', '<div class="error_message">', '</div>'); ?>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Issued By <span class="req">*</span></label>
+                                <label>Issue Returned By <span class="req">*</span></label>
                                 <input type="text" name="prepared_by" class="form-control" id="prepared_by" placeholder="Issueed By" value="<?php echo set_value('prepared_by', (((isset($detail->prepared_by)) && $detail->prepared_by != '') ? $detail->prepared_by : '')); ?>">
                                 <?php echo form_error('prepared_by', '<div class="error_message">', '</div>'); ?>
                             </div>

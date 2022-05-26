@@ -14,7 +14,7 @@
                   <th>#</th>
                   <th>Charge Code</th>
                   <th>Charge Name</th>
-                  <th>Description</th>
+                  <!-- <th>Description</th> -->
                   <th>Display in list?</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -23,7 +23,7 @@
               <tbody>
 
                 <?php
-                if ($items) {
+                if (!empty($items)) {
                   foreach ($items as $key => $value) {
                     if ($value->status == '1') {
                       $status = 'Active';
@@ -35,7 +35,8 @@
                       <td><?php echo $key + 1; ?></td>
                       <td><?php echo $value->charge_code; ?></td>
                       <td><?php echo $value->charge_name; ?></td>
-                      <td><?php echo $value->description; ?></td>
+                      <!-- <td><?php //echo $value->description; 
+                                ?></td> -->
                       <td><?php echo $value->display_in_list; ?></td>
                       <td><?php echo $status; ?></td>
                       <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a></td>
@@ -50,7 +51,7 @@
               </tbody>
             </table>
             <!-- /.card-body -->
-            <?php if ($items) { ?>
+            <?php if (!empty($items)) { ?>
               <div class="card-footer clearfix">
                 <!-- <ul class="pagination pagination-sm m-0 float-right">
                   <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>

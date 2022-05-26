@@ -225,6 +225,8 @@ class Admin extends Auth_controller
 						$this->db->insert_batch('grn_details', $batch_data);
 					}
 
+					//extra charges
+
 					$charge_code = $this->input->post('charge_code');
 					$charge_amount = $this->input->post('charge_amount');
 					$charge_remarks = $this->input->post('charge_remarks');
@@ -907,6 +909,123 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function grn_post()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+
+				if ($table || $row_id) {
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						if (isset($detail->posted_tag) && $detail->posted_tag == '1') {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Already Posted !!',
+							);
+						} else {
+							$childs = $this->crud_model->get_where('grn_details', array('grn_no' => $detail->grn_no));
+							// echo "<pre>";
+							// var_dump($childs);
+							// exit;
+							if (isset($childs)) {
+								foreach ($childs as $key => $value) {
+									$total_extra_cost = $detail->vat_amount + $detail->total_charge;
+									$in_actual_total_price = ($total_extra_cost / $detail->total) * ($value->qty * $value->unit_price);
+									$in_actual_unit_price = $in_actual_total_price / $value->qty;
+									$data = array(
+										'item_code' =>  $value->item_code,
+										'transaction_date' => $detail->grn_date,
+										'transaction_type' => 'GRN',
+										'in_qty' => $value->qty,
+										// 'out_qty' => 0,
+										'rem_qty' => $value->qty,
+										'in_unit_price' => $value->unit_price,
+										'in_total_price' => ($value->qty * $value->unit_price),
+										'in_actual_unit_price' => $in_actual_unit_price,
+										'in_actual_total_price' => $in_actual_total_price,
+										'out_unit_price' => 0,
+										'out_total_price' => 0,
+										'out_actual_unit_price' => 0,
+										'out_actual_total_price' => 0,
+										// 'location_id' => $value->location_id,
+										// 'batch_no' => $value->batch_no,
+										'vendor_id' => $detail->supplier_id,
+										// 'client_id' => '???',
+										'remarks' => 'posted from GRN',
+										'transactioncode' => $detail->grn_no,
+										'created_on' => date('Y-m-d'),
+										'created_by' => $this->current_user->id,
+										// 'updated_on' => '???',
+										// 'updated_by' => '???',
+										// 'staff_id' => '???',
+										// 'status' => '1',
+									);
+									$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+									if (isset($last_row_no->ledger_code)) {
+										$string = $last_row_no->ledger_code;
+										$explode = explode("-", $string);
+										$int_value = intval($explode[1]) + 1;
+										// var_dump(sprintf("%04d", $int_value));
+										// exit;
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+									} else {
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+									}
+
+									$this->crud_model->insert('stock_ledger', $data);
+								}
+
+								$update['posted_tag'] = '1';
+								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_on'] = date('Y-m-d');
+
+								$this->crud_model->update('grn_master', $update, array('id' => $detail->id));
+
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully Posted !!!',
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'No Details Available !!!',
+								);
+							}
+						}
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Record is not approved yet !!!',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid !!!',
 					);
 				}
 			}
