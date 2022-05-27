@@ -186,6 +186,8 @@ class Admin extends Auth_controller
 		// exit;
 		$data['items'] = $this->crud_model->get_total_item_stock_group_by_item('stock_ledger', array('status' => '1', 'transaction_date <=' => date('Y-m-d'), 'location_id' => $data['location_details'][3]->id));
 
+		// $data['stock_details'] = $this->crud_model->get_total_item_stock_group_by_item('stock_ledger', array('status' => '1', 'transaction_date <=' => date('Y-m-d')));
+
 		// echo "<pre>";
 		// var_dump($data['items']);
 		// exit;
@@ -275,6 +277,86 @@ class Admin extends Auth_controller
 											<span class="rmv_itm">X</span>
 										</div>
 									</div>
+									</div>';
+					}
+
+
+					if ($html) {
+
+						$response = array(
+							'status' => 'success',
+							'status_code' => 200,
+							'status_message' => 'Successfully retrived',
+							'data' => $html,
+						);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Unable To Get Form',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function getItem()
+	{
+		try {
+
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				//access ok 
+				// echo "here";
+				// exit;
+				// $check = $this->load->view('listall/image_form');  
+				$item_code = $this->input->post('val');
+				$unit_price = $this->input->post('unit_price');
+				$total = $this->input->post('total');
+
+				if ($item_code) {
+					// var_dump($val);
+					// exit;
+					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $item_code));
+					$html = '';
+
+					if ($item_detail) {
+						$html .= '<div class="row" style="margin-bottom: 15px;">
+									<div class="col-md-1">
+									' . ($total + 1) . '.
+									</div>
+									<div class="col-md-2">
+										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
+										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $item_code . '" readonly>
+										<input type="hidden" name="unit_price[]" class="form-control" placeholder="Unit Price" value="' . $unit_price . '" readonly>
+									</div>
+
+									<div class="col-md-4">
+									<div class="form-group">
+									  <label>Select Item To Proceed</label>
+									  <select name="type[]" class="form-control" id="type" required>
+									  <option value="Scrap">Scrap</option>
+									  <option value="Damage">Damage</option>
+									  <option value="Lost">Lost</option>
+								  </select>
+									</div>
+								  </div>
+								
 									</div>';
 					}
 

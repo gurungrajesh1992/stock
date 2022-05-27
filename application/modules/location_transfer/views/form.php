@@ -41,13 +41,12 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label>From Location <span class="req">*</span></label>
+                <label>From Location / Store <span class="req">*</span></label>
                 <select name="from_loc" class="form-control selct2" id="from_loc">
                   <?php
-                  foreach ($items as $key => $value) {
-                    $item_detail = $this->crud_model->get_where_single_order_by('location_para', array('status' => '1', 'id' => $value->location_id), 'id', 'DESC');
-                  ?>
-                    <option value="<?php echo $value->location_id; ?>"><?php echo $item_detail->store_name; ?></option>
+                  foreach ($location_details as $key => $value) { ?>
+                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('from_loc', $value->id, (isset($items[0]->location_id) && $items[0]->location_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->store_name; ?></option>
+
                   <?php } ?>
                 </select>
               </div>
@@ -58,10 +57,9 @@
                 <select name="to_loc" class="form-control selct2" id="to_loc">
                   <option value>Select Location</option>
                   <?php
-                  foreach ($items as $key => $value) {
-                    $item_detail = $this->crud_model->get_where_single_order_by('location_para', array('status' => '1', 'id' => $value->location_id), 'id', 'DESC');
+                  foreach ($location_details as $key => $value) {
                   ?>
-                    <option value="<?php echo $value->location_id; ?>"><?php echo $item_detail->store_name; ?></option>
+                    <option value="<?php echo $value->id; ?>"><?php echo $value->store_name; ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -97,10 +95,12 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Select Item To Proceed</label>
-                    <select name="item" class="form-control selct2" id="item_scrap">
+                    <select name="item" class="form-control selct2" id="item_loc_trans">
                       <option value>Select item</option>
                       <?php
                       foreach ($items as $key => $value) {
+                        // var_dump($value);
+                        // exit;
                         $item_detail = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1', 'item_code' => $value->item_code), 'id', 'DESC');
                       ?>
                         <option value="<?php echo $value->item_code . ',' . $value->unit_price; ?>"><?php echo $item_detail->item_name; ?></option>
