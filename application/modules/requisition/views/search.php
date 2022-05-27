@@ -59,8 +59,9 @@
                                 <div class="form-group">
                                     <label>Approved:</label>
                                       <select name="approved" class="form-control" id="requested_by">
-                                        <option value="1">approved</option>
                                         <option value="0">not approved</option>
+                                        <option value="1">approved</option>
+                                        
                                         </select>
                                 </div>
                             </div>
