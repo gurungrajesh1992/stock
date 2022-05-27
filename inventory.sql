@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: May 26, 2022 at 10:41 PM
+-- Generation Time: May 27, 2022 at 05:27 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.3.23
 
@@ -555,7 +555,7 @@ CREATE TABLE `grn_return` (
 
 INSERT INTO `grn_return` (`id`, `grn_return_no`, `grn_no`, `supplier_id`, `posted_on`, `posted_tag`, `approved_on`, `approved_by`, `total_amt`, `return_date`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
 (1, 'GRR26052022-0001', 'GRN26052022-0001', 1, NULL, '0', '2022-05-26', 3, '0.00', '2022-05-26', 'firta yeuta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:28:19', 0, '0000-00-00 00:00:00', '1'),
-(2, 'GRR26052022-0002', 'GRN26052022-0002', 2, NULL, '0', '2022-05-26', 3, '0.00', '2022-05-26', 'sabai firta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:33:02', 0, '0000-00-00 00:00:00', '1');
+(2, 'GRR26052022-0002', 'GRN26052022-0002', 2, '2022-05-27', '1', '2022-05-26', 3, '0.00', '2022-05-26', 'sabai firta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:33:02', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1581,7 +1581,9 @@ INSERT INTO `stock_ledger` (`id`, `ledger_code`, `item_code`, `transaction_date`
 (19, 'LEDG26052022-0015', 'IC19042022-0001', '2022-05-26', 'GRN', 2, 0, 2, '2000.00', '4000.00', '260.00', '520.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
 (20, 'LEDG26052022-0016', 'IC19042022-0002', '2022-05-26', 'GRN', 1, 0, 1, '1000.00', '1000.00', '130.00', '130.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
 (21, 'LEDG26052022-0017', 'IC19042022-0001', '2022-05-26', 'GRN', 9, 0, 9, '2000.00', '18000.00', '369.15', '3322.33', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(22, 'LEDG26052022-0018', 'IC19042022-0002', '2022-05-26', 'GRN', 9, 0, 9, '1000.00', '9000.00', '184.57', '1661.17', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1');
+(22, 'LEDG26052022-0018', 'IC19042022-0002', '2022-05-26', 'GRN', 9, 0, 9, '1000.00', '9000.00', '184.57', '1661.17', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(23, 'LEDG27052022-0019', 'IC19042022-0002', '2022-05-26', 'GRR', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', '130.00', '130.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1'),
+(24, 'LEDG27052022-0020', 'IC19042022-0001', '2022-05-26', 'GRR', 0, 2, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '4000.00', '260.00', '520.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1673,7 +1675,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `user_name`, `password`, `auth_code`, `role_id`, `staff_id`, `designation_code`, `depart_id`, `appointed_date`, `full_name`, `profile_image`, `temp_address`, `permanent_address`, `country_code`, `contact`, `description`, `email`, `created_on`, `created_by`, `updated_on`, `updated_by`, `currently_working`, `status`) VALUES
 (1, 'nyatapol', 'c7098dd01fd11866dcb79e33d03ecfc5', '820682a7c8be57db72638233737fabf2', 1, NULL, 'HRM', 3, NULL, 'Nyatapol', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Babarmahal', '', 'nepa', '+977 1-4102299', '', 'nyatapol@gmail.com', '2022-01-19', 0, '2022-02-07', 1, 'Yes', '1'),
 (2, 'rajesh', 'c7098dd01fd11866dcb79e33d03ecfc5', 'b41f1ae8bc8aeb8b467612ba63ef34b0', 1, NULL, 'HRM', 3, NULL, 'Rajesh Gurung', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Tikathali', '', 'nepa', '98119561913', '<h1>dami hai sss</h1>\r\n', 'gurungrajesh1992@gmail.com', '2022-01-28', 1, '2022-02-07', 1, 'Yes', '1'),
-(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', 'a454c2d322d473ef20e090a4036a5241', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
+(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '0ddc67329ca83f5a1f94361488af020f', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
 (6, 'chelina', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 1, 1, NULL, NULL, NULL, '', '', '', '', '', '', '', 'cheleena.maharjan.3@gmail.com', '2022-04-18', 3, '0000-00-00', 0, 'Yes', '1');
 
 -- --------------------------------------------------------
@@ -4159,7 +4161,20 @@ INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALU
 (2460, 'requisition', 'cancel_row', 3, '2022-05-26 20:33:20'),
 (2461, 'grn_return', 'all', 3, '2022-05-26 20:33:24'),
 (2462, 'grn_return', 'all', 3, '2022-05-26 20:33:47'),
-(2463, 'grn_return', 'view', 3, '2022-05-26 20:33:52');
+(2463, 'grn_return', 'view', 3, '2022-05-26 20:33:52'),
+(2464, 'dashboard', NULL, 3, '2022-05-27 02:47:45'),
+(2465, 'grn_return', 'all', 3, '2022-05-27 02:48:31'),
+(2466, 'grn_return', 'view', 3, '2022-05-27 02:48:36'),
+(2467, 'grn_return', 'form', 3, '2022-05-27 03:13:34'),
+(2468, 'grn_return', 'form', 3, '2022-05-27 03:13:38'),
+(2469, 'grn_return', 'add', 3, '2022-05-27 03:13:38'),
+(2470, 'grn_return', 'all', 3, '2022-05-27 03:23:08'),
+(2471, 'grn_return', 'view', 3, '2022-05-27 03:23:12'),
+(2472, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:23:16'),
+(2473, 'grn_return', 'view', 3, '2022-05-27 03:23:17'),
+(2474, 'grn_return', 'view', 3, '2022-05-27 03:24:23'),
+(2475, 'requisition', 'cancel_row', 3, '2022-05-27 03:26:17'),
+(2476, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:26:19');
 
 -- --------------------------------------------------------
 
@@ -4962,7 +4977,7 @@ ALTER TABLE `staff_infos`
 -- AUTO_INCREMENT for table `stock_ledger`
 --
 ALTER TABLE `stock_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `supplier_cat`
@@ -4986,7 +5001,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2464;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2477;
 
 --
 -- AUTO_INCREMENT for table `user_role`
