@@ -437,7 +437,7 @@ class Admin extends Auth_controller
 		echo json_encode($response);
 	}
 
-	public function issue_post()
+	public function grn_return_post()
 	{
 		try {
 			if (!$this->input->is_ajax_request()) {
@@ -451,41 +451,41 @@ class Admin extends Auth_controller
 				if ($table || $row_id) {
 					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
 					if (isset($detail->approved_by) && $detail->approved_by != '') {
-						if (isset($detail->posted_by) && $detail->posted_by != '') {
+						if (isset($detail->posted_tag) && $detail->posted_tag == '1') {
 							$response = array(
 								'status' => 'error',
 								'status_code' => 300,
 								'status_message' => 'Already Posted !!',
 							);
 						} else {
-							$issue_details = $this->crud_model->get_where('issue_slip_details', array('issue_slip_no' => $detail->issue_slip_no));
+							$childs = $this->crud_model->get_where('grn_return_details', array('grn_return_no' => $detail->grn_return_no));
 							// echo "<pre>";
-							// var_dump($opening_details);
+							// var_dump($childs);
 							// exit;
-							if (isset($issue_details)) {
-								$batch_data = array();
-								foreach ($issue_details as $key => $value) {
+							if (!empty($childs)) {
+								foreach ($childs as $key => $value) {
+									$grn_tran_detail_frm_stock_ledger = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $value->item_code, 'transactioncode' => $detail->grn_no));
 									$data = array(
 										'item_code' =>  $value->item_code,
-										'transaction_date' => $detail->issue_date,
-										'transaction_type' => 'ISS',
+										'transaction_date' => $detail->return_date,
+										'transaction_type' => 'GRR',
 										'in_qty' => 0,
-										'out_qty' => $value->issued_qnty,
+										'out_qty' => $value->qty,
 										'rem_qty' => 0,
 										'in_unit_price' => 0,
 										'in_total_price' => 0,
 										'in_actual_unit_price' => 0,
 										'in_actual_total_price' => 0,
-										'out_unit_price' => 0,
-										'out_total_price' => 0,
-										'out_actual_unit_price' => 0,
-										'out_actual_total_price' => 0,
+										'out_unit_price' => $grn_tran_detail_frm_stock_ledger->in_unit_price,
+										'out_total_price' => ($value->qty * $grn_tran_detail_frm_stock_ledger->in_unit_price),
+										'out_actual_unit_price' => $grn_tran_detail_frm_stock_ledger->in_actual_unit_price,
+										'out_actual_total_price' => ($value->qty * $grn_tran_detail_frm_stock_ledger->in_actual_unit_price),
 										// 'location_id' => $value->location_id,
-										// 'batch_no' => '',
-										// 'vendor_id' => '???',
+										// 'batch_no' => $value->batch_no,
+										'vendor_id' => $detail->supplier_id,
 										// 'client_id' => '???',
-										'remarks' => 'posted from issue',
-										'transactioncode' => $detail->issue_slip_no,
+										'remarks' => 'posted from goods return',
+										'transactioncode' => $detail->grn_return_no,
 										'created_on' => date('Y-m-d'),
 										'created_by' => $this->current_user->id,
 										// 'updated_on' => '???',
@@ -505,101 +505,25 @@ class Admin extends Auth_controller
 										$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
 									}
 
-									$batch_data[] = $data;
-
-									// $this->crud_model->insert('stock_ledger', $data);
-
-									// if (isset($detail->requisition_no)) {
-									// 	//by request 
-									// 	$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-									// 	$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$value->issued_qnty);
-									// 	$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$value->issued_qnty);
-
-									// 	$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-									// } else {
-									// 	// direct
-									// }
+									$this->crud_model->insert('stock_ledger', $data);
 								}
-								// echo "<pre>";
-								// var_dump($batch_data);
-								// exit;
-								$batch_result = $this->db->insert_batch('stock_ledger', $batch_data);
 
-								if ($batch_result) {
-									//update remaining and received qty in requisition table
-									foreach ($issue_details as $ku => $vu) {
+								$update['posted_tag'] = '1';
+								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_on'] = date('Y-m-d');
 
-										if (isset($detail->requisition_no)) {
-											//by request 
-											$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-											$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$vu->issued_qnty);
-											$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$vu->issued_qnty);
+								$this->crud_model->update('grn_return', $update, array('id' => $detail->id));
 
-											$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-										} else {
-											// direct
-										}
-									}
-
-									//update stock_ledger remaining qty
-									foreach ($batch_data as $k_batch => $v_batch) {
-										$issued_qty = $v_batch->out_qty;
-										$transaction_date = ((isset($v_batch->transaction_date)) && $v_batch->transaction_date != '') ? $v_batch->transaction_date : date('Y-m-d');
-										// $where_stock1 = array(
-										// 	'item_code' => $v_batch->item_code,
-										// 	'transaction_date <=' => $transaction_date,
-										// );
-										// $total_item_stock_before_issue_slip_date_1 = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock1);
-										$offset = 0;
-										while ($issued_qty > 0) {
-											$where_loop = array(
-												'item_code' => $v_batch->item_code,
-												'transaction_date <=' => $transaction_date,
-												'rem_qty >=' => 0
-											);
-											$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset($table, $where_loop, 'id', 'ASC', $offset);
-											if (isset($first_inserted_product_qty->rem_qty)) {
-												$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$issued_qty;
-												if ($remaining >= 0) {
-													$update_old['rem_qty'] = $remaining;
-													$issued_qty = 0;
-												} else {
-													$update_old['rem_qty'] = 0;
-													$issued_qty = (int)$issued_qty - (int)$first_inserted_product_qty->rem_qty;
-												}
-											}
-
-											$offset = $offset + 1;
-										}
-									}
-
-									//update posted tag  on issue_slip_master
-									$update['posted_tag'] = '1';
-									$update['posted_by'] = $this->current_user->id;
-									$update['posted_on'] = date('Y-m-d');
-
-									$this->crud_model->update('issue_slip_master', $update, array('id' => $detail->id));
-
-
-
-									$response = array(
-										'status' => 'success',
-										'status_code' => 200,
-										'status_message' => 'Successfully Posted !!!',
-									);
-								} else {
-
-									$response = array(
-										'status' => 'error',
-										'status_code' => 200,
-										'status_message' => 'Unable To Post !!!',
-									);
-								}
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully Posted !!!',
+								);
 							} else {
 								$response = array(
 									'status' => 'error',
 									'status_code' => 300,
-									'status_message' => 'No Details Available !!!',
+									'status_message' => 'No Childs Available !!!',
 								);
 							}
 						}

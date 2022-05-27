@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: May 05, 2022 at 08:10 AM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 7.4.22
+-- Generation Time: May 27, 2022 at 05:27 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.3.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -108,8 +108,9 @@ INSERT INTO `audit_log` (`audit_id`, `table_name`, `id_no`, `operation`, `field_
 (83, 'categories', 9, 'DELETE', 'parent_id ,  category_name ,  slug ,  description ,  status ,  order_no ,  created_on ,  created_by ,  updated_on ,  updated_by', '0;;;Heaters;;;heaters1650063371;;;<p>heaterin</p>\r\n;;;;2;;;0;;;2022-04-16;;;3;;;2022-04-16;;;3', NULL, 3, '2022-04-15 16:03:57'),
 (84, 'users', 3, 'UPDATE', 'user_name,password,auth_code,role_id,designation_code,\r\ndepart_id,appointed_date,full_name, profile_image,temp_address,permanent_address,\r\ncountry_code,contact, description,email,currently_working', 'admin;;;482c811da5d5b4bc6d497ffa98491e38;;;504a4be027611204ff993fd5d945a5c9;;;1;;;HRM;;;3;;;2022-03-01;;;admin;;;http://localhost:7777/stock/uploads/logo/admin.jpg;;;babarmahal;;;nawalparasi;;;nepa;;;9856767678978;;;<p>dashdga hagsdhgas jdhgas hdas</p>\r\n;;;admin@gmail.com;;;Yes;;;2022-02-24 00:00:00;;;1;;;2022-03-28 00:00:00;;;3;;;1', 'admin;;;482c811da5d5b4bc6d497ffa98491e38;;;2035c112425a855d645932bbe60c8a42;;;1;;;HRM;;;3;;;2022-03-01;;;admin;;;http://localhost:7777/stock/uploads/logo/admin.jpg;;;babarmahal;;;nawalparasi;;;nepa;;;9856767678978;;;<p>dashdga hagsdhgas jdhgas hdas</p>\r\n;;;admin@gmail.com;;;Yes;;;2022-03-28 00:00:00;;;3;;;1', 3, '2022-04-18 16:55:16'),
 (85, 'staff_design_depart', 1, 'UPDATE', 'staff_id, designation_code, department_code, from,to,\r\ncreated_on  , created_by  , updated_on  , updated_by,  status   ', '1;;;Mana;;;Dev;;;2020-01-01;;;0000-00-00;;;2022-04-18 00:00:00;;;3;;;0000-00-00 00:00:00;;;0;;;1', '1;;;Mana;;;Dev;;;2020-01-01;;;2020-02-01;;;2022-04-18 00:00:00;;;3;;;2022-04-19 00:00:00;;;1;;;2', 1, '2022-04-19 11:45:23'),
-(86, 'fiscal_year_para', 1, 'UPDATE', ' fiscal_year , start_date  ,end_date, current_tag, created_on  , created_by  , updated_on  , updated_by,  status   ', '2022;;;2022-03-13;;;2023-03-12;;;Y;;;2022-04-14 00:00:00;;;3;;;2022-04-14 00:00:00;;;3;;;1', '2022/23;;;2022-03-13;;;2023-03-12;;;Y;;;2022-04-14 00:00:00;;;3;;;2022-04-19 00:00:00;;;3;;;1', 3, '2022-04-19 15:12:07'),
-(87, 'requisition_master', 1, 'UPDATE', 'requisition_no,requisition_date, department_id,cancel_tag, requested_by,requested_date,approved_by, approved_date,remarks,\r\ncreated_on  , created_by  , updated_on  , updated_by,  status', 'RQ19042022-0001;;;2022-04-19;;;3;;;0;;;1;;;0000-00-00;;;0;;;0000-00-00;;;requisition1;;;2022-04-19 06:17:32;;;1;;;0000-00-00 00:00:00;;;0;;;1', 'RQ19042022-0001;;;2022-04-19;;;3;;;0;;;2;;;0000-00-00;;;0;;;0000-00-00;;;requisition1;;;2022-04-19 06:17:32;;;1;;;2022-04-19 11:01:03;;;1;;;1', 1, '2022-04-19 16:46:03');
+(86, 'staff_infos', 1, 'DELETE', 'full_name,slug,description,featured_image,appointed_date,\r\ntemp_address, permanent_address,country_code,contact,email,\r\ncreated_on,created_by,updated_on,updated_by,status', 'Chelina Maharjan;;;;;;;;;;;;2020-01-01;;;Gwarko ,Lalitpur;;;Gwarko ,Lalitpur;;;nepa;;;9860013046;;;cheleena.maharjan.3@gmail.com;;;2022-04-18 00:00:00;;;3;;;0000-00-00 00:00:00;;;0;;;1', NULL, 0, '2022-05-12 14:41:32'),
+(87, 'depreciation_para', 2, 'DELETE', ' depreciation_rate  , created_on  , created_by  , updated_on  , updated_by,  status   ', '10;;;2022-04-13 00:00:00;;;3;;;2022-04-13 00:00:00;;;2;;;1', NULL, 2, '2022-05-19 12:44:07'),
+(88, 'depreciation_para', 1, 'DELETE', ' depreciation_rate  , created_on  , created_by  , updated_on  , updated_by,  status   ', '10;;;0000-00-00 00:00:00;;;0;;;0000-00-00 00:00:00;;;0;;;1', NULL, 0, '2022-05-19 12:44:14');
 
 -- --------------------------------------------------------
 
@@ -144,6 +145,33 @@ INSERT INTO `categories` (`id`, `parent_id`, `category_name`, `slug`, `descripti
 (6, 2, 'Tablet', 'tablet', '', 0, '2022-04-12', 1, '0000-00-00', 0, '1'),
 (7, 2, 'Laptop', 'laptop', 'all laptops', 0, '2022-04-12', 1, '0000-00-00', 0, '1'),
 (8, 2, 'Heaters', 'heaters', '<p>warm heaters</p>\r\n', 0, '2022-04-13', 3, '2022-04-14', 3, '2');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `charge_parameter`
+--
+
+CREATE TABLE `charge_parameter` (
+  `id` int(11) NOT NULL,
+  `charge_name` varchar(50) NOT NULL,
+  `charge_code` varchar(50) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `display_in_list` enum('Yes','No') NOT NULL,
+  `status` enum('0','1','2') NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `charge_parameter`
+--
+
+INSERT INTO `charge_parameter` (`id`, `charge_name`, `charge_code`, `description`, `display_in_list`, `status`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES
+(1, 'Transportation cost', 'CHCD26052022-0001', '<p>Transportation cost</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-rig', 'Yes', '1', 3, '2022-05-26 20:32:12', 3, '2022-05-26 20:51:35'),
+(2, 'Load/Onload Cost', 'CHCD26052022-0002', '<p>Load/Onload Cost</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right:', 'Yes', '1', 3, '2022-05-26 20:51:08', 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -282,8 +310,11 @@ INSERT INTO `department_para` (`id`, `department_name`, `department_code`, `rema
 
 CREATE TABLE `depreciation_para` (
   `id` int(11) NOT NULL,
-  `item_code` varchar(25) NOT NULL,
   `depreciation_rate` varchar(25) NOT NULL,
+  `fiscal_year` varchar(10) NOT NULL,
+  `from` date NOT NULL,
+  `to` date NOT NULL,
+  `remarks` varchar(150) NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` date NOT NULL,
   `updated_by` int(11) NOT NULL,
@@ -343,7 +374,7 @@ CREATE TABLE `fiscal_year_para` (
 --
 
 INSERT INTO `fiscal_year_para` (`id`, `fiscal_year`, `start_date`, `end_date`, `current_tag`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, '2022/23', '2022-03-13', '2023-03-12', 'Y', 3, '2022-04-14', 3, '2022-04-19', '1');
+(1, '2022', '2022-03-13', '2023-03-12', 'Y', 3, '2022-04-14', 3, '2022-04-14', '1');
 
 -- --------------------------------------------------------
 
@@ -355,6 +386,11 @@ CREATE TABLE `gate_pass` (
   `id` int(11) NOT NULL,
   `gate_pass_no` varchar(25) NOT NULL,
   `sales_no` varchar(25) NOT NULL,
+  `approved_on` date NOT NULL,
+  `approved_by` int(11) DEFAULT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` date NOT NULL,
   `updated_by` int(11) NOT NULL,
@@ -382,6 +418,33 @@ CREATE TABLE `gate_pass_details` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `grn_charges`
+--
+
+CREATE TABLE `grn_charges` (
+  `id` int(11) NOT NULL,
+  `grn_no` varchar(25) NOT NULL,
+  `charge_code` varchar(50) NOT NULL,
+  `amount` decimal(12,2) NOT NULL,
+  `remarks` varchar(150) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL,
+  `status` enum('0','1','2') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grn_charges`
+--
+
+INSERT INTO `grn_charges` (`id`, `grn_no`, `charge_code`, `amount`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
+(0, 'GRN26052022-0001', 'CHCD26052022-0002', '1000.00', 'load/onload cost', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '0'),
+(0, 'GRN26052022-0001', 'CHCD26052022-0001', '1000.00', 'Transportation Cost', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '0');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `grn_details`
 --
 
@@ -391,6 +454,7 @@ CREATE TABLE `grn_details` (
   `item_code` varchar(25) NOT NULL,
   `qty` int(6) NOT NULL,
   `unit_price` decimal(11,2) NOT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
   `actual_total_price` decimal(11,2) NOT NULL,
   `total_price` decimal(11,2) NOT NULL,
   `created_by` int(11) NOT NULL,
@@ -399,6 +463,16 @@ CREATE TABLE `grn_details` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grn_details`
+--
+
+INSERT INTO `grn_details` (`id`, `grn_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `actual_total_price`, `total_price`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'GRN26052022-0001', 'IC19042022-0002', 9, '1000.00', '0.00', '0.00', '9000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
+(2, 'GRN26052022-0001', 'IC19042022-0001', 9, '2000.00', '0.00', '0.00', '18000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
+(5, 'GRN26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '0.00', '1000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1'),
+(6, 'GRN26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '0.00', '4000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -412,26 +486,40 @@ CREATE TABLE `grn_master` (
   `type` enum('DR','INV','PO','PRQ') NOT NULL,
   `grn_date` date NOT NULL,
   `supplier_id` int(11) NOT NULL,
+  `type_no` varchar(25) NOT NULL,
   `invoice_no` varchar(25) NOT NULL,
   `payment_type` enum('CH','CQ','CR') NOT NULL,
   `bank_name` varchar(55) NOT NULL,
   `advance_paid` decimal(11,2) DEFAULT NULL,
   `discount_per` decimal(11,2) DEFAULT NULL,
   `discount_amt` decimal(11,2) DEFAULT NULL,
+  `total` decimal(11,2) NOT NULL,
+  `sub_total` decimal(11,2) NOT NULL,
+  `vat_percent` decimal(11,2) DEFAULT NULL,
+  `vat_amount` decimal(11,3) NOT NULL,
   `grand_total` decimal(11,2) DEFAULT NULL,
-  `vat` decimal(11,2) DEFAULT NULL,
-  `travel_charges` decimal(11,2) DEFAULT NULL,
-  `other_charges` decimal(11,2) DEFAULT NULL,
-  `approved_date` date NOT NULL,
+  `total_charge` decimal(11,2) DEFAULT NULL,
+  `approved_on` date NOT NULL,
   `approved_by` varchar(25) NOT NULL,
   `posted_on` date DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grn_master`
+--
+
+INSERT INTO `grn_master` (`id`, `grn_no`, `type`, `grn_date`, `supplier_id`, `type_no`, `invoice_no`, `payment_type`, `bank_name`, `advance_paid`, `discount_per`, `discount_amt`, `total`, `sub_total`, `vat_percent`, `vat_amount`, `grand_total`, `total_charge`, `approved_on`, `approved_by`, `posted_on`, `posted_tag`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'GRN26052022-0001', 'DR', '2022-05-26', 1, '', '', 'CQ', 'Global IME', '5000.00', '15.00', '4050.00', '27000.00', '22950.00', '13.00', '2983.500', '25933.50', '2000.00', '2022-05-26', '3', '2022-05-26', '1', '0', NULL, NULL, 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
+(3, 'GRN26052022-0002', 'DR', '2022-05-26', 2, '', '', 'CQ', 'Gbl', '5000.00', '0.00', '0.00', '5000.00', '5000.00', '13.00', '650.000', '5650.00', NULL, '2022-05-26', '3', '2022-05-26', '1', '0', NULL, NULL, 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -446,13 +534,28 @@ CREATE TABLE `grn_return` (
   `supplier_id` int(11) NOT NULL,
   `posted_on` date DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `approved_on` date NOT NULL,
+  `approved_by` int(11) DEFAULT NULL,
   `total_amt` decimal(11,2) NOT NULL,
+  `return_date` date NOT NULL,
+  `remarks` varchar(150) NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grn_return`
+--
+
+INSERT INTO `grn_return` (`id`, `grn_return_no`, `grn_no`, `supplier_id`, `posted_on`, `posted_tag`, `approved_on`, `approved_by`, `total_amt`, `return_date`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'GRR26052022-0001', 'GRN26052022-0001', 1, NULL, '0', '2022-05-26', 3, '0.00', '2022-05-26', 'firta yeuta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:28:19', 0, '0000-00-00 00:00:00', '1'),
+(2, 'GRR26052022-0002', 'GRN26052022-0002', 2, '2022-05-27', '1', '2022-05-26', 3, '0.00', '2022-05-26', 'sabai firta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:33:02', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -466,14 +569,26 @@ CREATE TABLE `grn_return_details` (
   `item_code` varchar(25) NOT NULL,
   `qty` int(6) NOT NULL,
   `unit_price` decimal(11,2) DEFAULT NULL,
-  `actual_total_price` decimal(11,2) DEFAULT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
   `total_price` decimal(11,2) DEFAULT NULL,
+  `actual_total_price` decimal(11,2) DEFAULT NULL,
+  `remarks` varchar(150) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `grn_return_details`
+--
+
+INSERT INTO `grn_return_details` (`id`, `grn_return_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
+(1, 'GRR26052022-0001', 'IC19042022-0001', 1, '2000.00', '0.00', '2000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
+(2, 'GRR26052022-0001', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
+(3, 'GRR26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '4000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1'),
+(4, 'GRR26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -505,6 +620,11 @@ CREATE TABLE `invoice_master` (
   `invoice_no` varchar(25) NOT NULL,
   `type` enum('DR','RQ') NOT NULL,
   `supplier_id` int(11) NOT NULL,
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_on` date DEFAULT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_on` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
   `updated_on` datetime DEFAULT NULL,
@@ -532,6 +652,14 @@ CREATE TABLE `issue_return_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `issue_return_details`
+--
+
+INSERT INTO `issue_return_details` (`id`, `issue_return_no`, `item_code`, `issued_qty`, `returned_qty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
+(1, 'IR26052022-0001', 'IC19042022-0002', 1, 1, 'ghd hhg', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
+(2, 'IR26052022-0001', 'IC19042022-0001', 1, 1, 'hdgfdgf', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
+
 -- --------------------------------------------------------
 
 --
@@ -547,17 +675,27 @@ CREATE TABLE `issue_return_master` (
   `staff_id` int(11) NOT NULL,
   `prepared_by` varchar(25) DEFAULT NULL,
   `prepared_date` date NOT NULL,
-  `approved_date` date NOT NULL,
+  `approved_on` date NOT NULL,
   `approved_by` varchar(25) DEFAULT NULL,
   `posted_on` date NOT NULL,
   `posted_tag` enum('0','1') NOT NULL,
   `remarks` varchar(255) DEFAULT NULL,
-  `status` enum('0','1','2') NOT NULL DEFAULT '1',
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_on` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
-  `updated_by` int(11) NOT NULL
+  `updated_by` int(11) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `issue_return_master`
+--
+
+INSERT INTO `issue_return_master` (`id`, `issue_return_no`, `issue_no`, `return_date`, `department_id`, `staff_id`, `prepared_by`, `prepared_date`, `approved_on`, `approved_by`, `posted_on`, `posted_tag`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
+(1, 'IR26052022-0001', 'IS26052022-0001', '2022-05-26', 2, 2, 'rajesh dai', '2022-05-26', '2022-05-26', '3', '2022-05-26', '1', 'ghfghhf', '0', NULL, NULL, '2022-05-26 18:38:01', 3, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -583,11 +721,10 @@ CREATE TABLE `issue_slip_details` (
 --
 
 INSERT INTO `issue_slip_details` (`id`, `issue_slip_no`, `item_code`, `issued_qnty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(3, 'IS20042022-0002', 'IC19042022-0003', 1, 'dsadsa sdsdasdasdas sa sa', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(4, 'IS20042022-0002', 'IC19042022-0001', 550, 'sad sad as sa', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(7, 'IS20042022-0001', 'IC19042022-0002', 20, 'ggg ggg hhhh', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(8, 'IS20042022-0001', 'IC19042022-0003', 10, 'hjhjh jhjjhjhj', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(9, 'IS20042022-0003', 'IC19042022-0001', 1, 'issued Remarks hai', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
+(1, 'IS26052022-0001', 'IC19042022-0001', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
+(2, 'IS26052022-0001', 'IC19042022-0002', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
+(3, 'IS26052022-0002', 'IC19042022-0002', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
+(4, 'IS26052022-0002', 'IC19042022-0001', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -608,7 +745,9 @@ CREATE TABLE `issue_slip_master` (
   `approved_by` varchar(25) DEFAULT NULL,
   `approved_on` date DEFAULT NULL,
   `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
-  `posted_by` varchar(100) NOT NULL,
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
+  `posted_by` varchar(55) NOT NULL,
   `posted_tag` enum('1','0') DEFAULT '0',
   `posted_on` date NOT NULL,
   `remarks` mediumtext NOT NULL,
@@ -623,10 +762,9 @@ CREATE TABLE `issue_slip_master` (
 -- Dumping data for table `issue_slip_master`
 --
 
-INSERT INTO `issue_slip_master` (`id`, `issue_slip_no`, `requisition_no`, `issue_date`, `issue_type`, `department_id`, `staff_id`, `issued_by`, `issued_on`, `approved_by`, `approved_on`, `cancel_tag`, `posted_by`, `posted_tag`, `posted_on`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'IS20042022-0001', 'RQ20042022-0001', '2022-04-20', 'RQ', 3, 1, 'Rajesh Dai', '2022-04-20', NULL, NULL, '0', '', '0', '0000-00-00', 'dsad asd sadadasd sa', 3, '2022-04-28 10:48:18', 3, '2022-04-20 12:08:43', '1'),
-(2, 'IS20042022-0002', NULL, '2022-04-20', 'DR', 3, 1, 'Rajesh Dai', '2022-04-20', '3', '2022-05-01', '0', '3', '1', '2022-05-01', 'd asdsadsadsada s', 3, '2022-05-01 15:54:20', 0, '0000-00-00 00:00:00', '1'),
-(3, 'IS20042022-0003', 'RQ20042022-0002', '2022-03-01', 'RQ', 3, 1, 'Rajesh DAqi', '2022-04-20', '3', '2022-04-29', '0', '3', '1', '2022-04-28', 'ghjdas dashjdhasg dhas', 3, '2022-04-29 10:57:21', 0, '0000-00-00 00:00:00', '1');
+INSERT INTO `issue_slip_master` (`id`, `issue_slip_no`, `requisition_no`, `issue_date`, `issue_type`, `department_id`, `staff_id`, `issued_by`, `issued_on`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `posted_by`, `posted_tag`, `posted_on`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'IS26052022-0001', 'RQ26052022-0001', '2022-05-26', 'RQ', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', 'issue handeko hai hai', 3, '2022-05-26 21:24:48', 0, '0000-00-00 00:00:00', '1'),
+(2, 'IS26052022-0002', NULL, '2022-05-26', 'DR', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', '98 ota remaining', 3, '2022-05-26 21:38:53', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -713,8 +851,7 @@ CREATE TABLE `item_infos` (
 
 INSERT INTO `item_infos` (`id`, `category_id`, `location_id`, `item_code`, `item_name`, `item_type`, `specification`, `model_no`, `max_qty`, `min_qty`, `reorder_level`, `shelf_life_no`, `shelf_life_ym`, `purchases_date`, `depreciation_rate`, `item_image`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
 (6, 3, 2, 'IC19042022-0001', 'Computer Wifi Core i5', 'A', '', 'IC19042022-0001', 50, 3, 10, 4, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '0000-00-00 00:00:00', '1'),
-(7, 6, 2, 'IC19042022-0002', 'Dell Inspiron 3511', 'A', '', 'IC19042022-0002', 50, 5, 10, 2, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '2022-04-19 00:00:00', '1'),
-(8, 7, 1, 'IC19042022-0003', 'Dell Inspiron 3511', 'A', 'This is trestsitt', 'Dell Inspiron 5310 IC17042022-0012', 50, 5, 3, 5, 'Y', NULL, 13, '', NULL, 1, '2022-04-19 00:00:00', 0, '0000-00-00 00:00:00', '1');
+(7, 6, 2, 'IC19042022-0002', 'Dell Inspiron 3511', 'A', '', 'IC19042022-0002', 50, 5, 10, 2, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '2022-04-19 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -737,6 +874,59 @@ CREATE TABLE `item_insurance` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
+  `status` enum('0','1','2') NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_scrap`
+--
+
+CREATE TABLE `item_scrap` (
+  `id` int(11) NOT NULL,
+  `scrap_code` varchar(100) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) NOT NULL,
+  `canceled_on` date NOT NULL,
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_on` date NOT NULL,
+  `posted_on` date NOT NULL,
+  `posted_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `posted_by` int(11) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL,
+  `status` enum('0','1','2') DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_scrap_detail`
+--
+
+CREATE TABLE `item_scrap_detail` (
+  `id` int(11) NOT NULL,
+  `scrap_code` varchar(25) NOT NULL,
+  `item_code` varchar(25) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `type` enum('Scrap','Damage','Lost') NOT NULL,
+  `qty` int(11) NOT NULL,
+  `unit_price` decimal(11,2) NOT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
+  `total_price` decimal(11,2) NOT NULL,
+  `actual_total_price` decimal(11,2) NOT NULL,
+  `depreciated_amt` decimal(11,2) NOT NULL,
+  `total_depreciated_amt` decimal(11,2) NOT NULL,
+  `book_value` decimal(11,2) NOT NULL,
+  `remarks` varchar(150) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -794,19 +984,45 @@ INSERT INTO `location_para` (`id`, `parent_id`, `store_name`, `address`, `create
 
 CREATE TABLE `location_transfer` (
   `id` int(11) NOT NULL,
+  `transfer_code` varchar(50) NOT NULL,
   `date` date NOT NULL,
-  `staff_id` int(11) NOT NULL,
   `posted_tag` enum('0','1') DEFAULT '0',
   `posted_on` date DEFAULT NULL,
-  `from_loc` int(11) NOT NULL,
-  `to_loc` int(11) NOT NULL,
-  `remark` varchar(155) NOT NULL,
+  `from_loc` varchar(255) NOT NULL,
+  `to_loc` varchar(255) NOT NULL,
+  `transfered_on` date NOT NULL,
+  `transfered_by` int(11) NOT NULL,
+  `remarks` varchar(155) NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
-  `created_on` date DEFAULT NULL,
-  `updated_on` date NOT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `location_transfer_detail`
+--
+
+CREATE TABLE `location_transfer_detail` (
+  `id` int(11) NOT NULL,
+  `transfer_code` varchar(50) NOT NULL,
+  `item_code` varchar(150) NOT NULL,
+  `unit_price` decimal(11,2) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
+  `total_price` decimal(11,2) NOT NULL,
+  `actual_total_price` decimal(11,2) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -817,7 +1033,7 @@ CREATE TABLE `location_transfer` (
 CREATE TABLE `mrn_details` (
   `id` int(11) NOT NULL,
   `mrn_no` varchar(25) NOT NULL,
-  `item_code` varchar(25) NOT NULL,
+  `item_code` varchar(50) NOT NULL,
   `stock_qty` int(6) NOT NULL,
   `ordered_qty` int(6) NOT NULL,
   `mrn_qty` int(6) NOT NULL,
@@ -829,15 +1045,6 @@ CREATE TABLE `mrn_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `mrn_details`
---
-
-INSERT INTO `mrn_details` (`id`, `mrn_no`, `item_code`, `stock_qty`, `ordered_qty`, `mrn_qty`, `remaining_qty`, `remark`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'MRN22042022-0001', 'IC19042022-0003', 0, 5, 0, 5, 'xito hai', '2022-04-22', 0, '0000-00-00', 0, '1'),
-(2, 'MRN22042022-0001', 'IC19042022-0001', 0, 20, 0, 20, 'dami dami hai ta', '2022-04-22', 0, '0000-00-00', 0, '1'),
-(3, 'MRN28042022-0002', 'IC19042022-0001', 0, 2000, 0, 2000, 'demand dherai vayo stock kami vayo hai', '2022-04-28', 0, '0000-00-00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -853,22 +1060,16 @@ CREATE TABLE `mrn_master` (
   `prepared_date` date NOT NULL,
   `approved_on` date NOT NULL,
   `prepared_by` varchar(25) NOT NULL,
-  `approved_by` varchar(25) NOT NULL,
+  `approved_by` int(11) DEFAULT NULL,
   `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_on` date NOT NULL,
   `created_by` int(11) NOT NULL,
   `updated_on` date NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `mrn_master`
---
-
-INSERT INTO `mrn_master` (`id`, `mrn_no`, `mrn_date`, `remarks`, `prepared_date`, `approved_on`, `prepared_by`, `approved_by`, `cancel_tag`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'MRN22042022-0001', '2022-04-22', 'Sabai kura dami chaiyo ha', '2022-04-22', '2022-04-28', 'Rajesh Dai', '3', '0', '2022-04-22', 3, '0000-00-00', 0, '1'),
-(2, 'MRN28042022-0002', '2022-04-28', 'la la xito xito lyaunu pa', '2022-04-28', '2022-04-28', 'Rajesh Dai', '', '1', '2022-04-28', 3, '0000-00-00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -879,12 +1080,19 @@ INSERT INTO `mrn_master` (`id`, `mrn_no`, `mrn_date`, `remarks`, `prepared_date`
 CREATE TABLE `opening_detail` (
   `id` int(11) NOT NULL,
   `opening_master_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
   `item_code` varchar(25) NOT NULL,
   `qty` int(6) NOT NULL,
   `unit_price` decimal(11,2) NOT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
   `total_price` decimal(11,2) NOT NULL,
-  `location_id` int(11) NOT NULL,
+  `actual_total_price` decimal(11,2) NOT NULL,
+  `depreciated_amt` decimal(11,2) NOT NULL,
+  `purchase_date` date NOT NULL,
+  `book_value` decimal(11,2) NOT NULL,
   `remarks` varchar(100) NOT NULL,
+  `batch_no` varchar(50) NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_by` int(11) NOT NULL,
@@ -896,12 +1104,11 @@ CREATE TABLE `opening_detail` (
 -- Dumping data for table `opening_detail`
 --
 
-INSERT INTO `opening_detail` (`id`, `opening_master_id`, `item_code`, `qty`, `unit_price`, `total_price`, `location_id`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 1, 'IC19042022-0003', 5000, '100000.00', '500000000.00', 2, 'dami xa hai yo', 0, '2022-04-26 12:39:50', 0, '0000-00-00 00:00:00', '1'),
-(2, 1, 'IC19042022-0002', 6000, '90000.00', '540000000.00', 2, 'yo jhan dami hai', 0, '2022-04-26 12:39:50', 0, '0000-00-00 00:00:00', '1'),
-(3, 1, 'IC19042022-0001', 5, '3000.00', '1500000.00', 2, 'yo jhan babal hai', 0, '2022-04-26 16:04:11', 0, '0000-00-00 00:00:00', '1'),
-(4, 2, 'IC19042022-0001', 100, '4000.00', '400000.00', 2, '4000 wala hai yo', 0, '2022-04-26 16:11:04', 0, '0000-00-00 00:00:00', '1'),
-(5, 3, 'IC19042022-0001', 400, '2500.00', '1000000.00', 1, 'adas assfasa', 0, '2022-04-28 12:23:46', 0, '0000-00-00 00:00:00', '1');
+INSERT INTO `opening_detail` (`id`, `opening_master_id`, `supplier_id`, `location_id`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `depreciated_amt`, `purchase_date`, `book_value`, `remarks`, `batch_no`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 1, 1, 1, 'IC19042022-0002', 10, '1000.00', '1050.00', '10000.00', '10500.00', '50.00', '2022-01-01', '1000.00', '', 'abc123', 0, '2022-05-26 21:02:38', 0, '0000-00-00 00:00:00', '1'),
+(2, 1, 1, 1, 'IC19042022-0001', 10, '2000.00', '2100.00', '20000.00', '21000.00', '100.00', '2022-01-01', '1000.00', '', 'abc123', 0, '2022-05-26 21:02:38', 0, '0000-00-00 00:00:00', '1'),
+(3, 2, 2, 2, 'IC19042022-0002', 100, '1000.00', '1050.00', '100000.00', '105000.00', '50.00', '2022-02-01', '1000.00', '', 'cba321', 0, '2022-05-26 21:18:08', 0, '0000-00-00 00:00:00', '1'),
+(4, 2, 2, 2, 'IC19042022-0001', 100, '2000.00', '2100.00', '200000.00', '210000.00', '100.00', '2022-02-01', '2000.00', '', 'cba321', 0, '2022-05-26 21:18:08', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -911,16 +1118,18 @@ INSERT INTO `opening_detail` (`id`, `opening_master_id`, `item_code`, `qty`, `un
 
 CREATE TABLE `opening_master` (
   `id` int(11) NOT NULL,
-  `opening_code` varchar(100) NOT NULL,
+  `opening_code` varchar(55) NOT NULL,
   `fiscal_year` varchar(10) NOT NULL,
   `opening_date` date NOT NULL,
   `approved_by` int(11) DEFAULT NULL,
   `approved_on` date NOT NULL,
-  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
   `posted_tag` enum('0','1') NOT NULL DEFAULT '0',
   `posted_by` varchar(255) NOT NULL,
   `posted_on` date NOT NULL,
   `remarks` varchar(100) NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
@@ -932,10 +1141,9 @@ CREATE TABLE `opening_master` (
 -- Dumping data for table `opening_master`
 --
 
-INSERT INTO `opening_master` (`id`, `opening_code`, `fiscal_year`, `opening_date`, `approved_by`, `approved_on`, `cancel_tag`, `posted_tag`, `posted_by`, `posted_on`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'OPE26042022-0001', '2022/23', '2022-01-01', 3, '2022-04-26', '0', '1', '3', '2022-04-26', 'January', 3, '2022-04-26 08:54:50', 0, '2022-04-26 12:40:07', '1'),
-(2, 'OPE26042022-0002', '2022/23', '2022-01-01', 3, '2022-04-26', '0', '1', '3', '2022-04-26', 'wifi router only hai', 3, '2022-04-26 12:26:04', 0, '2022-04-26 16:14:50', '1'),
-(3, 'OPE28042022-0003', '2022/23', '2022-01-10', NULL, '0000-00-00', '1', '0', '', '0000-00-00', 'feri wifi', 3, '2022-04-28 08:38:46', 3, '2022-04-28 15:15:59', '1');
+INSERT INTO `opening_master` (`id`, `opening_code`, `fiscal_year`, `opening_date`, `approved_by`, `approved_on`, `posted_tag`, `posted_by`, `posted_on`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'OPE26052022-0001', '2022', '2022-01-01', 3, '2022-05-26', '1', '3', '2022-05-26', 'first shot', '0', NULL, NULL, 3, '2022-05-26 17:17:38', 0, '2022-05-26 21:03:00', '1'),
+(2, 'OPE26052022-0002', '2022', '2022-02-01', 3, '2022-05-26', '1', '3', '2022-05-26', 'february ma leko', '0', NULL, NULL, 3, '2022-05-26 17:33:08', 0, '2022-05-26 21:19:15', '1');
 
 -- --------------------------------------------------------
 
@@ -945,18 +1153,21 @@ INSERT INTO `opening_master` (`id`, `opening_code`, `fiscal_year`, `opening_date
 
 CREATE TABLE `purchase_order` (
   `id` int(11) NOT NULL,
-  `purchase_request_no` varchar(25) NOT NULL,
+  `purchase_request_no` varchar(25) DEFAULT NULL,
   `purchase_order_no` varchar(25) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
   `staff_id` int(11) DEFAULT NULL,
   `request_type` enum('DR','MRN','REQ','PR') NOT NULL,
-  `requisition_no` varchar(25) NOT NULL,
-  `mrn_no` varchar(25) NOT NULL,
+  `requisition_no` varchar(25) DEFAULT NULL,
+  `mrn_no` varchar(25) DEFAULT NULL,
   `remarks` varchar(255) NOT NULL,
   `requested_on` date NOT NULL,
   `requested_by` varchar(25) NOT NULL,
   `approved_by` varchar(25) NOT NULL,
   `approved_on` date NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) NOT NULL,
@@ -1002,22 +1213,17 @@ CREATE TABLE `purchase_request` (
   `remarks` varchar(255) NOT NULL,
   `requested_on` date NOT NULL,
   `requested_by` varchar(25) NOT NULL,
-  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
   `approved_by` varchar(25) NOT NULL,
   `approved_on` date NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `purchase_request`
---
-
-INSERT INTO `purchase_request` (`id`, `purchase_request_no`, `department_id`, `staff_id`, `request_type`, `requisition_no`, `mrn_no`, `remarks`, `requested_on`, `requested_by`, `cancel_tag`, `approved_by`, `approved_on`, `created_on`, `created_by`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'PR02052022-0001', 3, 2, 'DR', NULL, NULL, 'chado chado hai yekdam fast chaiyeko xa hailala la la la', '2022-05-02', 'Rajesh Dai', '0', '', '0000-00-00', '2022-05-02 11:32:36', 3, 3, '2022-05-02 11:50:42', '1');
 
 -- --------------------------------------------------------
 
@@ -1039,15 +1245,6 @@ CREATE TABLE `purchase_request_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `purchase_request_details`
---
-
-INSERT INTO `purchase_request_details` (`id`, `purchase_request_no`, `item_code`, `item_name`, `requested_qty`, `received_qty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(4, 'PR02052022-0001', 'IC19042022-0003', 'Dell Inspiron 3511', 500, 0, 'fast hai', '2022-05-02 11:50:42', '3', '0000-00-00 00:00:00', 0, '1'),
-(5, 'PR02052022-0001', 'IC19042022-0002', 'Dell Inspiron 3511', 500, 0, 'fast hai', '2022-05-02 11:50:42', '3', '0000-00-00 00:00:00', 0, '1'),
-(6, 'PR02052022-0001', 'IC19042022-0001', 'Computer Wifi Core i5', 500, 0, 'fast hai fast', '2022-05-02 11:50:42', '3', '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1075,10 +1272,11 @@ CREATE TABLE `requisition_details` (
 --
 
 INSERT INTO `requisition_details` (`id`, `requisition_no`, `item_code`, `quantity_requested`, `received_qnty`, `remaining_qnty`, `remark`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'RQ20042022-0001', 'IC19042022-0003', 100, 0, 100, 'sad sadsasadsasdfs dfsdfsdfsd', 0, '2022-04-20 15:11:49', 0, '0000-00-00 00:00:00', '1'),
-(2, 'RQ20042022-0001', 'IC19042022-0002', 200, 0, 200, 'da sdajshda sdgsajhdsajh', 0, '2022-04-20 15:11:49', 0, '0000-00-00 00:00:00', '1'),
-(3, 'RQ20042022-0002', 'IC19042022-0001', 1, 1, 0, 'asgdhasg hjasgdhsajdasdasass asdgjsaasas', 0, '2022-04-20 15:12:44', 0, '0000-00-00 00:00:00', '1'),
-(4, 'RQ28042022-0003', 'IC19042022-0001', 10, 0, 10, '10 ota fast hai', 0, '2022-04-28 12:28:39', 0, '0000-00-00 00:00:00', '1');
+(2, 'RQ19042022-0001', 'IC19042022-0002', 1, 0, NULL, 'Dell Inspiron 3511 ', 0, '2022-04-19 12:02:32', 0, '0000-00-00 00:00:00', '1'),
+(3, 'RQ19042022-0002', 'IC19042022-0002', 2, 0, NULL, 'Dell Inspiron 3511-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
+(4, 'RQ19042022-0002', 'IC19042022-0001', 2, 0, NULL, 'Computer Wifi Core i5-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
+(5, 'RQ26052022-0001', 'IC19042022-0002', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1'),
+(6, 'RQ26052022-0001', 'IC19042022-0001', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1093,11 +1291,13 @@ CREATE TABLE `requisition_master` (
   `department_id` int(11) DEFAULT NULL,
   `staff_id` int(11) NOT NULL,
   `remarks` varchar(155) DEFAULT NULL,
-  `cancel_tag` enum('0','1') DEFAULT '0',
   `requested_by` varchar(11) NOT NULL,
   `requested_date` date NOT NULL,
   `approved_by` varchar(25) NOT NULL,
   `approved_on` date NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` int(11) NOT NULL,
   `created_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
@@ -1109,10 +1309,8 @@ CREATE TABLE `requisition_master` (
 -- Dumping data for table `requisition_master`
 --
 
-INSERT INTO `requisition_master` (`id`, `requisition_no`, `requisition_date`, `department_id`, `staff_id`, `remarks`, `cancel_tag`, `requested_by`, `requested_date`, `approved_by`, `approved_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'RQ20042022-0001', '2022-04-20', 3, 0, 'dami dami', '0', '1', '0000-00-00', '1', '0000-00-00', 3, '2022-04-20 11:26:49', 0, '0000-00-00 00:00:00', '1'),
-(2, 'RQ20042022-0002', '2022-04-19', 3, 0, ' wdsfwdsfsd fsdf dssdfsdfsdf', '0', '1', '0000-00-00', '3', '2022-04-28', 3, '2022-04-20 11:27:44', 0, '0000-00-00 00:00:00', '1'),
-(3, 'RQ28042022-0003', '2022-04-28', 3, 0, 'tset 3 hai', '1', '1', '0000-00-00', '', '0000-00-00', 3, '2022-04-28 08:43:39', 0, '0000-00-00 00:00:00', '1');
+INSERT INTO `requisition_master` (`id`, `requisition_no`, `requisition_date`, `department_id`, `staff_id`, `remarks`, `requested_by`, `requested_date`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(3, 'RQ26052022-0001', '2022-05-26', 2, 2, 'duitai ma yeuta matra hai', 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, 3, '2022-05-26 17:36:34', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1134,7 +1332,7 @@ CREATE TABLE `sales_details` (
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1145,7 +1343,7 @@ CREATE TABLE `sales_details` (
 CREATE TABLE `sales_master` (
   `id` int(11) NOT NULL,
   `sale_no` varchar(25) NOT NULL,
-  `sales_code` int(11) NOT NULL,
+  `sales_code` varchar(25) NOT NULL,
   `sales_date` date DEFAULT NULL,
   `client_id` int(11) NOT NULL,
   `client_name` varchar(25) NOT NULL,
@@ -1158,12 +1356,18 @@ CREATE TABLE `sales_master` (
   `advance_amt` decimal(11,2) DEFAULT NULL,
   `discount_amt` varchar(25) DEFAULT NULL,
   `discount_per` decimal(11,2) DEFAULT NULL,
-  `vat` decimal(11,2) DEFAULT NULL,
+  `vat_percent` decimal(11,2) NOT NULL,
+  `vat_amount` decimal(11,2) NOT NULL,
+  `total` decimal(11,2) NOT NULL,
+  `remaining_amt` decimal(11,2) NOT NULL,
   `other_charges` decimal(11,2) DEFAULT NULL,
   `approved_by` varchar(25) DEFAULT NULL,
   `approved_on` date DEFAULT NULL,
-  `created_on` varchar(25) NOT NULL,
-  `created_by` datetime NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
@@ -1178,21 +1382,22 @@ CREATE TABLE `sales_master` (
 CREATE TABLE `sales_return` (
   `id` int(11) NOT NULL,
   `s_return_no` varchar(25) NOT NULL,
+  `sale_no` varchar(50) NOT NULL,
   `sales_rtn_date` date NOT NULL,
   `approved_by` varchar(25) DEFAULT NULL,
   `approved_on` date DEFAULT NULL,
   `posted_tag` enum('0','1') DEFAULT '0',
   `posted_on` date DEFAULT NULL,
-  `qty` int(6) NOT NULL,
-  `discount_per` decimal(11,2) DEFAULT NULL,
-  `discount_amt` decimal(11,2) DEFAULT NULL,
-  `grand_total` decimal(11,2) DEFAULT NULL,
+  `remarks` varchar(150) NOT NULL,
+  `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
+  `canceled_by` int(11) DEFAULT NULL,
+  `canceled_on` date DEFAULT NULL,
   `created_by` varchar(25) NOT NULL,
   `created_on` datetime NOT NULL,
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1204,17 +1409,18 @@ CREATE TABLE `sales_return_details` (
   `id` int(11) NOT NULL,
   `s_return_no` varchar(25) NOT NULL,
   `item_code` varchar(25) NOT NULL,
-  `sale_no` varchar(25) NOT NULL,
-  `qty` int(6) NOT NULL,
+  `qty_return` int(6) NOT NULL,
   `unit_price` decimal(11,2) DEFAULT NULL,
+  `actual_unit_price` decimal(11,2) NOT NULL,
   `actual_total_price` decimal(11,2) DEFAULT NULL,
   `total_price` decimal(11,2) DEFAULT NULL,
+  `return_remarks` varchar(150) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by` varchar(25) NOT NULL,
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1257,7 +1463,7 @@ CREATE TABLE `site_settings` (
 --
 
 INSERT INTO `site_settings` (`id`, `site_name`, `site_slogan`, `web_url`, `address`, `mobile`, `telephone`, `map_location`, `contact_detail`, `email`, `facebook`, `whatsapp`, `skype`, `twitter`, `instagram`, `youtube`, `googleplus`, `linked_in`, `logo`, `fav`, `default_img`, `meta_title`, `meta_description`, `meta_key_words`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'Inventory', 'Inventory Management', 'http://localhost:7777/stock', 'Prasuti Marga -509, Kathmandu, Nepal', '+977-1-4102299, 4102213 ,4102239', '+977-1-4102299, 4102213 ,4102239', '', '<p>Prasuti Marga -509,</p>\r\n\r\n<p>Kathmandu, Nepal</p>\r\n\r\n<p><strong>Fax:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Phone:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Email:</strong>&nbsp;info@nyatapol.com</p>\r\n', 'info@nyatapol.com', 'https://www.facebook.com/', 'whatsup.com', 'skype.com', 'twitter.com', 'instagram.com', 'youtube.com', 'google.com', 'linked_in.com', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'Stock Management (Inventory)', '<p>Best Stock Management</p>', 'stock, stock management, inventory', '2022-04-20', 3, '1');
+(1, 'Inventory', 'Inventory Management', 'http://localhost:7777/stock', 'Prasuti Marga -509, Kathmandu, Nepal', '+977-1-4102299, 4102213 ,4102239', '+977-1-4102299, 4102213 ,4102239', '<p>&nbsp;</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', '<p>Prasuti Marga -509,</p>\r\n\r\n<p>Kathmandu, Nepal</p>\r\n\r\n<p><strong>Fax:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Phone:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Email:</strong>&nbsp;info@nyatapol.com</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', 'info@nyatapol.com', 'https://www.facebook.com/', 'whatsup.com', 'skype.com', 'twitter.com', 'instagram.com', 'youtube.com', 'google.com', 'linked_in.com', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'Stock Management (Inventory)', '<p>Best Stock Management</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !impo', 'stock, stock management, inventory', '2022-05-26', 3, '1');
 
 -- --------------------------------------------------------
 
@@ -1285,7 +1491,8 @@ CREATE TABLE `staff_desig_depart` (
 
 INSERT INTO `staff_desig_depart` (`id`, `staff_id`, `designation_code`, `department_code`, `from`, `to`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
 (1, 1, 'Mana', 'Dev', '2020-01-01', '2020-02-01', 3, '2022-04-18 00:00:00', 1, '2022-04-19 00:00:00', '2'),
-(2, 1, 'Mana', 'Mar', '2020-02-01', '0000-00-00', 1, '2022-04-19 00:00:00', 0, '0000-00-00 00:00:00', '1');
+(2, 1, 'Mana', 'Mar', '2020-02-01', '0000-00-00', 1, '2022-04-19 00:00:00', 0, '0000-00-00 00:00:00', '1'),
+(3, 2, 'Mana', 'Dev', '2022-03-01', '0000-00-00', 3, '2022-05-26 00:00:00', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1317,7 +1524,7 @@ CREATE TABLE `staff_infos` (
 --
 
 INSERT INTO `staff_infos` (`id`, `full_name`, `slug`, `description`, `featured_image`, `appointed_date`, `temp_address`, `permanent_address`, `country_code`, `contact`, `email`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'Chelina Maharjan', '', '', '', '2020-01-01', 'Gwarko ,Lalitpur', 'Gwarko ,Lalitpur', 'nepa', '9860013046', 'cheleena.maharjan.3@gmail.com', '2022-04-18', 3, '0000-00-00', 0, '1');
+(2, 'Rajesh Gurung', '', '<p>adasdasdas</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', '2022-03-01', 'Kaushaltar, Bhaktapur', 'Kawasoti,Nawalpur', 'nepa', '9898989898', 'gurungrajesh1992@gmail.com', '2022-05-26', 3, '0000-00-00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1361,13 +1568,22 @@ CREATE TABLE `stock_ledger` (
 --
 
 INSERT INTO `stock_ledger` (`id`, `ledger_code`, `item_code`, `transaction_date`, `transaction_type`, `in_qty`, `out_qty`, `rem_qty`, `in_unit_price`, `in_total_price`, `in_actual_unit_price`, `in_actual_total_price`, `out_unit_price`, `out_total_price`, `out_actual_unit_price`, `out_actual_total_price`, `location_id`, `batch_no`, `vendor_id`, `client_id`, `remarks`, `transactioncode`, `created_on`, `created_by`, `updated_on`, `updated_by`, `staff_id`, `status`) VALUES
-(1, 'LEDG26042022-0001', 'IC19042022-0001', '2022-01-01', 'OPN', 500, 0, 0, '3000.00', '1500000.00', '3500.00', '1750000.00', '0.00', '0.00', '0.00', '0.00', 2, '', 0, 0, 'posted from opening', 'OPE26042022-0001', '2022-04-26', '3', '0000-00-00', 0, 0, '1'),
-(2, 'LEDG26042022-0002', 'IC19042022-0002', '2022-01-01', 'OPN', 6000, 0, 6000, '90000.00', '540000000.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', 2, '', 0, 0, 'posted from opening', 'OPE26042022-0001', '2022-04-26', '3', '0000-00-00', 0, 0, '1'),
-(3, 'LEDG26042022-0003', 'IC19042022-0003', '2022-01-01', 'OPN', 5, 0, 4, '100000.00', '500000000.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', 2, '', 0, 0, 'posted from opening', 'OPE26042022-0001', '2022-04-26', '3', '0000-00-00', 0, 0, '1'),
-(8, 'LEDG26042022-0004', 'IC19042022-0001', '2022-01-01', 'OPN', 100, 0, 49, '4000.00', '400000.00', '4500.00', '450000.00', '0.00', '0.00', '0.00', '0.00', 2, '', 0, 0, 'posted from opening', 'OPE26042022-0002', '2022-04-26', '3', '0000-00-00', 0, 0, '1'),
-(12, 'LEDG28042022-0005', 'IC19042022-0001', '2022-03-01', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue', 'IS20042022-0003', '2022-04-28', '3', '0000-00-00', 0, 0, '1'),
-(25, 'LEDG01052022-0006', 'IC19042022-0001', '2022-04-20', 'ISS', 0, 550, 0, '0.00', '0.00', '0.00', '0.00', '3092.73', '1701000.00', '3592.73', '1976000.00', 0, '', 0, 0, 'posted from issue', 'IS20042022-0002', '2022-05-01', '3', '0000-00-00', 0, 0, '1'),
-(26, 'LEDG01052022-0007', 'IC19042022-0003', '2022-04-20', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '100000.00', '100000.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue', 'IS20042022-0002', '2022-05-01', '3', '0000-00-00', 0, 0, '1');
+(1, 'LEDG26052022-0001', 'IC19042022-0001', '2022-01-01', 'OPN', 10, 0, 0, '2000.00', '20000.00', '2100.00', '21000.00', '0.00', '0.00', '0.00', '0.00', 1, 'abc123', 1, 0, 'posted from opening', 'OPE26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(2, 'LEDG26052022-0002', 'IC19042022-0002', '2022-01-01', 'OPN', 10, 0, 0, '1000.00', '10000.00', '1050.00', '10500.00', '0.00', '0.00', '0.00', '0.00', 1, 'abc123', 1, 0, 'posted from opening', 'OPE26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(3, 'LEDG26052022-0003', 'IC19042022-0001', '2022-02-01', 'OPN', 100, 0, 90, '2000.00', '200000.00', '2100.00', '210000.00', '0.00', '0.00', '0.00', '0.00', 2, 'cba321', 2, 0, 'posted from opening', 'OPE26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(4, 'LEDG26052022-0004', 'IC19042022-0002', '2022-02-01', 'OPN', 100, 0, 90, '1000.00', '100000.00', '1050.00', '105000.00', '0.00', '0.00', '0.00', '0.00', 2, 'cba321', 2, 0, 'posted from opening', 'OPE26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(5, 'LEDG26052022-0005', 'IC19042022-0002', '2022-05-26', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', '1050.00', '1050.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(6, 'LEDG26052022-0006', 'IC19042022-0001', '2022-05-26', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '2000.00', '2100.00', '2100.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(7, 'LEDG26052022-0007', 'IC19042022-0001', '2022-05-26', 'ISS', 0, 19, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '38000.00', '2100.00', '39900.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(8, 'LEDG26052022-0008', 'IC19042022-0002', '2022-05-26', 'ISS', 0, 19, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '19000.00', '1050.00', '19950.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(9, 'LEDG26052022-0009', 'IC19042022-0001', '2022-05-26', 'ISR', 1, 0, 1, '2000.00', '2000.00', '2100.00', '2100.00', '0.00', '0.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue return', 'IR26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(10, 'LEDG26052022-0010', 'IC19042022-0002', '2022-05-26', 'ISR', 1, 0, 1, '1000.00', '1000.00', '1050.00', '1050.00', '0.00', '0.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue return', 'IR26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(19, 'LEDG26052022-0015', 'IC19042022-0001', '2022-05-26', 'GRN', 2, 0, 2, '2000.00', '4000.00', '260.00', '520.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(20, 'LEDG26052022-0016', 'IC19042022-0002', '2022-05-26', 'GRN', 1, 0, 1, '1000.00', '1000.00', '130.00', '130.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(21, 'LEDG26052022-0017', 'IC19042022-0001', '2022-05-26', 'GRN', 9, 0, 9, '2000.00', '18000.00', '369.15', '3322.33', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(22, 'LEDG26052022-0018', 'IC19042022-0002', '2022-05-26', 'GRN', 9, 0, 9, '1000.00', '9000.00', '184.57', '1661.17', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
+(23, 'LEDG27052022-0019', 'IC19042022-0002', '2022-05-26', 'GRR', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', '130.00', '130.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1'),
+(24, 'LEDG27052022-0020', 'IC19042022-0001', '2022-05-26', 'GRR', 0, 2, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '4000.00', '260.00', '520.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1412,35 +1628,13 @@ CREATE TABLE `supplier_infos` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `temp_data`
+-- Dumping data for table `supplier_infos`
 --
 
-CREATE TABLE `temp_data` (
-  `temp_id` int(11) NOT NULL,
-  `table_name` varchar(55) NOT NULL,
-  `row_id` int(11) NOT NULL,
-  `value` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `temp_data`
---
-
-INSERT INTO `temp_data` (`temp_id`, `table_name`, `row_id`, `value`) VALUES
-(1, 'categories', 6, 'root@localhost;;;root@localhost'),
-(2, 'categories', 1, 'root@localhost;;;root@localhost'),
-(3, 'categories', 2, 'root@localhost;;;root@localhost'),
-(4, 'categories', 3, 'root@localhost;;;root@localhost'),
-(5, 'categories', 4, 'root@localhost;;;root@localhost'),
-(6, 'categories', 5, 'root@localhost;;;root@localhost'),
-(7, 'categories', 6, 'root@localhost;;;root@localhost'),
-(8, 'categories', 7, 'root@localhost;;;root@localhost'),
-(9, 'categories', 8, 'root@localhost;;;root@localhost'),
-(10, 'categories', 9, 'root@localhost;;;root@localhost'),
-(11, 'categories', 10, 'root@localhost;;;root@localhost');
+INSERT INTO `supplier_infos` (`id`, `supplier_name`, `remarks`, `address`, `country_code`, `email`, `telephone`, `contact_person`, `cp_mobile`, `docpath`, `meta_keyword`, `meta_desc`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'Supplier one', '<p>supplier oned</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', 'Kaushaltar', 'nepa', 'supplierone@gmail.com', '9898989898', 'sagdagdjagd asdgasd jagd', '768768768687', 'http://localhost:7777/stock/uploads/download.png', 'dsadmnsbadm sdhsd', 'fgsdh gshdgjfs', '3', '2022-05-26 00:00:00', NULL, '0000-00-00', '1'),
+(2, 'Spplier Two', '<p>Supplier Two</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', 'Gattha ghar', 'nepa', 'stwo@gmail.com', '9898988998', 'dasghjdags gjh', ' 879789798797', 'http://localhost:7777/stock/uploads/download.png', 'hjkhd jshdkj k', 'j hkjh kjhkjh kj', '3', '2022-05-26 00:00:00', NULL, '0000-00-00', '1');
 
 -- --------------------------------------------------------
 
@@ -1479,9 +1673,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_name`, `password`, `auth_code`, `role_id`, `staff_id`, `designation_code`, `depart_id`, `appointed_date`, `full_name`, `profile_image`, `temp_address`, `permanent_address`, `country_code`, `contact`, `description`, `email`, `created_on`, `created_by`, `updated_on`, `updated_by`, `currently_working`, `status`) VALUES
-(1, 'nyatapol', 'c7098dd01fd11866dcb79e33d03ecfc5', '2fea04ab2467cf94f8b31c1fbdffe0a7', 1, NULL, 'HRM', 3, NULL, 'Nyatapol', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Babarmahal', '', 'nepa', '+977 1-4102299', '', 'nyatapol@gmail.com', '2022-01-19', 0, '2022-02-07', 1, 'Yes', '1'),
+(1, 'nyatapol', 'c7098dd01fd11866dcb79e33d03ecfc5', '820682a7c8be57db72638233737fabf2', 1, NULL, 'HRM', 3, NULL, 'Nyatapol', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Babarmahal', '', 'nepa', '+977 1-4102299', '', 'nyatapol@gmail.com', '2022-01-19', 0, '2022-02-07', 1, 'Yes', '1'),
 (2, 'rajesh', 'c7098dd01fd11866dcb79e33d03ecfc5', 'b41f1ae8bc8aeb8b467612ba63ef34b0', 1, NULL, 'HRM', 3, NULL, 'Rajesh Gurung', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Tikathali', '', 'nepa', '98119561913', '<h1>dami hai sss</h1>\r\n', 'gurungrajesh1992@gmail.com', '2022-01-28', 1, '2022-02-07', 1, 'Yes', '1'),
-(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '2fc92014b26c655dc76e400b7d58f480', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
+(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '0ddc67329ca83f5a1f94361488af020f', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
 (6, 'chelina', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 1, 1, NULL, NULL, NULL, '', '', '', '', '', '', '', 'cheleena.maharjan.3@gmail.com', '2022-04-18', 3, '0000-00-00', 0, 'Yes', '1');
 
 -- --------------------------------------------------------
@@ -3637,1966 +3831,350 @@ INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALU
 (2130, 'items', 'all', 1, '2022-04-19 08:22:17'),
 (2131, 'items', 'all', 1, '2022-04-19 08:33:16'),
 (2132, 'items', 'form', 1, '2022-04-19 08:33:18'),
-(2133, 'opening_master', 'view', 1, '2022-04-19 09:26:04'),
-(2134, 'opening_master', 'all', 1, '2022-04-19 09:26:30'),
-(2135, 'categories', 'all', 1, '2022-04-19 09:26:41'),
-(2136, 'items', 'all', 1, '2022-04-19 09:26:48'),
-(2137, 'fiscal_year', 'all', 1, '2022-04-19 09:26:56'),
-(2138, 'fiscal_year', 'form', 1, '2022-04-19 09:27:00'),
-(2139, 'fiscal_year', 'form', 1, '2022-04-19 09:27:07'),
-(2140, 'fiscal_year', 'all', 1, '2022-04-19 09:27:07'),
-(2141, 'location', 'all', 1, '2022-04-19 09:27:18'),
-(2142, 'opening_master', 'all', 1, '2022-04-19 09:27:39'),
-(2143, 'opening_master', 'form', 1, '2022-04-19 09:27:42'),
-(2144, 'opening_master', 'getForm', 1, '2022-04-19 09:27:52'),
-(2145, 'opening_master', 'getForm', 1, '2022-04-19 09:28:08'),
-(2146, 'opening_master', 'form', 1, '2022-04-19 09:28:23'),
-(2147, 'opening_master', 'all', 1, '2022-04-19 09:28:23'),
-(2148, 'opening_master', 'form', 1, '2022-04-19 09:28:26'),
-(2149, 'opening_master', 'getForm', 1, '2022-04-19 09:28:34'),
-(2150, 'opening_master', 'form', 1, '2022-04-19 09:28:44'),
-(2151, 'opening_master', 'all', 1, '2022-04-19 09:28:44'),
-(2152, 'opening_master', 'view', 1, '2022-04-19 09:28:51'),
-(2153, 'opening_master', 'view', 1, '2022-04-19 09:31:32'),
-(2154, 'opening_master', 'view', 1, '2022-04-19 09:32:03'),
-(2155, 'opening_master', 'view', 1, '2022-04-19 09:32:56'),
-(2156, 'opening_master', 'view', 1, '2022-04-19 09:34:27'),
-(2157, 'opening_master', 'view', 1, '2022-04-19 09:35:15'),
-(2158, 'opening_master', 'view', 1, '2022-04-19 09:35:48'),
-(2159, 'opening_master', 'view', 1, '2022-04-19 09:35:54'),
-(2160, 'opening_master', 'view', 1, '2022-04-19 09:36:26'),
-(2161, 'opening_master', 'view', 1, '2022-04-19 09:36:47'),
-(2162, 'dashboard', NULL, 1, '2022-04-19 09:43:40'),
-(2163, 'dashboard', NULL, 1, '2022-04-19 09:43:41'),
-(2164, 'items', 'form', 1, '2022-04-19 09:46:19'),
-(2165, 'items', 'form', 1, '2022-04-19 09:46:25'),
-(2166, 'items', 'form', 1, '2022-04-19 09:47:45'),
-(2167, 'items', 'all', 1, '2022-04-19 09:47:45'),
-(2168, 'items', 'form', 1, '2022-04-19 09:48:33'),
-(2169, 'items', 'form', 1, '2022-04-19 09:48:39'),
-(2170, 'items', 'form', 1, '2022-04-19 09:48:55'),
-(2171, 'opening_master', 'all', 1, '2022-04-19 10:00:39'),
-(2172, 'opening_master', 'view', 1, '2022-04-19 10:00:45'),
-(2173, 'opening_master', 'view', 1, '2022-04-19 10:01:40'),
-(2174, 'opening_master', 'view', 1, '2022-04-19 10:14:28'),
-(2175, 'opening_master', 'view', 1, '2022-04-19 10:16:19'),
-(2176, 'opening_master', 'view', 1, '2022-04-19 10:16:35'),
-(2177, 'opening_master', 'all', 1, '2022-04-19 10:17:04'),
-(2178, 'opening_master', 'view', 1, '2022-04-19 10:17:07'),
-(2179, 'opening_master', 'view', 1, '2022-04-19 10:17:24'),
-(2180, 'opening_master', 'view', 1, '2022-04-19 10:17:57'),
-(2181, 'opening_master', 'view', 1, '2022-04-19 10:18:19'),
-(2182, 'opening_master', 'view', 1, '2022-04-19 10:18:59'),
-(2183, 'opening_master', 'view', 1, '2022-04-19 10:19:01'),
-(2184, 'opening_master', 'view', 1, '2022-04-19 10:19:31'),
-(2185, 'opening_master', 'view', 1, '2022-04-19 10:19:37'),
-(2186, 'opening_master', 'view', 1, '2022-04-19 10:20:44'),
-(2187, 'opening_master', 'view', 1, '2022-04-19 10:21:03'),
-(2188, 'opening_master', 'view', 1, '2022-04-19 10:22:42'),
-(2189, 'opening_master', 'view', 1, '2022-04-19 10:25:04'),
-(2190, 'opening_master', 'view', 1, '2022-04-19 10:27:31'),
-(2191, 'opening_master', 'view', 1, '2022-04-19 10:29:14'),
-(2192, 'opening_master', 'view', 1, '2022-04-19 10:30:38'),
-(2193, 'opening_master', 'view', 1, '2022-04-19 10:30:54'),
-(2194, 'opening_master', 'view', 1, '2022-04-19 10:31:19'),
-(2195, 'opening_master', 'view', 1, '2022-04-19 10:32:25'),
-(2196, 'opening_master', 'view', 1, '2022-04-19 10:32:37'),
-(2197, 'opening_master', 'view', 1, '2022-04-19 10:33:04'),
-(2198, 'opening_master', 'view', 1, '2022-04-19 10:33:33'),
-(2199, 'opening_master', 'all', 1, '2022-04-19 10:33:59'),
-(2200, 'opening_master', 'view', 1, '2022-04-19 10:34:06'),
-(2201, 'opening_master', 'all', 1, '2022-04-19 10:34:16'),
-(2202, 'opening_master', 'view', 1, '2022-04-19 10:34:18'),
-(2203, 'opening_master', 'view', 1, '2022-04-19 10:36:39'),
-(2204, 'opening_master', 'view', 1, '2022-04-19 10:36:46'),
-(2205, 'opening_master', 'view', 1, '2022-04-19 10:40:45'),
-(2206, 'opening_master', 'view', 1, '2022-04-19 10:41:16'),
-(2207, 'opening_master', 'view', 1, '2022-04-19 10:41:39'),
-(2208, 'opening_master', 'view', 1, '2022-04-19 10:45:11'),
-(2209, 'opening_master', 'view', 1, '2022-04-19 10:45:24'),
-(2210, 'opening_master', 'view', 1, '2022-04-19 10:46:14'),
-(2211, 'opening_master', 'view', 1, '2022-04-19 10:46:19'),
-(2212, 'opening_master', 'view', 1, '2022-04-19 10:46:25'),
-(2213, 'opening_master', 'view', 1, '2022-04-19 10:46:50'),
-(2214, 'opening_master', 'view', 1, '2022-04-19 10:47:12'),
-(2215, 'opening_master', 'view', 1, '2022-04-19 10:47:43'),
-(2216, 'opening_master', 'view', 1, '2022-04-19 10:48:23'),
-(2217, 'opening_master', 'view', 1, '2022-04-19 10:48:39'),
-(2218, 'opening_master', 'view', 1, '2022-04-19 10:49:06'),
-(2219, 'opening_master', 'view', 1, '2022-04-19 10:49:10'),
-(2220, 'opening_master', 'view', 1, '2022-04-19 10:49:21'),
-(2221, 'opening_master', 'view', 1, '2022-04-19 10:49:59'),
-(2222, 'opening_master', 'view', 1, '2022-04-19 10:50:18'),
-(2223, 'opening_master', 'view', 1, '2022-04-19 10:50:22'),
-(2224, 'opening_master', 'all', 1, '2022-04-19 10:51:44'),
-(2225, 'opening_master', 'form', 1, '2022-04-19 10:52:29'),
-(2226, 'opening_master', 'all', 1, '2022-04-19 10:52:33'),
-(2227, 'opening_master', 'view', 1, '2022-04-19 10:52:36'),
-(2228, 'opening_master', 'view', 1, '2022-04-19 10:53:46'),
-(2229, 'opening_master', 'view', 1, '2022-04-19 10:54:47'),
-(2230, 'opening_master', 'view', 1, '2022-04-19 10:55:01'),
-(2231, 'items', 'all', 1, '2022-04-19 10:56:27'),
-(2232, 'opening_master', 'all', 1, '2022-04-19 10:57:32'),
-(2233, 'opening_master', 'view', 1, '2022-04-19 10:57:36'),
-(2234, 'opening_master', 'all', 1, '2022-04-19 10:57:47'),
-(2235, 'opening_master', 'form', 1, '2022-04-19 10:57:51'),
-(2236, 'opening_master', 'form', 1, '2022-04-19 10:58:05'),
-(2237, 'opening_master', 'form', 1, '2022-04-19 10:58:09'),
-(2238, 'opening_master', 'form', 1, '2022-04-19 11:00:13'),
-(2239, 'requisition', 'all', 1, '2022-04-19 11:00:21'),
-(2240, 'requisition', 'view', 1, '2022-04-19 11:00:24'),
-(2241, 'requisition', 'all', 1, '2022-04-19 11:00:37'),
-(2242, 'requisition', 'view', 1, '2022-04-19 11:00:39'),
-(2243, 'requisition', 'all', 1, '2022-04-19 11:00:42'),
-(2244, 'requisition', 'form', 1, '2022-04-19 11:00:44'),
-(2245, 'requisition', 'all', 1, '2022-04-19 11:00:48'),
-(2246, 'requisition', 'form', 1, '2022-04-19 11:00:51'),
-(2247, 'requisition', 'form', 1, '2022-04-19 11:01:03'),
-(2248, 'requisition', 'form', 1, '2022-04-19 11:01:05'),
-(2249, 'opening_master', 'view', 1, '2022-04-19 11:02:37'),
-(2250, 'requisition', 'form', 1, '2022-04-19 11:02:44'),
-(2251, 'requisition', 'form', 1, '2022-04-19 11:02:44'),
-(2252, 'requisition', 'form', 1, '2022-04-19 11:02:47'),
-(2253, 'requisition', 'all', 1, '2022-04-19 11:02:55'),
-(2254, 'requisition', 'form', 1, '2022-04-19 11:02:59'),
-(2255, 'requisition', 'form', 1, '2022-04-19 11:03:06'),
-(2256, 'requisition', 'form', 1, '2022-04-19 11:04:16'),
-(2257, 'requisition', 'form', 1, '2022-04-19 11:04:22'),
-(2258, 'requisition', 'all', 1, '2022-04-19 11:05:43'),
-(2259, 'requisition', 'form', 1, '2022-04-19 11:05:46'),
-(2260, 'requisition', 'getStaffOfDepartment', 1, '2022-04-19 11:05:53'),
-(2261, 'requisition', 'getForm', 1, '2022-04-19 11:06:58'),
-(2262, 'requisition', 'getForm', 1, '2022-04-19 11:07:02'),
-(2263, 'requisition', 'form', 1, '2022-04-19 11:08:13'),
-(2264, 'requisition', 'all', 1, '2022-04-19 11:08:13'),
-(2265, 'requisition', 'view', 1, '2022-04-19 11:08:20'),
-(2266, 'requisition', 'view', 1, '2022-04-19 11:19:37'),
-(2267, 'requisition', 'all', 1, '2022-04-19 11:19:53'),
-(2268, 'requisition', 'all', 1, '2022-04-19 11:20:37'),
-(2269, 'requisition', 'form', 1, '2022-04-19 11:20:40'),
-(2270, 'requisition', 'form', 1, '2022-04-19 11:20:45'),
-(2271, 'requisition', 'form', 1, '2022-04-19 11:22:18'),
-(2272, 'requisition', 'form', 1, '2022-04-19 11:22:28'),
-(2273, 'requisition', 'form', 1, '2022-04-19 11:23:33'),
-(2274, 'requisition', 'form', 1, '2022-04-19 11:32:50'),
-(2275, 'requisition', 'all', 1, '2022-04-19 11:32:57'),
-(2276, 'requisition', 'view', 1, '2022-04-19 11:33:00'),
-(2277, 'dashboard', NULL, 1, '2022-04-20 06:04:53'),
-(2278, 'requisition', 'all', 1, '2022-04-20 06:09:05'),
-(2279, 'requisition', 'view', 1, '2022-04-20 06:09:07'),
-(2280, 'requisition', 'view', 1, '2022-04-20 06:11:55'),
-(2281, 'requisition', 'view', 1, '2022-04-20 06:12:53'),
-(2282, 'requisition', 'view', 1, '2022-04-20 06:13:23'),
-(2283, 'requisition', 'view', 1, '2022-04-20 06:14:16'),
-(2284, 'requisition', 'view', 1, '2022-04-20 06:15:35'),
-(2285, 'requisition', 'view', 1, '2022-04-20 06:20:58'),
-(2286, 'requisition', 'view', 1, '2022-04-20 06:21:31'),
-(2287, 'requisition', 'view', 1, '2022-04-20 06:22:28'),
-(2288, 'requisition', 'view', 1, '2022-04-20 06:22:58'),
-(2289, 'requisition', 'view', 1, '2022-04-20 06:23:03'),
-(2290, 'requisition', 'view', 1, '2022-04-20 06:23:27'),
-(2291, 'requisition', 'view', 1, '2022-04-20 06:23:42'),
-(2292, 'requisition', 'view', 1, '2022-04-20 06:24:36'),
-(2293, 'requisition', 'view', 1, '2022-04-20 06:25:19'),
-(2294, 'requisition', 'view', 1, '2022-04-20 06:25:22'),
-(2295, 'requisition', 'view', 1, '2022-04-20 06:25:47'),
-(2296, 'requisition', 'view', 1, '2022-04-20 06:25:56'),
-(2297, 'requisition', 'view', 1, '2022-04-20 06:26:21'),
-(2298, 'requisition', 'view', 1, '2022-04-20 06:26:52'),
-(2299, 'requisition', 'view', 1, '2022-04-20 06:30:14'),
-(2300, 'requisition', 'view', 1, '2022-04-20 06:30:14'),
-(2301, 'requisition', 'view', 1, '2022-04-20 06:30:29'),
-(2302, 'requisition', 'view', 1, '2022-04-20 06:31:29'),
-(2303, 'requisition', 'view', 1, '2022-04-20 06:32:41'),
-(2304, 'requisition', 'view', 1, '2022-04-20 06:33:15'),
-(2305, 'requisition', 'view', 1, '2022-04-20 06:33:50'),
-(2306, 'requisition', 'view', 1, '2022-04-20 06:34:42'),
-(2307, 'requisition', 'all', 1, '2022-04-20 06:41:35'),
-(2308, 'requisition', 'form', 1, '2022-04-20 06:41:42'),
-(2309, 'requisition', 'form', 1, '2022-04-20 06:41:46'),
-(2310, 'requisition', 'form', 1, '2022-04-20 06:41:58'),
-(2311, 'requisition', 'all', 1, '2022-04-20 06:41:58'),
-(2312, 'requisition', 'all', 1, '2022-04-20 06:43:08'),
-(2313, 'requisition', 'form', 1, '2022-04-20 06:43:16'),
-(2314, 'requisition', 'form', 1, '2022-04-20 06:43:20'),
-(2315, 'requisition', 'form', 1, '2022-04-20 06:43:26'),
-(2316, 'requisition', 'form', 1, '2022-04-20 06:43:26'),
-(2317, 'dashboard', NULL, 3, '2022-04-20 09:21:15'),
-(2318, 'opening_master', 'all', 3, '2022-04-20 09:21:26'),
-(2319, 'opening_master', 'view', 3, '2022-04-20 09:21:32'),
-(2320, 'requisition', 'all', 3, '2022-04-20 09:21:50'),
-(2321, 'issue', 'all', 3, '2022-04-20 09:22:05'),
-(2322, 'issue', 'form', 3, '2022-04-20 09:22:12'),
-(2323, 'requisition', 'all', 3, '2022-04-20 09:22:23'),
-(2324, 'requisition', 'all', 3, '2022-04-20 09:24:55'),
-(2325, 'site_settings', NULL, 3, '2022-04-20 09:25:10'),
-(2326, 'site_settings', NULL, 3, '2022-04-20 09:25:32'),
-(2327, 'site_settings', NULL, 3, '2022-04-20 09:25:32'),
-(2328, 'opening_master', 'all', 3, '2022-04-20 09:25:42'),
-(2329, 'requisition', 'all', 3, '2022-04-20 09:26:13'),
-(2330, 'requisition', 'form', 3, '2022-04-20 09:26:16'),
-(2331, 'requisition', 'getStaffOfDepartment', 3, '2022-04-20 09:26:23'),
-(2332, 'requisition', 'getForm', 3, '2022-04-20 09:26:31'),
-(2333, 'requisition', 'getForm', 3, '2022-04-20 09:26:41'),
-(2334, 'requisition', 'form', 3, '2022-04-20 09:26:49'),
-(2335, 'requisition', 'all', 3, '2022-04-20 09:26:49'),
-(2336, 'requisition', 'form', 3, '2022-04-20 09:26:53'),
-(2337, 'requisition', 'all', 3, '2022-04-20 09:26:57'),
-(2338, 'requisition', 'form', 3, '2022-04-20 09:26:59'),
-(2339, 'requisition', 'getStaffOfDepartment', 3, '2022-04-20 09:27:06'),
-(2340, 'requisition', 'getStaffOfDepartment', 3, '2022-04-20 09:27:08'),
-(2341, 'requisition', 'getForm', 3, '2022-04-20 09:27:15'),
-(2342, 'requisition', 'form', 3, '2022-04-20 09:27:44'),
-(2343, 'requisition', 'all', 3, '2022-04-20 09:27:44'),
-(2344, 'issue', 'all', 3, '2022-04-20 09:28:00'),
-(2345, 'issue', 'form', 3, '2022-04-20 09:28:02'),
-(2346, 'issue', 'form', 3, '2022-04-20 09:28:21'),
-(2347, 'issue', 'form', 3, '2022-04-20 09:28:27'),
-(2348, 'issue', 'add', 3, '2022-04-20 09:28:27'),
-(2349, 'issue', 'add', 3, '2022-04-20 09:32:00'),
-(2350, 'issue', 'all', 3, '2022-04-20 09:32:01'),
-(2351, 'issue', 'view', 3, '2022-04-20 09:32:04'),
-(2352, 'issue', 'form', 3, '2022-04-20 09:32:29'),
-(2353, 'issue', 'form', 3, '2022-04-20 09:32:32'),
-(2354, 'issue', 'direct_add', 3, '2022-04-20 09:32:32'),
-(2355, 'requisition', 'getStaffOfDepartment', 3, '2022-04-20 09:32:41'),
-(2356, 'issue', 'getForm', 3, '2022-04-20 09:32:44'),
-(2357, 'issue', 'getForm', 3, '2022-04-20 09:32:52'),
-(2358, 'issue', 'getForm', 3, '2022-04-20 09:33:01'),
-(2359, 'issue', 'direct_add', 3, '2022-04-20 09:34:25'),
-(2360, 'issue', 'all', 3, '2022-04-20 09:34:25'),
-(2361, 'issue', 'direct_view', 3, '2022-04-20 09:34:28'),
-(2362, 'issue', 'direct_add', 3, '2022-04-20 09:34:38'),
-(2363, 'issue', 'edit', 3, '2022-04-20 09:34:55'),
-(2364, 'issue', 'getAllStock', 3, '2022-04-20 09:37:06'),
-(2365, 'items', 'all', 3, '2022-04-20 09:38:23'),
-(2366, 'issue', 'edit', 3, '2022-04-20 09:46:22'),
-(2367, 'issue', 'edit', 3, '2022-04-20 09:55:11'),
-(2368, 'issue', 'edit', 3, '2022-04-20 09:56:42'),
-(2369, 'issue', 'edit', 3, '2022-04-20 09:58:23'),
-(2370, 'issue', 'getAllStock', 3, '2022-04-20 09:58:55'),
-(2371, 'issue', 'edit', 3, '2022-04-20 10:00:32'),
-(2372, 'issue', 'edit', 3, '2022-04-20 10:02:23'),
-(2373, 'issue', 'getAllStock', 3, '2022-04-20 10:03:10'),
-(2374, 'issue', 'getAllStock', 3, '2022-04-20 10:03:16'),
-(2375, 'issue', 'getAllStock', 3, '2022-04-20 10:03:31'),
-(2376, 'issue', 'edit', 3, '2022-04-20 10:05:36'),
-(2377, 'issue', 'getAllStock', 3, '2022-04-20 10:05:46'),
-(2378, 'issue', 'getAllStock', 3, '2022-04-20 10:05:51'),
-(2379, 'issue', 'getAllStock', 3, '2022-04-20 10:05:55'),
-(2380, 'issue', 'edit', 3, '2022-04-20 10:06:29'),
-(2381, 'issue', 'edit', 3, '2022-04-20 10:07:32'),
-(2382, 'issue', 'getAllStock', 3, '2022-04-20 10:07:39'),
-(2383, 'issue', 'edit', 3, '2022-04-20 10:07:54'),
-(2384, 'issue', 'all', 3, '2022-04-20 10:07:55'),
-(2385, 'issue', 'edit', 3, '2022-04-20 10:08:00'),
-(2386, 'issue', 'edit', 3, '2022-04-20 10:08:09'),
-(2387, 'issue', 'edit', 3, '2022-04-20 10:08:26'),
-(2388, 'issue', 'getAllStock', 3, '2022-04-20 10:08:35'),
-(2389, 'issue', 'edit', 3, '2022-04-20 10:08:43'),
-(2390, 'issue', 'all', 3, '2022-04-20 10:08:43'),
-(2391, 'issue', 'edit', 3, '2022-04-20 10:08:47'),
-(2392, 'issue', 'getAllStock', 3, '2022-04-20 10:14:11'),
-(2393, 'issue', 'getAllStock', 3, '2022-04-20 10:14:36'),
-(2394, 'issue', 'edit', 3, '2022-04-20 10:20:26'),
-(2395, 'issue', 'edit', 3, '2022-04-20 10:21:04'),
-(2396, 'issue', 'edit', 3, '2022-04-20 10:22:22'),
-(2397, 'issue', 'edit', 3, '2022-04-20 10:23:38'),
-(2398, 'issue', 'edit', 3, '2022-04-20 10:30:09'),
-(2399, 'issue', 'edit', 3, '2022-04-20 10:30:49'),
-(2400, 'issue', 'edit', 3, '2022-04-20 10:31:04'),
-(2401, 'issue', 'edit', 3, '2022-04-20 10:31:29'),
-(2402, 'issue', 'getAllStock', 3, '2022-04-20 10:32:08'),
-(2403, 'issue', 'getAllStock', 3, '2022-04-20 10:33:39'),
-(2404, 'issue', 'edit', 3, '2022-04-20 10:33:42'),
-(2405, 'issue', 'getAllStock', 3, '2022-04-20 10:34:30'),
-(2406, 'issue', 'getAllStock', 3, '2022-04-20 10:48:37'),
-(2407, 'issue', 'getAllStock', 3, '2022-04-20 10:48:50'),
-(2408, 'issue', 'edit', 3, '2022-04-20 10:48:54'),
-(2409, 'issue', 'getAllStock', 3, '2022-04-20 10:49:03'),
-(2410, 'issue', 'getAllStock', 3, '2022-04-20 10:49:10'),
-(2411, 'issue', 'getAllStock', 3, '2022-04-20 10:49:34'),
-(2412, 'issue', 'edit', 3, '2022-04-20 10:51:17'),
-(2413, 'issue', 'edit', 3, '2022-04-20 10:51:43'),
-(2414, 'issue', 'getAllStock', 3, '2022-04-20 10:51:51'),
-(2415, 'issue', 'getAllStock', 3, '2022-04-20 10:51:57'),
-(2416, 'issue', 'all', 3, '2022-04-20 10:55:33'),
-(2417, 'issue', 'form', 3, '2022-04-20 10:55:36'),
-(2418, 'issue', 'all', 3, '2022-04-20 10:55:58'),
-(2419, 'issue', 'form', 3, '2022-04-20 10:56:09'),
-(2420, 'issue', 'form', 3, '2022-04-20 10:56:15'),
-(2421, 'issue', 'add', 3, '2022-04-20 10:56:15'),
-(2422, 'issue', 'edit', 3, '2022-04-20 10:56:22'),
-(2423, 'issue', 'add', 3, '2022-04-20 11:13:44'),
-(2424, 'issue', 'getAllStock', 3, '2022-04-20 11:14:31'),
-(2425, 'issue', 'getAllStock', 3, '2022-04-20 11:14:47'),
-(2426, 'issue', 'getAllStock', 3, '2022-04-20 11:15:14'),
-(2427, 'issue', 'add', 3, '2022-04-20 11:15:28'),
-(2428, 'issue', 'getAllStock', 3, '2022-04-20 11:15:45'),
-(2429, 'issue', 'getAllStock', 3, '2022-04-20 11:16:07'),
-(2430, 'issue', 'add', 3, '2022-04-20 11:16:45'),
-(2431, 'issue', 'all', 3, '2022-04-20 11:16:45'),
-(2432, 'issue', 'edit', 3, '2022-04-20 11:16:53'),
-(2433, 'issue', 'direct_add', 3, '2022-04-20 11:17:09'),
-(2434, 'issue', 'direct_add', 3, '2022-04-20 11:18:54'),
-(2435, 'issue', 'direct_add', 3, '2022-04-20 11:19:02'),
-(2436, 'issue', 'direct_add', 3, '2022-04-20 11:28:27'),
-(2437, 'issue', 'direct_add', 3, '2022-04-20 11:30:25'),
-(2438, 'issue', 'direct_add', 3, '2022-04-20 11:30:45'),
-(2439, 'issue', 'direct_add', 3, '2022-04-20 11:31:53'),
-(2440, 'issue', 'getAllStock', 3, '2022-04-20 11:31:59'),
-(2441, 'issue', 'getAllStock', 3, '2022-04-20 11:32:13'),
-(2442, 'issue', 'direct_add', 3, '2022-04-20 11:33:20'),
-(2443, 'issue', 'getAllStock', 3, '2022-04-20 11:33:25'),
-(2444, 'issue', 'getAllStock', 3, '2022-04-20 11:33:37'),
-(2445, 'issue', 'direct_add', 3, '2022-04-20 11:34:25'),
-(2446, 'issue', 'direct_add', 3, '2022-04-20 11:37:16'),
-(2447, 'issue', 'getAllStock', 3, '2022-04-20 11:37:22'),
-(2448, 'issue', 'getAllStock', 3, '2022-04-20 11:37:29'),
-(2449, 'issue', 'direct_add', 3, '2022-04-20 11:41:04'),
-(2450, 'issue', 'direct_add', 3, '2022-04-20 11:41:42'),
-(2451, 'issue', 'getAllStock', 3, '2022-04-20 11:41:58'),
-(2452, 'issue', 'direct_add', 3, '2022-04-20 11:42:15'),
-(2453, 'issue', 'all', 3, '2022-04-20 11:42:23'),
-(2454, 'issue', 'direct_add', 3, '2022-04-20 11:42:40'),
-(2455, 'issue', 'getAllStock', 3, '2022-04-20 11:42:55'),
-(2456, 'issue', 'getAllStock', 3, '2022-04-20 11:43:04'),
-(2457, 'requisition', 'getStaffOfDepartment', 3, '2022-04-20 11:43:07'),
-(2458, 'issue', 'getForm', 3, '2022-04-20 11:43:10'),
-(2459, 'issue', 'direct_add', 3, '2022-04-20 11:47:27'),
-(2460, 'issue', 'getAllStock', 3, '2022-04-20 11:47:46'),
-(2461, 'issue', 'getAllStock', 3, '2022-04-20 11:47:52'),
-(2462, 'issue', 'direct_add', 3, '2022-04-20 11:48:18'),
-(2463, 'issue', 'getForm', 3, '2022-04-20 11:48:23'),
-(2464, 'issue', 'direct_add', 3, '2022-04-20 11:53:45'),
-(2465, 'issue', 'direct_add', 3, '2022-04-20 11:57:15'),
-(2466, 'issue', 'getForm', 3, '2022-04-20 11:57:20'),
-(2467, 'issue', 'getForm', 3, '2022-04-20 11:57:31'),
-(2468, 'issue', 'getForm', 3, '2022-04-20 11:57:34'),
-(2469, 'issue', 'direct_add', 3, '2022-04-20 11:58:51'),
-(2470, 'issue', 'getForm', 3, '2022-04-20 11:58:58'),
-(2471, 'issue', 'getAllStock', 3, '2022-04-20 11:59:20'),
-(2472, 'issue', 'getAllStock', 3, '2022-04-20 11:59:27'),
-(2473, 'issue', 'getForm', 3, '2022-04-20 11:59:32'),
-(2474, 'issue', 'getForm', 3, '2022-04-20 11:59:35'),
-(2475, 'issue', 'direct_add', 3, '2022-04-20 11:59:39'),
-(2476, 'issue', 'getForm', 3, '2022-04-20 11:59:46'),
-(2477, 'issue', 'getAllStock', 3, '2022-04-20 11:59:51'),
-(2478, 'dashboard', NULL, 3, '2022-04-22 06:21:10'),
-(2479, 'mrn', 'all', 3, '2022-04-22 06:21:15'),
-(2480, 'mrn', 'all', 3, '2022-04-22 06:24:36'),
-(2481, 'mrn', 'form', 3, '2022-04-22 06:24:38'),
-(2482, 'mrn', 'getForm', 3, '2022-04-22 06:25:02'),
-(2483, 'dashboard', NULL, 3, '2022-04-22 08:38:48'),
-(2484, 'opening_master', 'all', 3, '2022-04-22 08:38:57'),
-(2485, 'opening_master', 'view', 3, '2022-04-22 08:38:59'),
-(2486, 'opening_master', 'view', 3, '2022-04-22 08:39:39'),
-(2487, 'issue', 'all', 3, '2022-04-22 08:39:45'),
-(2488, 'issue', 'edit', 3, '2022-04-22 08:39:50'),
-(2489, 'issue', 'getAllStock', 3, '2022-04-22 08:40:05'),
-(2490, 'issue', 'all', 3, '2022-04-22 08:41:56'),
-(2491, 'issue', 'direct_add', 3, '2022-04-22 08:41:59'),
-(2492, 'issue', 'getAllStock', 3, '2022-04-22 08:42:14'),
-(2493, 'issue', 'direct_add', 3, '2022-04-22 08:42:22'),
-(2494, 'issue', 'direct_add', 3, '2022-04-22 08:42:51'),
-(2495, 'opening_master', 'all', 3, '2022-04-22 08:42:55'),
-(2496, 'opening_master', 'view', 3, '2022-04-22 08:42:58'),
-(2497, 'opening_master', 'view', 3, '2022-04-22 08:42:59'),
-(2498, 'opening_master', 'form', 3, '2022-04-22 08:43:24'),
-(2499, 'opening_master', 'all', 3, '2022-04-22 08:43:27'),
-(2500, 'requisition', 'all', 3, '2022-04-22 08:46:22'),
-(2501, 'requisition', 'view', 3, '2022-04-22 08:46:31'),
-(2502, 'issue', 'all', 3, '2022-04-22 08:46:54'),
-(2503, 'issue', 'view', 3, '2022-04-22 08:46:57'),
-(2504, 'issue', 'direct_view', 3, '2022-04-22 08:46:58'),
-(2505, 'requisition', 'form', 3, '2022-04-22 08:48:17'),
-(2506, 'requisition', 'all', 3, '2022-04-22 08:48:26'),
-(2507, 'requisition', 'view', 3, '2022-04-22 08:48:28'),
-(2508, 'mrn', 'all', 3, '2022-04-22 08:49:47'),
-(2509, 'opening_master', 'form', 3, '2022-04-22 08:51:52'),
-(2510, 'opening_master', 'getForm', 3, '2022-04-22 08:52:00'),
-(2511, 'opening_master', 'form', 3, '2022-04-22 08:52:08'),
-(2512, 'opening_master', 'all', 3, '2022-04-22 08:52:08'),
-(2513, 'opening_master', 'view', 3, '2022-04-22 08:52:11'),
-(2514, 'opening_master', 'all', 3, '2022-04-22 08:52:19'),
-(2515, 'mrn', 'all', 3, '2022-04-22 08:53:05'),
-(2516, 'mrn', 'form', 3, '2022-04-22 08:53:07'),
-(2517, 'mrn', 'form', 3, '2022-04-22 08:55:01'),
-(2518, 'mrn', 'getForm', 3, '2022-04-22 08:55:13'),
-(2519, 'mrn', 'getForm', 3, '2022-04-22 08:55:22'),
-(2520, 'mrn', 'getForm', 3, '2022-04-22 08:55:26'),
-(2521, 'mrn', 'form', 3, '2022-04-22 08:56:00'),
-(2522, 'mrn', 'all', 3, '2022-04-22 08:56:00'),
-(2523, 'mrn', 'view', 3, '2022-04-22 08:56:08'),
-(2524, 'mrn', 'all', 3, '2022-04-22 08:56:11'),
-(2525, 'opening_master', 'all', 3, '2022-04-22 08:56:41'),
-(2526, 'opening_master', 'view', 3, '2022-04-22 08:56:43'),
-(2527, 'requisition', 'all', 3, '2022-04-22 08:56:47'),
-(2528, 'requisition', 'view', 3, '2022-04-22 08:56:51'),
-(2529, 'issue', 'all', 3, '2022-04-22 08:56:58'),
-(2530, 'issue', 'view', 3, '2022-04-22 08:57:23'),
-(2531, 'issue', 'direct_view', 3, '2022-04-22 08:57:24'),
-(2532, 'opening_master', 'view', 3, '2022-04-22 10:40:58'),
-(2533, 'opening_master', 'view', 3, '2022-04-22 10:41:02'),
-(2534, 'opening_master', 'view', 3, '2022-04-22 10:45:27'),
-(2535, 'opening_master', 'view', 3, '2022-04-22 10:46:03'),
-(2536, 'opening_master', 'view', 3, '2022-04-22 10:46:36'),
-(2537, 'opening_master', 'view', 3, '2022-04-22 10:48:27'),
-(2538, 'opening_master', 'view', 3, '2022-04-22 10:49:05'),
-(2539, 'opening_master', 'view', 3, '2022-04-22 10:50:13'),
-(2540, 'opening_master', 'view', 3, '2022-04-22 10:50:32'),
-(2541, 'opening_master', 'view', 3, '2022-04-22 11:02:19'),
-(2542, 'opening_master', 'change_status', 3, '2022-04-22 11:02:24'),
-(2543, 'opening_master', 'view', 3, '2022-04-22 11:02:24'),
-(2544, 'opening_master', 'all', 3, '2022-04-22 11:02:34'),
-(2545, 'opening_master', 'view', 3, '2022-04-22 11:02:40'),
-(2546, 'opening_master', 'change_status', 3, '2022-04-22 11:02:42'),
-(2547, 'opening_master', 'view', 3, '2022-04-22 11:02:42'),
-(2548, 'requisition', 'view', 3, '2022-04-22 11:04:40'),
-(2549, 'opening_master', 'change_status', 3, '2022-04-22 11:04:46'),
-(2550, 'opening_master', 'change_status', 3, '2022-04-22 11:04:47'),
-(2551, 'opening_master', 'change_status', 3, '2022-04-22 11:04:55'),
-(2552, 'requisition', 'view', 3, '2022-04-22 11:05:43'),
-(2553, 'requisition', 'view', 3, '2022-04-22 11:06:49'),
-(2554, 'opening_master', 'change_status', 3, '2022-04-22 11:06:55'),
-(2555, 'requisition', 'view', 3, '2022-04-22 11:07:26'),
-(2556, 'requisition', 'view', 3, '2022-04-22 11:12:32'),
-(2557, 'opening_master', 'change_status', 3, '2022-04-22 11:12:42'),
-(2558, 'requisition', 'view', 3, '2022-04-22 11:12:42'),
-(2559, 'issue', 'direct_view', 3, '2022-04-22 11:16:04'),
-(2560, 'opening_master', 'change_status', 3, '2022-04-22 11:16:18'),
-(2561, 'issue', 'direct_view', 3, '2022-04-22 11:16:18'),
-(2562, 'issue', 'view', 3, '2022-04-22 11:16:51'),
-(2563, 'issue', 'view', 3, '2022-04-22 11:17:16'),
-(2564, 'opening_master', 'change_status', 3, '2022-04-22 11:17:19'),
-(2565, 'issue', 'view', 3, '2022-04-22 11:17:19'),
-(2566, 'issue', 'edit', 3, '2022-04-22 11:17:19'),
-(2567, 'issue', 'edit', 3, '2022-04-22 11:17:19'),
-(2568, 'issue', 'edit', 3, '2022-04-22 11:17:19'),
-(2569, 'issue', 'edit', 3, '2022-04-22 11:17:19'),
-(2570, 'issue', 'edit', 3, '2022-04-22 11:17:19'),
-(2571, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2572, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2573, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2574, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2575, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2576, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2577, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2578, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2579, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2580, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2581, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2582, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2583, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2584, 'issue', 'edit', 3, '2022-04-22 11:17:20'),
-(2585, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2586, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2587, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2588, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2589, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2590, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2591, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2592, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2593, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2594, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2595, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2596, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2597, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2598, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2599, 'issue', 'edit', 3, '2022-04-22 11:17:22'),
-(2600, 'issue', 'edit', 3, '2022-04-22 11:17:23'),
-(2601, 'issue', 'edit', 3, '2022-04-22 11:17:23'),
-(2602, 'issue', 'edit', 3, '2022-04-22 11:17:23'),
-(2603, 'issue', 'edit', 3, '2022-04-22 11:17:23'),
-(2604, 'issue', 'edit', 3, '2022-04-22 11:17:23'),
-(2605, 'issue', 'edit', 3, '2022-04-22 11:17:26'),
-(2606, 'issue', 'edit', 3, '2022-04-22 11:17:26'),
-(2607, 'issue', 'edit', 3, '2022-04-22 11:17:26'),
-(2608, 'issue', 'edit', 3, '2022-04-22 11:17:26'),
-(2609, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2610, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2611, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2612, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2613, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2614, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2615, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2616, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2617, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2618, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2619, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2620, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2621, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2622, 'issue', 'edit', 3, '2022-04-22 11:17:27'),
-(2623, 'issue', 'edit', 3, '2022-04-22 11:17:28'),
-(2624, 'issue', 'edit', 3, '2022-04-22 11:17:28'),
-(2625, 'issue', 'edit', 3, '2022-04-22 11:17:30'),
-(2626, 'issue', 'edit', 3, '2022-04-22 11:17:30'),
-(2627, 'issue', 'edit', 3, '2022-04-22 11:17:30'),
-(2628, 'issue', 'edit', 3, '2022-04-22 11:17:30'),
-(2629, 'issue', 'edit', 3, '2022-04-22 11:17:30'),
-(2630, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2631, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2632, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2633, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2634, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2635, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2636, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2637, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2638, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2639, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2640, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2641, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2642, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2643, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2644, 'issue', 'edit', 3, '2022-04-22 11:17:31'),
-(2645, 'issue', 'all', 3, '2022-04-22 11:17:36'),
-(2646, 'opening_master', 'all', 3, '2022-04-22 11:17:58'),
-(2647, 'issue', 'all', 3, '2022-04-22 11:18:15'),
-(2648, 'issue', 'all', 3, '2022-04-22 11:18:16'),
-(2649, 'issue', 'all', 3, '2022-04-22 11:18:16'),
-(2650, 'issue', 'all', 3, '2022-04-22 11:19:52'),
-(2651, 'issue', 'view', 3, '2022-04-22 11:19:57'),
-(2652, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2653, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2654, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2655, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2656, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2657, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2658, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2659, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2660, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2661, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2662, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2663, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2664, 'issue', 'edit', 3, '2022-04-22 11:19:57'),
-(2665, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2666, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2667, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2668, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2669, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2670, 'issue', 'edit', 3, '2022-04-22 11:19:58'),
-(2671, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2672, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2673, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2674, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2675, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2676, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2677, 'issue', 'edit', 3, '2022-04-22 11:19:59'),
-(2678, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2679, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2680, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2681, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2682, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2683, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2684, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2685, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2686, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2687, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2688, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2689, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2690, 'issue', 'edit', 3, '2022-04-22 11:20:00'),
-(2691, 'issue', 'all', 3, '2022-04-22 11:20:04'),
-(2692, 'issue', 'view', 3, '2022-04-22 11:20:12'),
-(2693, 'issue', 'edit', 3, '2022-04-22 11:20:12'),
-(2694, 'issue', 'edit', 3, '2022-04-22 11:20:12'),
-(2695, 'issue', 'edit', 3, '2022-04-22 11:20:12'),
-(2696, 'issue', 'edit', 3, '2022-04-22 11:20:12'),
-(2697, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2698, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2699, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2700, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2701, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2702, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2703, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2704, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2705, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2706, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2707, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2708, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2709, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2710, 'issue', 'edit', 3, '2022-04-22 11:20:13'),
-(2711, 'issue', 'edit', 3, '2022-04-22 11:20:14'),
-(2712, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2713, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2714, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2715, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2716, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2717, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2718, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2719, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2720, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2721, 'issue', 'edit', 3, '2022-04-22 11:20:15'),
-(2722, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2723, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2724, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2725, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2726, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2727, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2728, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2729, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2730, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2731, 'issue', 'edit', 3, '2022-04-22 11:20:16'),
-(2732, 'issue', 'all', 3, '2022-04-22 11:20:18'),
-(2733, 'issue', 'all', 3, '2022-04-22 11:21:29'),
-(2734, 'issue', 'view', 3, '2022-04-22 11:21:36'),
-(2735, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2736, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2737, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2738, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2739, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2740, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2741, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2742, 'issue', 'edit', 3, '2022-04-22 11:21:36'),
-(2743, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2744, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2745, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2746, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2747, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2748, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2749, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2750, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2751, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2752, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2753, 'issue', 'edit', 3, '2022-04-22 11:21:37'),
-(2754, 'issue', 'edit', 3, '2022-04-22 11:21:38'),
-(2755, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2756, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2757, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2758, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2759, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2760, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2761, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2762, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2763, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2764, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2765, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2766, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2767, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2768, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2769, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2770, 'issue', 'edit', 3, '2022-04-22 11:21:39'),
-(2771, 'issue', 'edit', 3, '2022-04-22 11:21:40'),
-(2772, 'issue', 'edit', 3, '2022-04-22 11:21:40'),
-(2773, 'issue', 'edit', 3, '2022-04-22 11:21:40'),
-(2774, 'issue', 'all', 3, '2022-04-22 11:21:42'),
-(2775, 'issue', 'direct_view', 3, '2022-04-22 11:21:51'),
-(2776, 'issue', 'all', 3, '2022-04-22 11:21:55'),
-(2777, 'issue', 'all', 3, '2022-04-22 11:22:22'),
-(2778, 'issue', 'view', 3, '2022-04-22 11:22:24'),
-(2779, 'opening_master', 'change_status', 3, '2022-04-22 11:22:30'),
-(2780, 'issue', 'view', 3, '2022-04-22 11:22:30'),
-(2781, 'opening_master', 'view', 3, '2022-04-22 11:33:26'),
-(2782, 'opening_master', 'view', 3, '2022-04-22 11:34:25'),
-(2783, 'opening_master', 'change_status', 3, '2022-04-22 11:34:27'),
-(2784, 'opening_master', 'view', 3, '2022-04-22 11:34:27'),
-(2785, 'opening_master', 'change_status', 3, '2022-04-22 11:34:30'),
-(2786, 'opening_master', 'view', 3, '2022-04-22 11:34:30'),
-(2787, 'opening_master', 'view', 3, '2022-04-22 11:34:35'),
-(2788, 'opening_master', 'change_status', 3, '2022-04-22 11:34:37'),
-(2789, 'opening_master', 'view', 3, '2022-04-22 11:35:16'),
-(2790, 'opening_master', 'change_status', 3, '2022-04-22 11:35:18'),
-(2791, 'opening_master', 'change_status', 3, '2022-04-22 11:35:24'),
-(2792, 'opening_master', 'view', 3, '2022-04-22 11:35:50'),
-(2793, 'opening_master', 'change_status', 3, '2022-04-22 11:35:52'),
-(2794, 'opening_master', 'view', 3, '2022-04-22 11:36:42'),
-(2795, 'opening_master', 'change_status', 3, '2022-04-22 11:36:46'),
-(2796, 'opening_master', 'view', 3, '2022-04-22 11:37:13'),
-(2797, 'opening_master', 'view', 3, '2022-04-22 11:38:04'),
-(2798, 'opening_master', 'change_status', 3, '2022-04-22 11:38:07'),
-(2799, 'opening_master', 'view', 3, '2022-04-22 11:38:07'),
-(2800, 'opening_master', 'view', 3, '2022-04-22 11:38:18'),
-(2801, 'opening_master', 'change_status', 3, '2022-04-22 11:38:20'),
-(2802, 'opening_master', 'view', 3, '2022-04-22 11:38:20'),
-(2803, 'opening_master', 'view', 3, '2022-04-22 11:38:26'),
-(2804, 'opening_master', 'change_status', 3, '2022-04-22 11:38:28'),
-(2805, 'opening_master', 'change_status', 3, '2022-04-22 11:38:30'),
-(2806, 'opening_master', 'change_status', 3, '2022-04-22 11:38:31'),
-(2807, 'opening_master', 'view', 3, '2022-04-22 11:41:33'),
-(2808, 'opening_master', 'change_status', 3, '2022-04-22 11:41:35'),
-(2809, 'opening_master', 'view', 3, '2022-04-22 11:41:35'),
-(2810, 'opening_master', 'view', 3, '2022-04-22 11:42:39'),
-(2811, 'opening_master', 'change_status', 3, '2022-04-22 11:42:41'),
-(2812, 'opening_master', 'view', 3, '2022-04-22 11:42:41'),
-(2813, 'dashboard', NULL, 3, '2022-04-25 05:18:46'),
-(2814, 'opening_master', 'all', 3, '2022-04-25 05:19:25'),
-(2815, 'opening_master', 'view', 3, '2022-04-25 05:19:30'),
-(2816, 'opening_master', 'change_status', 3, '2022-04-25 05:19:35'),
-(2817, 'opening_master', 'view', 3, '2022-04-25 05:19:36'),
-(2818, 'opening_master', 'change_status', 3, '2022-04-25 05:19:38'),
-(2819, 'opening_master', 'view', 3, '2022-04-25 05:19:38'),
-(2820, 'opening_master', 'change_status', 3, '2022-04-25 05:19:39'),
-(2821, 'opening_master', 'view', 3, '2022-04-25 05:19:39'),
-(2822, 'opening_master', 'change_status', 3, '2022-04-25 05:19:40'),
-(2823, 'opening_master', 'view', 3, '2022-04-25 05:19:40'),
-(2824, 'opening_master', 'change_status', 3, '2022-04-25 05:19:41'),
-(2825, 'opening_master', 'view', 3, '2022-04-25 05:19:41'),
-(2826, 'opening_master', 'change_status', 3, '2022-04-25 05:19:49'),
-(2827, 'opening_master', 'view', 3, '2022-04-25 05:19:49'),
-(2828, 'opening_master', 'change_status', 3, '2022-04-25 05:19:53'),
-(2829, 'opening_master', 'view', 3, '2022-04-25 05:19:53'),
-(2830, 'opening_master', 'change_status', 3, '2022-04-25 05:19:55'),
-(2831, 'opening_master', 'view', 3, '2022-04-25 05:19:56'),
-(2832, 'opening_master', 'change_status', 3, '2022-04-25 05:19:57'),
-(2833, 'opening_master', 'view', 3, '2022-04-25 05:19:57'),
-(2834, 'opening_master', 'change_status', 3, '2022-04-25 05:20:03'),
-(2835, 'opening_master', 'view', 3, '2022-04-25 05:20:03'),
-(2836, 'opening_master', 'change_status', 3, '2022-04-25 05:20:04'),
-(2837, 'opening_master', 'view', 3, '2022-04-25 05:20:04'),
-(2838, 'opening_master', 'change_status', 3, '2022-04-25 05:20:05'),
-(2839, 'opening_master', 'view', 3, '2022-04-25 05:20:05'),
-(2840, 'opening_master', 'change_status', 3, '2022-04-25 05:20:06'),
-(2841, 'opening_master', 'view', 3, '2022-04-25 05:20:06'),
-(2842, 'opening_master', 'change_status', 3, '2022-04-25 05:20:06'),
-(2843, 'opening_master', 'view', 3, '2022-04-25 05:20:07'),
-(2844, 'opening_master', 'change_status', 3, '2022-04-25 05:20:07'),
-(2845, 'opening_master', 'view', 3, '2022-04-25 05:20:07'),
-(2846, 'opening_master', 'change_status', 3, '2022-04-25 05:20:07'),
-(2847, 'opening_master', 'view', 3, '2022-04-25 05:20:07'),
-(2848, 'opening_master', 'change_status', 3, '2022-04-25 05:20:08'),
-(2849, 'opening_master', 'view', 3, '2022-04-25 05:20:08'),
-(2850, 'opening_master', 'change_status', 3, '2022-04-25 05:20:11'),
-(2851, 'opening_master', 'view', 3, '2022-04-25 05:20:11'),
-(2852, 'opening_master', 'change_status', 3, '2022-04-25 05:20:13'),
-(2853, 'opening_master', 'view', 3, '2022-04-25 05:20:14'),
-(2854, 'opening_master', 'change_status', 3, '2022-04-25 05:20:15'),
-(2855, 'opening_master', 'view', 3, '2022-04-25 05:20:15'),
-(2856, 'opening_master', 'change_status', 3, '2022-04-25 05:20:15'),
-(2857, 'opening_master', 'view', 3, '2022-04-25 05:20:15'),
-(2858, 'opening_master', 'change_status', 3, '2022-04-25 05:20:16'),
-(2859, 'opening_master', 'view', 3, '2022-04-25 05:20:16'),
-(2860, 'opening_master', 'change_status', 3, '2022-04-25 05:20:16'),
-(2861, 'opening_master', 'view', 3, '2022-04-25 05:20:17'),
-(2862, 'opening_master', 'change_status', 3, '2022-04-25 05:20:17'),
-(2863, 'opening_master', 'view', 3, '2022-04-25 05:20:17'),
-(2864, 'opening_master', 'change_status', 3, '2022-04-25 05:20:18'),
-(2865, 'opening_master', 'view', 3, '2022-04-25 05:20:18'),
-(2866, 'opening_master', 'change_status', 3, '2022-04-25 05:20:18'),
-(2867, 'opening_master', 'view', 3, '2022-04-25 05:20:18'),
-(2868, 'opening_master', 'change_status', 3, '2022-04-25 05:20:19'),
-(2869, 'opening_master', 'view', 3, '2022-04-25 05:20:19'),
-(2870, 'opening_master', 'change_status', 3, '2022-04-25 05:20:19'),
-(2871, 'opening_master', 'view', 3, '2022-04-25 05:20:19'),
-(2872, 'opening_master', 'change_status', 3, '2022-04-25 05:20:20'),
-(2873, 'opening_master', 'view', 3, '2022-04-25 05:20:20'),
-(2874, 'opening_master', 'change_status', 3, '2022-04-25 05:20:21'),
-(2875, 'opening_master', 'view', 3, '2022-04-25 05:20:21'),
-(2876, 'opening_master', 'change_status', 3, '2022-04-25 05:20:21'),
-(2877, 'opening_master', 'view', 3, '2022-04-25 05:20:21'),
-(2878, 'opening_master', 'change_status', 3, '2022-04-25 05:20:22'),
-(2879, 'opening_master', 'view', 3, '2022-04-25 05:20:22'),
-(2880, 'opening_master', 'change_status', 3, '2022-04-25 05:20:23'),
-(2881, 'opening_master', 'view', 3, '2022-04-25 05:20:23'),
-(2882, 'opening_master', 'change_status', 3, '2022-04-25 05:20:23'),
-(2883, 'opening_master', 'view', 3, '2022-04-25 05:20:24'),
-(2884, 'opening_master', 'change_status', 3, '2022-04-25 05:20:24'),
-(2885, 'opening_master', 'view', 3, '2022-04-25 05:20:24'),
-(2886, 'opening_master', 'change_status', 3, '2022-04-25 05:20:25'),
-(2887, 'opening_master', 'view', 3, '2022-04-25 05:20:25'),
-(2888, 'opening_master', 'change_status', 3, '2022-04-25 05:20:25'),
-(2889, 'opening_master', 'view', 3, '2022-04-25 05:20:25'),
-(2890, 'opening_master', 'change_status', 3, '2022-04-25 05:20:26'),
-(2891, 'opening_master', 'view', 3, '2022-04-25 05:20:26'),
-(2892, 'opening_master', 'change_status', 3, '2022-04-25 05:20:27'),
-(2893, 'opening_master', 'view', 3, '2022-04-25 05:20:27'),
-(2894, 'opening_master', 'change_status', 3, '2022-04-25 05:20:27'),
-(2895, 'opening_master', 'view', 3, '2022-04-25 05:20:27'),
-(2896, 'opening_master', 'change_status', 3, '2022-04-25 05:20:28'),
-(2897, 'opening_master', 'view', 3, '2022-04-25 05:20:28'),
-(2898, 'opening_master', 'change_status', 3, '2022-04-25 05:20:28'),
-(2899, 'opening_master', 'view', 3, '2022-04-25 05:20:29'),
-(2900, 'opening_master', 'change_status', 3, '2022-04-25 05:20:29'),
-(2901, 'opening_master', 'view', 3, '2022-04-25 05:20:29'),
-(2902, 'opening_master', 'change_status', 3, '2022-04-25 05:20:30'),
-(2903, 'opening_master', 'view', 3, '2022-04-25 05:20:30');
-INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALUES
-(2904, 'opening_master', 'change_status', 3, '2022-04-25 05:20:31'),
-(2905, 'opening_master', 'view', 3, '2022-04-25 05:20:31'),
-(2906, 'opening_master', 'change_status', 3, '2022-04-25 05:20:32'),
-(2907, 'opening_master', 'view', 3, '2022-04-25 05:20:32'),
-(2908, 'opening_master', 'change_status', 3, '2022-04-25 05:20:35'),
-(2909, 'opening_master', 'view', 3, '2022-04-25 05:20:35'),
-(2910, 'opening_master', 'view', 3, '2022-04-25 05:20:38'),
-(2911, 'opening_master', 'change_status', 3, '2022-04-25 05:20:40'),
-(2912, 'opening_master', 'view', 3, '2022-04-25 05:20:40'),
-(2913, 'opening_master', 'change_status', 3, '2022-04-25 05:20:42'),
-(2914, 'opening_master', 'view', 3, '2022-04-25 05:20:42'),
-(2915, 'opening_master', 'change_status', 3, '2022-04-25 05:20:43'),
-(2916, 'opening_master', 'view', 3, '2022-04-25 05:20:43'),
-(2917, 'opening_master', 'change_status', 3, '2022-04-25 05:20:44'),
-(2918, 'opening_master', 'view', 3, '2022-04-25 05:20:44'),
-(2919, 'opening_master', 'change_status', 3, '2022-04-25 05:20:44'),
-(2920, 'opening_master', 'view', 3, '2022-04-25 05:20:44'),
-(2921, 'opening_master', 'change_status', 3, '2022-04-25 05:20:45'),
-(2922, 'opening_master', 'view', 3, '2022-04-25 05:20:45'),
-(2923, 'opening_master', 'change_status', 3, '2022-04-25 05:20:46'),
-(2924, 'opening_master', 'view', 3, '2022-04-25 05:20:46'),
-(2925, 'opening_master', 'change_status', 3, '2022-04-25 05:20:46'),
-(2926, 'opening_master', 'view', 3, '2022-04-25 05:20:47'),
-(2927, 'opening_master', 'change_status', 3, '2022-04-25 05:20:47'),
-(2928, 'opening_master', 'view', 3, '2022-04-25 05:20:47'),
-(2929, 'opening_master', 'change_status', 3, '2022-04-25 05:20:50'),
-(2930, 'opening_master', 'view', 3, '2022-04-25 05:20:50'),
-(2931, 'opening_master', 'change_status', 3, '2022-04-25 05:20:51'),
-(2932, 'opening_master', 'view', 3, '2022-04-25 05:20:51'),
-(2933, 'opening_master', 'change_status', 3, '2022-04-25 05:20:52'),
-(2934, 'opening_master', 'view', 3, '2022-04-25 05:20:52'),
-(2935, 'opening_master', 'change_status', 3, '2022-04-25 05:20:52'),
-(2936, 'opening_master', 'view', 3, '2022-04-25 05:20:52'),
-(2937, 'opening_master', 'change_status', 3, '2022-04-25 05:20:53'),
-(2938, 'opening_master', 'view', 3, '2022-04-25 05:20:53'),
-(2939, 'opening_master', 'change_status', 3, '2022-04-25 05:20:53'),
-(2940, 'opening_master', 'view', 3, '2022-04-25 05:20:53'),
-(2941, 'opening_master', 'change_status', 3, '2022-04-25 05:20:55'),
-(2942, 'opening_master', 'view', 3, '2022-04-25 05:20:55'),
-(2943, 'opening_master', 'change_status', 3, '2022-04-25 05:20:56'),
-(2944, 'opening_master', 'view', 3, '2022-04-25 05:20:56'),
-(2945, 'opening_master', 'view', 3, '2022-04-25 05:20:59'),
-(2946, 'opening_master', 'view', 3, '2022-04-25 05:24:32'),
-(2947, 'opening_master', 'change_status', 3, '2022-04-25 05:24:35'),
-(2948, 'opening_master', 'view', 3, '2022-04-25 05:24:35'),
-(2949, 'opening_master', 'change_status', 3, '2022-04-25 05:24:41'),
-(2950, 'opening_master', 'view', 3, '2022-04-25 05:24:41'),
-(2951, 'opening_master', 'change_status', 3, '2022-04-25 05:24:42'),
-(2952, 'opening_master', 'view', 3, '2022-04-25 05:24:42'),
-(2953, 'opening_master', 'all', 3, '2022-04-25 05:24:44'),
-(2954, 'opening_master', 'view', 3, '2022-04-25 05:34:05'),
-(2955, 'opening_master', 'view', 3, '2022-04-25 05:34:28'),
-(2956, 'opening_master', 'view', 3, '2022-04-25 05:40:20'),
-(2957, 'opening_master', 'change_status', 3, '2022-04-25 05:42:55'),
-(2958, 'opening_master', 'view', 3, '2022-04-25 05:42:55'),
-(2959, 'opening_master', 'change_status', 3, '2022-04-25 05:42:58'),
-(2960, 'opening_master', 'view', 3, '2022-04-25 05:42:58'),
-(2961, 'opening_master', 'change_status', 3, '2022-04-25 05:43:04'),
-(2962, 'opening_master', 'view', 3, '2022-04-25 05:43:04'),
-(2963, 'opening_master', 'view', 3, '2022-04-25 05:43:09'),
-(2964, 'opening_master', 'change_status', 3, '2022-04-25 05:43:13'),
-(2965, 'opening_master', 'view', 3, '2022-04-25 05:43:13'),
-(2966, 'opening_master', 'change_status', 3, '2022-04-25 05:43:15'),
-(2967, 'opening_master', 'view', 3, '2022-04-25 05:43:15'),
-(2968, 'opening_master', 'view', 3, '2022-04-25 05:43:17'),
-(2969, 'opening_master', 'view', 3, '2022-04-25 05:51:09'),
-(2970, 'opening_master', 'view', 3, '2022-04-25 05:52:01'),
-(2971, 'opening_master', 'change_status', 3, '2022-04-25 05:53:44'),
-(2972, 'opening_master', 'view', 3, '2022-04-25 05:53:44'),
-(2973, 'opening_master', 'view', 3, '2022-04-25 05:54:26'),
-(2974, 'opening_master', 'opening_post', 3, '2022-04-25 05:54:31'),
-(2975, 'opening_master', 'view', 3, '2022-04-25 06:09:03'),
-(2976, 'opening_master', 'change_status', 3, '2022-04-25 06:09:05'),
-(2977, 'opening_master', 'view', 3, '2022-04-25 06:09:05'),
-(2978, 'opening_master', 'change_status', 3, '2022-04-25 06:09:06'),
-(2979, 'opening_master', 'view', 3, '2022-04-25 06:09:06'),
-(2980, 'opening_master', 'change_status', 3, '2022-04-25 06:09:08'),
-(2981, 'opening_master', 'view', 3, '2022-04-25 06:09:08'),
-(2982, 'opening_master', 'view', 3, '2022-04-25 06:10:04'),
-(2983, 'opening_master', 'view', 3, '2022-04-25 06:10:08'),
-(2984, 'opening_master', 'opening_post', 3, '2022-04-25 06:10:11'),
-(2985, 'opening_master', 'view', 3, '2022-04-25 06:10:35'),
-(2986, 'opening_master', 'opening_post', 3, '2022-04-25 06:10:39'),
-(2987, 'opening_master', 'opening_post', 3, '2022-04-25 06:10:43'),
-(2988, 'opening_master', 'opening_post', 3, '2022-04-25 06:10:44'),
-(2989, 'opening_master', 'opening_post', 3, '2022-04-25 06:10:44'),
-(2990, 'opening_master', 'opening_post', 3, '2022-04-25 06:11:00'),
-(2991, 'opening_master', 'all', 3, '2022-04-25 06:33:39'),
-(2992, 'opening_master', 'form', 3, '2022-04-25 06:33:41'),
-(2993, 'opening_master', 'getForm', 3, '2022-04-25 06:33:59'),
-(2994, 'opening_master', 'form', 3, '2022-04-25 06:34:17'),
-(2995, 'opening_master', 'all', 3, '2022-04-25 06:34:17'),
-(2996, 'opening_master', 'form', 3, '2022-04-25 06:35:05'),
-(2997, 'opening_master', 'getForm', 3, '2022-04-25 06:35:26'),
-(2998, 'opening_master', 'getForm', 3, '2022-04-25 06:35:48'),
-(2999, 'opening_master', 'all', 3, '2022-04-25 06:36:04'),
-(3000, 'opening_master', 'view', 3, '2022-04-25 06:36:12'),
-(3001, 'opening_master', 'form', 3, '2022-04-25 06:36:33'),
-(3002, 'opening_master', 'all', 3, '2022-04-25 06:36:33'),
-(3003, 'opening_master', 'view', 3, '2022-04-25 06:36:37'),
-(3004, 'opening_master', 'view', 3, '2022-04-25 06:37:00'),
-(3005, 'opening_master', 'opening_post', 3, '2022-04-25 06:37:02'),
-(3006, 'opening_master', 'opening_post', 3, '2022-04-25 06:37:08'),
-(3007, 'dashboard', NULL, 3, '2022-04-25 08:56:24'),
-(3008, 'issue', 'form', 3, '2022-04-25 09:02:48'),
-(3009, 'issue', 'form', 3, '2022-04-25 09:03:00'),
-(3010, 'issue', 'direct_add', 3, '2022-04-25 09:03:00'),
-(3011, 'issue', 'getForm', 3, '2022-04-25 09:03:04'),
-(3012, 'issue', 'getForm', 3, '2022-04-25 09:03:06'),
-(3013, 'issue', 'form', 3, '2022-04-25 09:03:21'),
-(3014, 'issue', 'form', 3, '2022-04-25 09:04:09'),
-(3015, 'issue', 'add', 3, '2022-04-25 09:04:09'),
-(3016, 'issue', 'form', 3, '2022-04-25 09:04:15'),
-(3017, 'issue', 'form', 3, '2022-04-25 09:04:20'),
-(3018, 'issue', 'direct_add', 3, '2022-04-25 09:04:20'),
-(3019, 'issue', 'form', 3, '2022-04-25 09:04:24'),
-(3020, 'issue', 'form', 3, '2022-04-25 09:04:28'),
-(3021, 'issue', 'add', 3, '2022-04-25 09:04:28'),
-(3022, 'opening_master', 'view', 3, '2022-04-25 09:08:25'),
-(3023, 'opening_master', 'view', 3, '2022-04-25 09:08:30'),
-(3024, 'opening_master', 'opening_post', 3, '2022-04-25 09:08:32'),
-(3025, 'opening_master', 'all', 3, '2022-04-25 09:13:40'),
-(3026, 'opening_master', 'view', 3, '2022-04-25 09:13:49'),
-(3027, 'opening_master', 'view', 3, '2022-04-25 09:21:56'),
-(3028, 'opening_master', 'opening_post', 3, '2022-04-25 09:21:59'),
-(3029, 'opening_master', 'change_status', 3, '2022-04-25 09:22:04'),
-(3030, 'opening_master', 'view', 3, '2022-04-25 09:22:04'),
-(3031, 'opening_master', 'view', 3, '2022-04-25 09:22:50'),
-(3032, 'opening_master', 'opening_post', 3, '2022-04-25 09:22:52'),
-(3033, 'opening_master', 'opening_post', 3, '2022-04-25 09:23:15'),
-(3034, 'opening_master', 'view', 3, '2022-04-25 09:24:53'),
-(3035, 'opening_master', 'opening_post', 3, '2022-04-25 09:24:58'),
-(3036, 'opening_master', 'view', 3, '2022-04-25 09:24:58'),
-(3037, 'opening_master', 'view', 3, '2022-04-25 09:28:05'),
-(3038, 'opening_master', 'view', 3, '2022-04-25 09:30:42'),
-(3039, 'opening_master', 'opening_post', 3, '2022-04-25 09:30:50'),
-(3040, 'opening_master', 'view', 3, '2022-04-25 09:30:58'),
-(3041, 'opening_master', 'view', 3, '2022-04-25 09:31:02'),
-(3042, 'opening_master', 'view', 3, '2022-04-25 09:33:51'),
-(3043, 'opening_master', 'opening_post', 3, '2022-04-25 09:34:02'),
-(3044, 'opening_master', 'view', 3, '2022-04-25 09:34:16'),
-(3045, 'opening_master', 'opening_post', 3, '2022-04-25 09:34:20'),
-(3046, 'opening_master', 'view', 3, '2022-04-25 09:35:50'),
-(3047, 'opening_master', 'view', 3, '2022-04-25 09:36:30'),
-(3048, 'opening_master', 'opening_post', 3, '2022-04-25 09:36:43'),
-(3049, 'opening_master', 'view', 3, '2022-04-25 09:36:58'),
-(3050, 'opening_master', 'view', 3, '2022-04-25 09:37:02'),
-(3051, 'opening_master', 'opening_post', 3, '2022-04-25 09:37:11'),
-(3052, 'opening_master', 'view', 3, '2022-04-25 09:37:11'),
-(3053, 'opening_master', 'view', 3, '2022-04-25 09:40:36'),
-(3054, 'opening_master', 'opening_post', 3, '2022-04-25 09:40:41'),
-(3055, 'opening_master', 'view', 3, '2022-04-25 09:42:23'),
-(3056, 'opening_master', 'view', 3, '2022-04-25 09:43:15'),
-(3057, 'opening_master', 'view', 3, '2022-04-25 09:43:23'),
-(3058, 'opening_master', 'opening_post', 3, '2022-04-25 09:43:29'),
-(3059, 'opening_master', 'view', 3, '2022-04-25 09:43:29'),
-(3060, 'opening_master', 'view', 3, '2022-04-25 09:43:44'),
-(3061, 'opening_master', 'opening_post', 3, '2022-04-25 09:43:48'),
-(3062, 'opening_master', 'change_status', 3, '2022-04-25 09:43:51'),
-(3063, 'opening_master', 'view', 3, '2022-04-25 09:43:51'),
-(3064, 'opening_master', 'opening_post', 3, '2022-04-25 09:43:55'),
-(3065, 'opening_master', 'view', 3, '2022-04-25 09:43:55'),
-(3066, 'opening_master', 'view', 3, '2022-04-25 09:44:16'),
-(3067, 'opening_master', 'view', 3, '2022-04-25 09:46:33'),
-(3068, 'opening_master', 'view', 3, '2022-04-25 09:47:31'),
-(3069, 'opening_master', 'opening_post', 3, '2022-04-25 09:47:34'),
-(3070, 'opening_master', 'change_status', 3, '2022-04-25 09:47:37'),
-(3071, 'opening_master', 'view', 3, '2022-04-25 09:47:37'),
-(3072, 'opening_master', 'opening_post', 3, '2022-04-25 09:47:41'),
-(3073, 'opening_master', 'change_status', 3, '2022-04-25 09:47:49'),
-(3074, 'opening_master', 'view', 3, '2022-04-25 09:47:49'),
-(3075, 'opening_master', 'change_status', 3, '2022-04-25 09:47:50'),
-(3076, 'opening_master', 'view', 3, '2022-04-25 09:47:50'),
-(3077, 'opening_master', 'opening_post', 3, '2022-04-25 09:47:50'),
-(3078, 'opening_master', 'view', 3, '2022-04-25 09:47:57'),
-(3079, 'opening_master', 'opening_post', 3, '2022-04-25 09:47:59'),
-(3080, 'opening_master', 'opening_post', 3, '2022-04-25 09:48:20'),
-(3081, 'mrn', 'all', 3, '2022-04-25 09:48:29'),
-(3082, 'mrn', 'view', 3, '2022-04-25 09:48:39'),
-(3083, 'issue', 'all', 3, '2022-04-25 09:48:44'),
-(3084, 'issue', 'view', 3, '2022-04-25 09:48:50'),
-(3085, 'issue', 'direct_view', 3, '2022-04-25 09:48:52'),
-(3086, 'opening_master', 'change_status', 3, '2022-04-25 09:49:12'),
-(3087, 'issue', 'direct_view', 3, '2022-04-25 09:49:12'),
-(3088, 'issue', 'direct_view', 3, '2022-04-25 09:49:14'),
-(3089, 'issue', 'edit', 3, '2022-04-25 09:50:47'),
-(3090, 'issue', 'edit', 3, '2022-04-25 09:51:45'),
-(3091, 'issue', 'view', 3, '2022-04-25 09:55:11'),
-(3092, 'issue', 'view', 3, '2022-04-25 10:33:42'),
-(3093, 'issue', 'issue_post', 3, '2022-04-25 10:33:45'),
-(3094, 'issue', 'view', 3, '2022-04-25 10:33:50'),
-(3095, 'issue', 'all', 3, '2022-04-25 10:33:53'),
-(3096, 'issue', 'view', 3, '2022-04-25 10:33:56'),
-(3097, 'issue', 'view', 3, '2022-04-25 10:36:11'),
-(3098, 'issue', 'issue_post', 3, '2022-04-25 10:36:13'),
-(3099, 'issue', 'issue_post', 3, '2022-04-25 10:36:21'),
-(3100, 'issue', 'edit', 3, '2022-04-25 10:36:45'),
-(3101, 'issue', 'view', 3, '2022-04-25 10:39:36'),
-(3102, 'issue', 'issue_post', 3, '2022-04-25 10:39:41'),
-(3103, 'issue', 'view', 3, '2022-04-25 10:39:42'),
-(3104, 'issue', 'view', 3, '2022-04-25 10:42:27'),
-(3105, 'issue', 'view', 3, '2022-04-25 10:43:35'),
-(3106, 'issue', 'view', 3, '2022-04-25 10:43:47'),
-(3107, 'issue', 'view', 3, '2022-04-25 10:43:50'),
-(3108, 'issue', 'view', 3, '2022-04-25 10:44:09'),
-(3109, 'issue', 'issue_post', 3, '2022-04-25 10:44:11'),
-(3110, 'opening_master', 'change_status', 3, '2022-04-25 10:44:13'),
-(3111, 'issue', 'view', 3, '2022-04-25 10:44:13'),
-(3112, 'issue', 'all', 3, '2022-04-25 10:44:20'),
-(3113, 'issue', 'direct_view', 3, '2022-04-25 10:44:46'),
-(3114, 'issue', 'direct_view', 3, '2022-04-25 10:45:08'),
-(3115, 'opening_master', 'change_status', 3, '2022-04-25 10:45:11'),
-(3116, 'issue', 'direct_view', 3, '2022-04-25 10:45:11'),
-(3117, 'issue', 'issue_post', 3, '2022-04-25 10:45:13'),
-(3118, 'issue', 'direct_view', 3, '2022-04-25 10:45:13'),
-(3119, 'issue', 'all', 3, '2022-04-25 10:45:47'),
-(3120, 'issue', 'view', 3, '2022-04-25 10:45:51'),
-(3121, 'issue', 'view', 3, '2022-04-25 11:03:40'),
-(3122, 'issue', 'issue_post', 3, '2022-04-25 11:03:43'),
-(3123, 'issue', 'view', 3, '2022-04-25 11:04:14'),
-(3124, 'issue', 'edit', 3, '2022-04-25 11:05:02'),
-(3125, 'issue', 'view', 3, '2022-04-25 11:06:29'),
-(3126, 'issue', 'view', 3, '2022-04-25 11:15:35'),
-(3127, 'issue', 'view', 3, '2022-04-25 11:22:46'),
-(3128, 'issue', 'issue_post', 3, '2022-04-25 11:22:52'),
-(3129, 'dashboard', NULL, 3, '2022-04-26 06:41:20'),
-(3130, 'issue', 'all', 3, '2022-04-26 06:41:51'),
-(3131, 'issue', 'view', 3, '2022-04-26 06:41:53'),
-(3132, 'issue', 'direct_view', 3, '2022-04-26 06:41:54'),
-(3133, 'issue', 'view', 3, '2022-04-26 06:41:56'),
-(3134, 'issue', 'all', 3, '2022-04-26 06:52:52'),
-(3135, 'issue', 'edit', 3, '2022-04-26 06:52:58'),
-(3136, 'opening_master', 'all', 3, '2022-04-26 06:53:09'),
-(3137, 'opening_master', 'form', 3, '2022-04-26 06:53:15'),
-(3138, 'opening_master', 'getForm', 3, '2022-04-26 06:53:54'),
-(3139, 'opening_master', 'getForm', 3, '2022-04-26 06:54:13'),
-(3140, 'opening_master', 'getForm', 3, '2022-04-26 06:54:30'),
-(3141, 'opening_master', 'form', 3, '2022-04-26 06:54:50'),
-(3142, 'opening_master', 'all', 3, '2022-04-26 06:54:51'),
-(3143, 'opening_master', 'view', 3, '2022-04-26 06:54:57'),
-(3144, 'opening_master', 'opening_post', 3, '2022-04-26 06:55:00'),
-(3145, 'opening_master', 'change_status', 3, '2022-04-26 06:55:04'),
-(3146, 'opening_master', 'view', 3, '2022-04-26 06:55:04'),
-(3147, 'opening_master', 'opening_post', 3, '2022-04-26 06:55:07'),
-(3148, 'opening_master', 'view', 3, '2022-04-26 06:55:07'),
-(3149, 'opening_master', 'opening_post', 3, '2022-04-26 06:55:28'),
-(3150, 'opening_master', 'change_status', 3, '2022-04-26 06:55:30'),
-(3151, 'opening_master', 'view', 3, '2022-04-26 06:55:30'),
-(3152, 'opening_master', 'all', 3, '2022-04-26 06:55:34'),
-(3153, 'opening_master', 'all', 3, '2022-04-26 06:55:36'),
-(3154, 'requisition', 'all', 3, '2022-04-26 06:56:07'),
-(3155, 'issue', 'direct_view', 3, '2022-04-26 06:56:35'),
-(3156, 'issue', 'all', 3, '2022-04-26 06:56:42'),
-(3157, 'issue', 'view', 3, '2022-04-26 06:56:44'),
-(3158, 'issue', 'direct_view', 3, '2022-04-26 06:56:46'),
-(3159, 'issue', 'view', 3, '2022-04-26 06:56:46'),
-(3160, 'dashboard', NULL, 3, '2022-04-26 09:12:22'),
-(3161, 'issue', 'all', 3, '2022-04-26 09:18:02'),
-(3162, 'issue', 'view', 3, '2022-04-26 09:18:20'),
-(3163, 'issue', 'direct_view', 3, '2022-04-26 09:18:22'),
-(3164, 'issue', 'issue_post', 3, '2022-04-26 09:18:24'),
-(3165, 'issue', 'issue_post', 3, '2022-04-26 09:18:27'),
-(3166, 'opening_master', 'change_status', 3, '2022-04-26 09:18:30'),
-(3167, 'issue', 'view', 3, '2022-04-26 09:18:30'),
-(3168, 'issue', 'view', 3, '2022-04-26 09:19:21'),
-(3169, 'issue', 'direct_view', 3, '2022-04-26 09:19:26'),
-(3170, 'issue', 'view', 3, '2022-04-26 09:19:31'),
-(3171, 'issue', 'view', 3, '2022-04-26 09:19:39'),
-(3172, 'issue', 'view', 3, '2022-04-26 09:19:58'),
-(3173, 'issue', 'issue_post', 3, '2022-04-26 09:21:29'),
-(3174, 'issue', 'view', 3, '2022-04-26 09:21:43'),
-(3175, 'issue', 'issue_post', 3, '2022-04-26 09:22:03'),
-(3176, 'opening_master', 'change_status', 3, '2022-04-26 09:22:09'),
-(3177, 'issue', 'view', 3, '2022-04-26 09:22:09'),
-(3178, 'issue', 'issue_post', 3, '2022-04-26 09:22:13'),
-(3179, 'issue', 'view', 3, '2022-04-26 09:36:03'),
-(3180, 'issue', 'view', 3, '2022-04-26 09:37:48'),
-(3181, 'issue', 'view', 3, '2022-04-26 09:38:20'),
-(3182, 'issue', 'direct_view', 3, '2022-04-26 09:45:50'),
-(3183, 'issue', 'direct_view', 3, '2022-04-26 09:47:09'),
-(3184, 'issue', 'view', 3, '2022-04-26 09:49:35'),
-(3185, 'issue', 'view', 3, '2022-04-26 09:49:54'),
-(3186, 'issue', 'view', 3, '2022-04-26 09:49:55'),
-(3187, 'issue', 'view', 3, '2022-04-26 10:01:04'),
-(3188, 'issue', 'direct_view', 3, '2022-04-26 10:01:10'),
-(3189, 'issue', 'view', 3, '2022-04-26 10:03:49'),
-(3190, 'issue', 'view', 3, '2022-04-26 10:04:56'),
-(3191, 'issue', 'view', 3, '2022-04-26 10:06:41'),
-(3192, 'issue', 'issue_post', 3, '2022-04-26 10:06:45'),
-(3193, 'issue', 'view', 3, '2022-04-26 10:07:59'),
-(3194, 'issue', 'view', 3, '2022-04-26 10:08:22'),
-(3195, 'issue', 'direct_view', 3, '2022-04-26 10:08:24'),
-(3196, 'issue', 'direct_add', 3, '2022-04-26 10:08:33'),
-(3197, 'issue', 'view', 3, '2022-04-26 10:10:33'),
-(3198, 'issue', 'direct_view', 3, '2022-04-26 10:12:02'),
-(3199, 'issue', 'view', 3, '2022-04-26 10:13:18'),
-(3200, 'issue', 'view', 3, '2022-04-26 10:13:21'),
-(3201, 'issue', 'view', 3, '2022-04-26 10:13:43'),
-(3202, 'issue', 'view', 3, '2022-04-26 10:13:55'),
-(3203, 'issue', 'issue_post', 3, '2022-04-26 10:14:03'),
-(3204, 'issue', 'view', 3, '2022-04-26 10:14:03'),
-(3205, 'issue', 'view', 3, '2022-04-26 10:14:41'),
-(3206, 'issue', 'view', 3, '2022-04-26 10:16:08'),
-(3207, 'issue', 'view', 3, '2022-04-26 10:16:47'),
-(3208, 'issue', 'direct_view', 3, '2022-04-26 10:16:55'),
-(3209, 'issue', 'direct_view', 3, '2022-04-26 10:17:20'),
-(3210, 'opening_master', 'all', 3, '2022-04-26 10:24:55'),
-(3211, 'opening_master', 'form', 3, '2022-04-26 10:24:59'),
-(3212, 'opening_master', 'getForm', 3, '2022-04-26 10:25:36'),
-(3213, 'opening_master', 'form', 3, '2022-04-26 10:26:04'),
-(3214, 'opening_master', 'all', 3, '2022-04-26 10:26:04'),
-(3215, 'opening_master', 'view', 3, '2022-04-26 10:26:09'),
-(3216, 'opening_master', 'change_status', 3, '2022-04-26 10:26:12'),
-(3217, 'opening_master', 'view', 3, '2022-04-26 10:26:12'),
-(3218, 'opening_master', 'opening_post', 3, '2022-04-26 10:26:14'),
-(3219, 'opening_master', 'view', 3, '2022-04-26 10:26:14'),
-(3220, 'opening_master', 'view', 3, '2022-04-26 10:26:18'),
-(3221, 'issue', 'view', 3, '2022-04-26 10:26:38'),
-(3222, 'issue', 'view', 3, '2022-04-26 10:26:45'),
-(3223, 'issue', 'view', 3, '2022-04-26 10:26:50'),
-(3224, 'issue', 'direct_view', 3, '2022-04-26 10:26:57'),
-(3225, 'issue', 'view', 3, '2022-04-26 10:27:21'),
-(3226, 'issue', 'direct_view', 3, '2022-04-26 10:27:29'),
-(3227, 'issue', 'view', 3, '2022-04-26 10:27:39'),
-(3228, 'issue', 'view', 3, '2022-04-26 10:29:38'),
-(3229, 'opening_master', 'all', 3, '2022-04-26 10:29:43'),
-(3230, 'opening_master', 'view', 3, '2022-04-26 10:29:47'),
-(3231, 'opening_master', 'opening_post', 3, '2022-04-26 10:29:49'),
-(3232, 'opening_master', 'view', 3, '2022-04-26 10:29:50'),
-(3233, 'issue', 'view', 3, '2022-04-26 10:29:58'),
-(3234, 'issue', 'direct_view', 3, '2022-04-26 10:30:04'),
-(3235, 'issue', 'direct_view', 3, '2022-04-26 11:09:46'),
-(3236, 'issue', 'direct_view', 3, '2022-04-26 11:10:47'),
-(3237, 'opening_master', 'change_status', 3, '2022-04-26 11:10:55'),
-(3238, 'issue', 'direct_view', 3, '2022-04-26 11:10:55'),
-(3239, 'issue', 'issue_post', 3, '2022-04-26 11:11:07'),
-(3240, 'issue', 'view', 3, '2022-04-26 11:40:52'),
-(3241, 'issue', 'view', 3, '2022-04-26 11:40:56'),
-(3242, 'issue', 'direct_view', 3, '2022-04-26 11:40:57'),
-(3243, 'dashboard', NULL, 3, '2022-04-28 04:48:23'),
-(3244, 'issue', 'all', 3, '2022-04-28 04:48:56'),
-(3245, 'issue', 'view', 3, '2022-04-28 04:49:04'),
-(3246, 'issue', 'direct_view', 3, '2022-04-28 04:49:05'),
-(3247, 'mrn', 'all', 3, '2022-04-28 04:52:17'),
-(3248, 'mrn', 'view', 3, '2022-04-28 04:52:22'),
-(3249, 'issue', 'form', 3, '2022-04-28 04:56:12'),
-(3250, 'requisition', 'form', 3, '2022-04-28 04:56:21'),
-(3251, 'requisition', 'getForm', 3, '2022-04-28 04:57:17'),
-(3252, 'issue', 'all', 3, '2022-04-28 05:00:43'),
-(3253, 'issue', 'view', 3, '2022-04-28 05:00:46'),
-(3254, 'issue', 'all', 3, '2022-04-28 05:01:09'),
-(3255, 'issue', 'view', 3, '2022-04-28 05:01:13'),
-(3256, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3257, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3258, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3259, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3260, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3261, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3262, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3263, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3264, 'issue', 'edit', 3, '2022-04-28 05:01:19'),
-(3265, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3266, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3267, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3268, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3269, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3270, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3271, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3272, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3273, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3274, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3275, 'issue', 'edit', 3, '2022-04-28 05:01:20'),
-(3276, 'issue', 'edit', 3, '2022-04-28 05:01:21'),
-(3277, 'issue', 'edit', 3, '2022-04-28 05:01:21'),
-(3278, 'issue', 'edit', 3, '2022-04-28 05:01:21'),
-(3279, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3280, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3281, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3282, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3283, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3284, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3285, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3286, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3287, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3288, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3289, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3290, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3291, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3292, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3293, 'issue', 'edit', 3, '2022-04-28 05:01:22'),
-(3294, 'issue', 'edit', 3, '2022-04-28 05:01:23'),
-(3295, 'issue', 'edit', 3, '2022-04-28 05:01:23'),
-(3296, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3297, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3298, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3299, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3300, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3301, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3302, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3303, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3304, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3305, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3306, 'issue', 'edit', 3, '2022-04-28 05:01:28'),
-(3307, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3308, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3309, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3310, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3311, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3312, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3313, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3314, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3315, 'issue', 'edit', 3, '2022-04-28 05:01:29'),
-(3316, 'issue', 'view', 3, '2022-04-28 05:01:35'),
-(3317, 'issue', 'all', 3, '2022-04-28 05:03:31'),
-(3318, 'issue', 'edit', 3, '2022-04-28 05:03:33'),
-(3319, 'issue', 'direct_add', 3, '2022-04-28 05:08:41'),
-(3320, 'issue', 'view', 3, '2022-04-28 05:11:56'),
-(3321, 'issue', 'direct_view', 3, '2022-04-28 05:11:57'),
-(3322, 'issue', 'view', 3, '2022-04-28 05:13:17'),
-(3323, 'mrn', 'all', 3, '2022-04-28 05:13:24'),
-(3324, 'mrn', 'view', 3, '2022-04-28 05:13:32'),
-(3325, 'mrn', 'all', 3, '2022-04-28 05:13:39'),
-(3326, 'requisition', 'all', 3, '2022-04-28 05:14:17'),
-(3327, 'requisition', 'view', 3, '2022-04-28 05:14:20'),
-(3328, 'issue', 'all', 3, '2022-04-28 05:15:25'),
-(3329, 'mrn', 'all', 3, '2022-04-28 05:15:30'),
-(3330, 'mrn', 'view', 3, '2022-04-28 05:15:33'),
-(3331, 'issue', 'all', 3, '2022-04-28 05:17:47'),
-(3332, 'mrn', 'all', 3, '2022-04-28 05:17:51'),
-(3333, 'mrn', 'view', 3, '2022-04-28 05:17:54'),
-(3334, 'issue', 'all', 3, '2022-04-28 05:18:56'),
-(3335, 'issue', 'view', 3, '2022-04-28 05:20:06'),
-(3336, 'issue', 'direct_view', 3, '2022-04-28 05:20:07'),
-(3337, 'issue', 'issue_post', 3, '2022-04-28 05:20:26'),
-(3338, 'opening_master', 'change_status', 3, '2022-04-28 05:20:30'),
-(3339, 'issue', 'view', 3, '2022-04-28 05:20:30'),
-(3340, 'issue', 'issue_post', 3, '2022-04-28 05:20:34'),
-(3341, 'issue', 'issue_post', 3, '2022-04-28 05:20:44'),
-(3342, 'issue', 'view', 3, '2022-04-28 05:20:52'),
-(3343, 'issue', 'all', 3, '2022-04-28 05:21:22'),
-(3344, 'issue', 'direct_view', 3, '2022-04-28 05:23:07'),
-(3345, 'issue', 'view', 3, '2022-04-28 05:25:18'),
-(3346, 'issue', 'view', 3, '2022-04-28 05:35:10'),
-(3347, 'issue', 'issue_post', 3, '2022-04-28 05:35:18'),
-(3348, 'issue', 'view', 3, '2022-04-28 05:35:18'),
-(3349, 'opening_master', 'change_status', 3, '2022-04-28 05:35:33'),
-(3350, 'issue', 'view', 3, '2022-04-28 05:35:33'),
-(3351, 'issue', 'issue_post', 3, '2022-04-28 05:35:40'),
-(3352, 'issue', 'edit', 3, '2022-04-28 05:37:36'),
-(3353, 'issue', 'direct_add', 3, '2022-04-28 05:37:44'),
-(3354, 'issue', 'getForm', 3, '2022-04-28 05:38:00'),
-(3355, 'issue', 'form', 3, '2022-04-28 05:39:47'),
-(3356, 'issue', 'all', 3, '2022-04-28 05:40:08'),
-(3357, 'issue', 'edit', 3, '2022-04-28 05:42:59'),
-(3358, 'issue', 'view', 3, '2022-04-28 05:52:19'),
-(3359, 'issue', 'issue_post', 3, '2022-04-28 05:52:24'),
-(3360, 'issue', 'view', 3, '2022-04-28 05:52:24'),
-(3361, 'issue', 'issue_post', 3, '2022-04-28 05:52:30'),
-(3362, 'issue', 'view', 3, '2022-04-28 05:52:30'),
-(3363, 'issue', 'issue_post', 3, '2022-04-28 05:52:34'),
-(3364, 'issue', 'view', 3, '2022-04-28 05:52:34'),
-(3365, 'issue', 'issue_post', 3, '2022-04-28 05:52:36'),
-(3366, 'issue', 'view', 3, '2022-04-28 05:52:36'),
-(3367, 'issue', 'issue_post', 3, '2022-04-28 05:52:43'),
-(3368, 'issue', 'view', 3, '2022-04-28 05:52:43'),
-(3369, 'opening_master', 'change_status', 3, '2022-04-28 05:52:48'),
-(3370, 'issue', 'view', 3, '2022-04-28 05:52:48'),
-(3371, 'issue', 'issue_post', 3, '2022-04-28 05:53:00'),
-(3372, 'issue', 'view', 3, '2022-04-28 05:56:26'),
-(3373, 'issue', 'issue_post', 3, '2022-04-28 05:56:31'),
-(3374, 'issue', 'view', 3, '2022-04-28 05:56:31'),
-(3375, 'opening_master', 'change_status', 3, '2022-04-28 05:56:37'),
-(3376, 'issue', 'view', 3, '2022-04-28 05:56:37'),
-(3377, 'issue', 'issue_post', 3, '2022-04-28 05:56:47'),
-(3378, 'issue', 'view', 3, '2022-04-28 05:56:48'),
-(3379, 'issue', 'view', 3, '2022-04-28 05:57:02'),
-(3380, 'issue', 'direct_view', 3, '2022-04-28 05:58:21'),
-(3381, 'issue', 'issue_post', 3, '2022-04-28 05:58:45'),
-(3382, 'issue', 'direct_view', 3, '2022-04-28 05:58:45'),
-(3383, 'opening_master', 'change_status', 3, '2022-04-28 05:58:49'),
-(3384, 'issue', 'direct_view', 3, '2022-04-28 05:58:49'),
-(3385, 'issue', 'issue_post', 3, '2022-04-28 05:58:51'),
-(3386, 'issue', 'direct_view', 3, '2022-04-28 05:59:27'),
-(3387, 'issue', 'issue_post', 3, '2022-04-28 05:59:36'),
-(3388, 'issue', 'direct_view', 3, '2022-04-28 06:00:51'),
-(3389, 'issue', 'issue_post', 3, '2022-04-28 06:00:59'),
-(3390, 'issue', 'issue_post', 3, '2022-04-28 06:05:07'),
-(3391, 'issue', 'view', 3, '2022-04-28 06:05:07'),
-(3392, 'issue', 'direct_view', 3, '2022-04-28 06:05:10'),
-(3393, 'issue', 'issue_post', 3, '2022-04-28 06:05:32'),
-(3394, 'issue', 'direct_view', 3, '2022-04-28 06:05:32'),
-(3395, 'issue', 'direct_view', 3, '2022-04-28 06:05:32'),
-(3396, 'issue', 'all', 3, '2022-04-28 06:06:03'),
-(3397, 'opening_master', 'all', 3, '2022-04-28 06:06:31'),
-(3398, 'opening_master', 'view', 3, '2022-04-28 06:06:37'),
-(3399, 'opening_master', 'view', 3, '2022-04-28 06:09:18'),
-(3400, 'issue', 'view', 3, '2022-04-28 06:13:03'),
-(3401, 'issue', 'direct_view', 3, '2022-04-28 06:13:07'),
-(3402, 'issue', 'view', 3, '2022-04-28 06:20:17'),
-(3403, 'issue', 'view', 3, '2022-04-28 06:21:27'),
-(3404, 'issue', 'direct_view', 3, '2022-04-28 06:22:01'),
-(3405, 'issue', 'issue_post', 3, '2022-04-28 06:22:03'),
-(3406, 'issue', 'direct_view', 3, '2022-04-28 06:22:03'),
-(3407, 'opening_master', 'change_status', 3, '2022-04-28 06:22:05'),
-(3408, 'issue', 'direct_view', 3, '2022-04-28 06:22:05'),
-(3409, 'issue', 'issue_post', 3, '2022-04-28 06:22:08'),
-(3410, 'issue', 'direct_view', 3, '2022-04-28 06:22:08'),
-(3411, 'issue', 'direct_view', 3, '2022-04-28 06:22:08'),
-(3412, 'issue', 'direct_view', 3, '2022-04-28 06:23:49'),
-(3413, 'issue', 'view', 3, '2022-04-28 06:23:56'),
-(3414, 'issue', 'direct_view', 3, '2022-04-28 06:24:00'),
-(3415, 'issue', 'all', 3, '2022-04-28 06:24:21'),
-(3416, 'issue', 'all', 3, '2022-04-28 06:28:19'),
-(3417, 'issue', 'view', 3, '2022-04-28 06:28:23'),
-(3418, 'issue', 'direct_view', 3, '2022-04-28 06:28:26'),
-(3419, 'issue', 'direct_view', 3, '2022-04-28 06:29:41'),
-(3420, 'issue', 'direct_view', 3, '2022-04-28 06:30:14'),
-(3421, 'issue', 'all', 3, '2022-04-28 06:30:22'),
-(3422, 'issue', 'all', 3, '2022-04-28 06:32:55'),
-(3423, 'issue', 'issue_post', 3, '2022-04-28 06:33:05'),
-(3424, 'issue', 'direct_view', 3, '2022-04-28 06:33:05'),
-(3425, 'issue', 'direct_view', 3, '2022-04-28 06:33:07'),
-(3426, 'issue', 'direct_view', 3, '2022-04-28 06:33:36'),
-(3427, 'issue', 'issue_post', 3, '2022-04-28 06:33:41'),
-(3428, 'issue', 'direct_view', 3, '2022-04-28 06:33:41'),
-(3429, 'opening_master', 'change_status', 3, '2022-04-28 06:33:45'),
-(3430, 'issue', 'direct_view', 3, '2022-04-28 06:33:45'),
-(3431, 'issue', 'all', 3, '2022-04-28 06:33:48'),
-(3432, 'opening_master', 'all', 3, '2022-04-28 06:34:20'),
-(3433, 'opening_master', 'all', 3, '2022-04-28 06:37:49'),
-(3434, 'opening_master', 'form', 3, '2022-04-28 06:37:55'),
-(3435, 'opening_master', 'getForm', 3, '2022-04-28 06:38:24'),
-(3436, 'opening_master', 'form', 3, '2022-04-28 06:38:46'),
-(3437, 'opening_master', 'all', 3, '2022-04-28 06:38:46'),
-(3438, 'opening_master', 'soft_delete', 3, '2022-04-28 06:39:24'),
-(3439, 'opening_master', 'all', 3, '2022-04-28 06:39:24'),
-(3440, 'opening_master', 'all', 3, '2022-04-28 06:40:07'),
-(3441, 'opening_master', 'view', 3, '2022-04-28 06:40:09'),
-(3442, 'opening_master', 'form', 3, '2022-04-28 06:40:15'),
-(3443, 'opening_master', 'form', 3, '2022-04-28 06:40:22'),
-(3444, 'opening_master', 'all', 3, '2022-04-28 06:40:34'),
-(3445, 'requisition', 'all', 3, '2022-04-28 06:40:51'),
-(3446, 'requisition', 'all', 3, '2022-04-28 06:43:05'),
-(3447, 'requisition', 'form', 3, '2022-04-28 06:43:09'),
-(3448, 'requisition', 'getStaffOfDepartment', 3, '2022-04-28 06:43:15'),
-(3449, 'requisition', 'getForm', 3, '2022-04-28 06:43:26'),
-(3450, 'requisition', 'form', 3, '2022-04-28 06:43:39'),
-(3451, 'requisition', 'all', 3, '2022-04-28 06:43:39'),
-(3452, 'issue', 'all', 3, '2022-04-28 06:43:51'),
-(3453, 'mrn', 'all', 3, '2022-04-28 06:43:57'),
-(3454, 'mrn', 'view', 3, '2022-04-28 06:44:01'),
-(3455, 'issue', 'view', 3, '2022-04-28 06:45:23'),
-(3456, 'mrn', 'view', 3, '2022-04-28 06:45:31'),
-(3457, 'mrn', 'view', 3, '2022-04-28 06:46:22'),
-(3458, 'opening_master', 'change_status', 3, '2022-04-28 06:46:30'),
-(3459, 'mrn', 'view', 3, '2022-04-28 06:46:30'),
-(3460, 'mrn', 'view', 3, '2022-04-28 06:46:40'),
-(3461, 'mrn', 'view', 3, '2022-04-28 06:47:05'),
-(3462, 'mrn', 'view', 3, '2022-04-28 06:47:54'),
-(3463, 'opening_master', 'change_status', 3, '2022-04-28 06:47:56'),
-(3464, 'mrn', 'view', 3, '2022-04-28 06:47:56'),
-(3465, 'mrn', 'all', 3, '2022-04-28 06:48:06'),
-(3466, 'mrn', 'all', 3, '2022-04-28 06:50:51'),
-(3467, 'mrn', 'form', 3, '2022-04-28 06:50:57'),
-(3468, 'mrn', 'getForm', 3, '2022-04-28 06:51:03'),
-(3469, 'mrn', 'form', 3, '2022-04-28 06:51:48'),
-(3470, 'mrn', 'all', 3, '2022-04-28 06:51:48'),
-(3471, 'mrn', 'form', 3, '2022-04-28 06:52:18'),
-(3472, 'mrn', 'all', 3, '2022-04-28 06:52:27'),
-(3473, 'mrn', 'view', 3, '2022-04-28 06:52:44'),
-(3474, 'mrn', 'all', 3, '2022-04-28 06:52:50'),
-(3475, 'mrn', 'view', 3, '2022-04-28 06:52:52'),
-(3476, 'opening_master', 'change_status', 3, '2022-04-28 06:52:54'),
-(3477, 'mrn', 'view', 3, '2022-04-28 06:52:54'),
-(3478, 'opening_master', 'change_status', 3, '2022-04-28 06:52:55'),
-(3479, 'mrn', 'view', 3, '2022-04-28 06:52:55'),
-(3480, 'opening_master', 'change_status', 3, '2022-04-28 06:52:55'),
-(3481, 'mrn', 'view', 3, '2022-04-28 06:52:55'),
-(3482, 'opening_master', 'all', 3, '2022-04-28 06:53:02'),
-(3483, 'requisition', 'all', 3, '2022-04-28 06:53:33'),
-(3484, 'requisition', 'view', 3, '2022-04-28 06:55:49'),
-(3485, 'issue', 'all', 3, '2022-04-28 06:56:06'),
-(3486, 'issue', 'direct_view', 3, '2022-04-28 06:56:08'),
-(3487, 'requisition', 'view', 3, '2022-04-28 06:58:33'),
-(3488, 'requisition', 'view', 3, '2022-04-28 06:58:42'),
-(3489, 'issue', 'all', 3, '2022-04-28 06:58:55'),
-(3490, 'issue', 'view', 3, '2022-04-28 06:58:57'),
-(3491, 'requisition', 'view', 3, '2022-04-28 06:59:34'),
-(3492, 'requisition', 'view', 3, '2022-04-28 06:59:47'),
-(3493, 'requisition', 'view', 3, '2022-04-28 07:06:13'),
-(3494, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:17'),
-(3495, 'requisition', 'view', 3, '2022-04-28 07:06:17'),
-(3496, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:22'),
-(3497, 'requisition', 'view', 3, '2022-04-28 07:06:22'),
-(3498, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:24'),
-(3499, 'requisition', 'view', 3, '2022-04-28 07:06:24'),
-(3500, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:25'),
-(3501, 'requisition', 'view', 3, '2022-04-28 07:06:25'),
-(3502, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:27'),
-(3503, 'requisition', 'view', 3, '2022-04-28 07:06:27'),
-(3504, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:29'),
-(3505, 'requisition', 'view', 3, '2022-04-28 07:06:29'),
-(3506, 'requisition', 'cancel_row', 3, '2022-04-28 07:06:30'),
-(3507, 'requisition', 'view', 3, '2022-04-28 07:06:30'),
-(3508, 'issue', 'form', 3, '2022-04-28 07:07:28'),
-(3509, 'mrn', 'all', 3, '2022-04-28 08:34:54'),
-(3510, 'mrn', 'view', 3, '2022-04-28 08:34:59'),
-(3511, 'requisition', 'all', 3, '2022-04-28 08:35:14'),
-(3512, 'requisition', 'view', 3, '2022-04-28 08:35:18'),
-(3513, 'requisition', 'all', 3, '2022-04-28 08:35:21'),
-(3514, 'issue', 'all', 3, '2022-04-28 08:37:51'),
-(3515, 'requisition', 'view', 3, '2022-04-28 08:39:06'),
-(3516, 'issue', 'view', 3, '2022-04-28 08:39:18'),
-(3517, 'requisition', 'view', 3, '2022-04-28 08:45:36'),
-(3518, 'requisition', 'all', 3, '2022-04-28 08:45:38'),
-(3519, 'requisition', 'all', 3, '2022-04-28 08:46:47'),
-(3520, 'requisition', 'view', 3, '2022-04-28 08:46:50'),
-(3521, 'requisition', 'cancel_row', 3, '2022-04-28 08:46:55'),
-(3522, 'requisition', 'view', 3, '2022-04-28 08:47:01'),
-(3523, 'requisition', 'cancel_row', 3, '2022-04-28 08:47:14'),
-(3524, 'requisition', 'view', 3, '2022-04-28 08:47:14'),
-(3525, 'requisition', 'all', 3, '2022-04-28 08:49:59'),
-(3526, 'opening_master', 'all', 3, '2022-04-28 08:53:16'),
-(3527, 'opening_master', 'view', 3, '2022-04-28 08:53:21'),
-(3528, 'requisition', 'view', 3, '2022-04-28 08:54:11'),
-(3529, 'requisition', 'all', 3, '2022-04-28 08:54:21'),
-(3530, 'requisition', 'view', 3, '2022-04-28 08:54:24'),
-(3531, 'requisition', 'all', 3, '2022-04-28 08:54:27'),
-(3532, 'requisition', 'view', 3, '2022-04-28 08:54:30'),
-(3533, 'requisition', 'cancel_row', 3, '2022-04-28 08:54:34'),
-(3534, 'requisition', 'cancel_row', 3, '2022-04-28 08:54:37'),
-(3535, 'requisition', 'cancel_row', 3, '2022-04-28 08:54:38'),
-(3536, 'requisition', 'cancel_row', 3, '2022-04-28 08:54:38'),
-(3537, 'issue', 'all', 3, '2022-04-28 08:55:01'),
-(3538, 'issue', 'view', 3, '2022-04-28 08:58:38'),
-(3539, 'issue', 'view', 3, '2022-04-28 09:01:32'),
-(3540, 'issue', 'view', 3, '2022-04-28 09:01:58'),
-(3541, 'requisition', 'cancel_row', 3, '2022-04-28 09:02:02'),
-(3542, 'issue', 'view', 3, '2022-04-28 09:02:02'),
-(3543, 'issue', 'view', 3, '2022-04-28 09:02:05'),
-(3544, 'issue', 'view', 3, '2022-04-28 09:02:45'),
-(3545, 'requisition', 'cancel_row', 3, '2022-04-28 09:02:47'),
-(3546, 'issue', 'view', 3, '2022-04-28 09:02:47'),
-(3547, 'issue', 'view', 3, '2022-04-28 09:02:56'),
-(3548, 'issue', 'view', 3, '2022-04-28 09:03:21'),
-(3549, 'issue', 'view', 3, '2022-04-28 09:05:34'),
-(3550, 'requisition', 'cancel_row', 3, '2022-04-28 09:05:36'),
-(3551, 'issue', 'view', 3, '2022-04-28 09:09:55'),
-(3552, 'requisition', 'cancel_row', 3, '2022-04-28 09:09:58'),
-(3553, 'issue', 'view', 3, '2022-04-28 09:10:04'),
-(3554, 'issue', 'direct_view', 3, '2022-04-28 09:10:14'),
-(3555, 'requisition', 'cancel_row', 3, '2022-04-28 09:10:19'),
-(3556, 'issue', 'direct_view', 3, '2022-04-28 09:11:03'),
-(3557, 'requisition', 'cancel_row', 3, '2022-04-28 09:11:07'),
-(3558, 'issue', 'direct_view', 3, '2022-04-28 09:11:07'),
-(3559, 'issue', 'direct_view', 3, '2022-04-28 09:21:37'),
-(3560, 'opening_master', 'change_status', 3, '2022-04-28 09:21:40'),
-(3561, 'requisition', 'cancel_row', 3, '2022-04-28 09:21:46'),
-(3562, 'issue', 'view', 3, '2022-04-28 09:21:51'),
-(3563, 'opening_master', 'change_status', 3, '2022-04-28 09:26:08'),
-(3564, 'requisition', 'cancel_row', 3, '2022-04-28 09:26:11'),
-(3565, 'issue', 'view', 3, '2022-04-28 09:26:31'),
-(3566, 'issue', 'direct_view', 3, '2022-04-28 09:26:32'),
-(3567, 'opening_master', 'change_status', 3, '2022-04-28 09:26:38'),
-(3568, 'requisition', 'cancel_row', 3, '2022-04-28 09:26:46'),
-(3569, 'opening_master', 'change_status', 3, '2022-04-28 09:26:49'),
-(3570, 'issue', 'direct_view', 3, '2022-04-28 09:27:02'),
-(3571, 'opening_master', 'change_status', 3, '2022-04-28 09:27:05'),
-(3572, 'requisition', 'cancel_row', 3, '2022-04-28 09:27:11'),
-(3573, 'opening_master', 'all', 3, '2022-04-28 09:27:25'),
-(3574, 'opening_master', 'view', 3, '2022-04-28 09:28:30'),
-(3575, 'opening_master', 'all', 3, '2022-04-28 09:28:42'),
-(3576, 'opening_master', 'view', 3, '2022-04-28 09:28:50'),
-(3577, 'opening_master', 'view', 3, '2022-04-28 09:30:42'),
-(3578, 'opening_master', 'view', 3, '2022-04-28 09:30:49'),
-(3579, 'requisition', 'cancel_row', 3, '2022-04-28 09:30:53'),
-(3580, 'requisition', 'cancel_row', 3, '2022-04-28 09:30:59'),
-(3581, 'opening_master', 'view', 3, '2022-04-28 09:30:59'),
-(3582, 'opening_master', 'change_status', 3, '2022-04-28 09:31:02'),
-(3583, 'opening_master', 'opening_post', 3, '2022-04-28 09:31:06'),
-(3584, 'opening_master', 'change_status', 3, '2022-04-28 09:31:09'),
-(3585, 'opening_master', 'view', 3, '2022-04-28 09:31:21'),
-(3586, 'opening_master', 'view', 3, '2022-04-28 09:31:21'),
-(3587, 'requisition', 'cancel_row', 3, '2022-04-28 09:31:25'),
-(3588, 'opening_master', 'change_status', 3, '2022-04-28 09:31:29'),
-(3589, 'requisition', 'cancel_row', 3, '2022-04-28 09:31:31'),
-(3590, 'opening_master', 'view', 3, '2022-04-28 09:31:31'),
-(3591, 'requisition', 'cancel_row', 3, '2022-04-28 09:31:32'),
-(3592, 'opening_master', 'view', 3, '2022-04-28 09:31:32'),
-(3593, 'requisition', 'cancel_row', 3, '2022-04-28 09:31:33'),
-(3594, 'opening_master', 'view', 3, '2022-04-28 09:31:33'),
-(3595, 'requisition', 'cancel_row', 3, '2022-04-28 09:31:34'),
-(3596, 'opening_master', 'view', 3, '2022-04-28 09:31:34'),
-(3597, 'requisition', 'all', 3, '2022-04-28 09:31:41'),
-(3598, 'requisition', 'view', 3, '2022-04-28 09:32:09'),
-(3599, 'requisition', 'view', 3, '2022-04-28 09:32:10'),
-(3600, 'requisition', 'cancel_row', 3, '2022-04-28 09:32:16'),
-(3601, 'opening_master', 'change_status', 3, '2022-04-28 09:32:19'),
-(3602, 'requisition', 'view', 3, '2022-04-28 09:32:24'),
-(3603, 'opening_master', 'change_status', 3, '2022-04-28 09:32:40'),
-(3604, 'opening_master', 'change_status', 3, '2022-04-28 09:32:42'),
-(3605, 'opening_master', 'change_status', 3, '2022-04-28 09:32:43'),
-(3606, 'requisition', 'view', 3, '2022-04-28 09:33:56'),
-(3607, 'opening_master', 'change_status', 3, '2022-04-28 09:33:59'),
-(3608, 'requisition', 'view', 3, '2022-04-28 09:33:59'),
-(3609, 'opening_master', 'change_status', 3, '2022-04-28 09:34:01'),
-(3610, 'requisition', 'view', 3, '2022-04-28 09:34:01'),
-(3611, 'opening_master', 'change_status', 3, '2022-04-28 09:34:01'),
-(3612, 'requisition', 'view', 3, '2022-04-28 09:34:01'),
-(3613, 'requisition', 'cancel_row', 3, '2022-04-28 09:34:02'),
-(3614, 'requisition', 'view', 3, '2022-04-28 09:34:24'),
-(3615, 'requisition', 'cancel_row', 3, '2022-04-28 09:34:29'),
-(3616, 'requisition', 'view', 3, '2022-04-28 09:34:29'),
-(3617, 'opening_master', 'change_status', 3, '2022-04-28 09:34:31'),
-(3618, 'opening_master', 'change_status', 3, '2022-04-28 09:34:34'),
-(3619, 'requisition', 'view', 3, '2022-04-28 09:34:41'),
-(3620, 'opening_master', 'change_status', 3, '2022-04-28 09:34:44'),
-(3621, 'requisition', 'cancel_row', 3, '2022-04-28 09:34:47'),
-(3622, 'opening_master', 'change_status', 3, '2022-04-28 09:34:48'),
-(3623, 'requisition', 'view', 3, '2022-04-28 09:34:48'),
-(3624, 'issue', 'all', 3, '2022-04-28 09:35:00'),
-(3625, 'issue', 'direct_view', 3, '2022-04-28 09:35:08'),
-(3626, 'issue', 'view', 3, '2022-04-28 09:35:09'),
-(3627, 'requisition', 'cancel_row', 3, '2022-04-28 09:35:20'),
-(3628, 'opening_master', 'change_status', 3, '2022-04-28 09:35:40'),
-(3629, 'opening_master', 'change_status', 3, '2022-04-28 09:35:44'),
-(3630, 'issue', 'view', 3, '2022-04-28 09:35:44'),
-(3631, 'requisition', 'cancel_row', 3, '2022-04-28 09:35:45'),
-(3632, 'issue', 'issue_post', 3, '2022-04-28 09:35:47'),
-(3633, 'issue', 'view', 3, '2022-04-28 09:35:47'),
-(3634, 'issue', 'issue_post', 3, '2022-04-28 09:35:52'),
-(3635, 'issue', 'direct_view', 3, '2022-04-28 09:35:52'),
-(3636, 'mrn', 'all', 3, '2022-04-28 09:36:08'),
-(3637, 'mrn', 'view', 3, '2022-04-28 09:36:13'),
-(3638, 'mrn', 'view', 3, '2022-04-28 09:36:14'),
-(3639, 'requisition', 'all', 3, '2022-04-28 09:36:23'),
-(3640, 'mrn', 'all', 3, '2022-04-28 09:37:46'),
-(3641, 'opening_master', 'all', 3, '2022-04-28 09:45:32'),
-(3642, 'requisition', 'all', 3, '2022-04-28 10:01:27'),
-(3643, 'issue', 'all', 3, '2022-04-28 10:01:35'),
-(3644, 'issue', 'view', 3, '2022-04-28 10:01:39'),
-(3645, 'requisition', 'cancel_row', 3, '2022-04-28 10:01:43'),
-(3646, 'issue', 'issue_post', 3, '2022-04-28 10:01:47'),
-(3647, 'issue', 'view', 3, '2022-04-28 10:01:47'),
-(3648, 'opening_master', 'change_status', 3, '2022-04-28 10:01:48'),
-(3649, 'issue', 'view', 3, '2022-04-28 10:01:48'),
-(3650, 'issue', 'all', 3, '2022-04-28 10:01:55'),
-(3651, 'issue', 'direct_view', 3, '2022-04-28 10:01:59'),
-(3652, 'issue', 'issue_post', 3, '2022-04-28 10:02:16'),
-(3653, 'issue', 'direct_view', 3, '2022-04-28 10:02:16'),
-(3654, 'opening_master', 'change_status', 3, '2022-04-28 10:02:17'),
-(3655, 'issue', 'view', 3, '2022-04-28 10:02:25'),
-(3656, 'requisition', 'cancel_row', 3, '2022-04-28 10:02:28'),
-(3657, 'opening_master', 'all', 3, '2022-04-28 10:02:32'),
-(3658, 'opening_master', 'view', 3, '2022-04-28 10:02:35'),
-(3659, 'opening_master', 'view', 3, '2022-04-28 10:02:36'),
-(3660, 'opening_master', 'change_status', 3, '2022-04-28 10:02:40'),
-(3661, 'requisition', 'cancel_row', 3, '2022-04-28 10:02:42'),
-(3662, 'opening_master', 'view', 3, '2022-04-28 10:02:42'),
-(3663, 'requisition', 'cancel_row', 3, '2022-04-28 10:02:45'),
-(3664, 'opening_master', 'opening_post', 3, '2022-04-28 10:02:47'),
-(3665, 'opening_master', 'opening_post', 3, '2022-04-28 10:02:49'),
-(3666, 'requisition', 'all', 3, '2022-04-28 10:03:00'),
-(3667, 'requisition', 'view', 3, '2022-04-28 10:03:03'),
-(3668, 'requisition', 'view', 3, '2022-04-28 10:03:04'),
-(3669, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:08'),
-(3670, 'requisition', 'view', 3, '2022-04-28 10:03:08'),
-(3671, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:10'),
-(3672, 'requisition', 'view', 3, '2022-04-28 10:03:10'),
-(3673, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:12'),
-(3674, 'requisition', 'view', 3, '2022-04-28 10:03:12'),
-(3675, 'opening_master', 'change_status', 3, '2022-04-28 10:03:13'),
-(3676, 'opening_master', 'change_status', 3, '2022-04-28 10:03:20'),
-(3677, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:22'),
-(3678, 'requisition', 'view', 3, '2022-04-28 10:03:22'),
-(3679, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:24'),
-(3680, 'requisition', 'view', 3, '2022-04-28 10:03:24'),
-(3681, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:27'),
-(3682, 'requisition', 'view', 3, '2022-04-28 10:03:27'),
-(3683, 'requisition', 'cancel_row', 3, '2022-04-28 10:03:33'),
-(3684, 'opening_master', 'change_status', 3, '2022-04-28 10:03:34'),
-(3685, 'requisition', 'view', 3, '2022-04-28 10:03:34'),
-(3686, 'mrn', 'all', 3, '2022-04-28 10:03:45'),
-(3687, 'mrn', 'view', 3, '2022-04-28 10:03:57'),
-(3688, 'mrn', 'view', 3, '2022-04-28 10:03:58'),
-(3689, 'mrn', 'all', 3, '2022-04-28 10:05:14'),
-(3690, 'mrn', 'view', 3, '2022-04-28 10:05:15'),
-(3691, 'mrn', 'view', 3, '2022-04-28 10:05:19'),
-(3692, 'requisition', 'cancel_row', 3, '2022-04-28 10:05:31'),
-(3693, 'opening_master', 'change_status', 3, '2022-04-28 10:05:34'),
-(3694, 'mrn', 'view', 3, '2022-04-28 10:05:34'),
-(3695, 'mrn', 'view', 3, '2022-04-28 10:05:51'),
-(3696, 'mrn', 'view', 3, '2022-04-28 10:05:53'),
-(3697, 'requisition', 'cancel_row', 3, '2022-04-28 10:05:56'),
-(3698, 'opening_master', 'change_status', 3, '2022-04-28 10:05:58'),
-(3699, 'mrn', 'view', 3, '2022-04-28 10:05:58'),
-(3700, 'requisition', 'cancel_row', 3, '2022-04-28 10:06:00'),
-(3701, 'mrn', 'view', 3, '2022-04-28 10:06:06'),
-(3702, 'requisition', 'cancel_row', 3, '2022-04-28 10:06:09'),
-(3703, 'mrn', 'view', 3, '2022-04-28 10:06:27'),
-(3704, 'mrn', 'view', 3, '2022-04-28 10:06:29'),
-(3705, 'requisition', 'cancel_row', 3, '2022-04-28 10:06:31'),
-(3706, 'requisition', 'cancel_row', 3, '2022-04-28 10:06:35'),
-(3707, 'mrn', 'view', 3, '2022-04-28 10:06:35'),
-(3708, 'mrn', 'view', 3, '2022-04-28 10:06:37'),
-(3709, 'opening_master', 'change_status', 3, '2022-04-28 10:06:41'),
-(3710, 'requisition', 'cancel_row', 3, '2022-04-28 10:06:44'),
-(3711, 'mrn', 'view', 3, '2022-04-28 10:09:26'),
-(3712, 'mrn', 'view', 3, '2022-04-28 10:09:27'),
-(3713, 'opening_master', 'change_status', 3, '2022-04-28 10:09:30'),
-(3714, 'requisition', 'cancel_row', 3, '2022-04-28 10:09:32'),
-(3715, 'mrn', 'view', 3, '2022-04-28 10:09:32'),
-(3716, 'opening_master', 'change_status', 3, '2022-04-28 10:09:34'),
-(3717, 'mrn', 'view', 3, '2022-04-28 10:09:34'),
-(3718, 'requisition', 'cancel_row', 3, '2022-04-28 10:09:35'),
-(3719, 'opening_master', 'change_status', 3, '2022-04-28 10:24:28'),
-(3720, 'requisition', 'cancel_row', 3, '2022-04-28 10:24:41'),
-(3721, 'mrn', 'view', 3, '2022-04-28 10:24:41'),
-(3722, 'issue_return', 'all', 3, '2022-04-28 10:24:45'),
-(3723, 'issue_return', 'add', 3, '2022-04-28 10:24:50'),
-(3724, 'issue_return', 'form', 3, '2022-04-28 10:24:50'),
-(3725, 'issue_return', 'form', 3, '2022-04-28 10:25:09'),
-(3726, 'issue_return', 'add', 3, '2022-04-28 10:25:09'),
-(3727, 'issue_return', 'all', 3, '2022-04-28 10:26:37'),
-(3728, 'mrn', 'all', 3, '2022-04-28 10:35:29'),
-(3729, 'issue_return', 'add', 3, '2022-04-28 10:35:30'),
-(3730, 'issue', 'form', 3, '2022-04-28 10:35:53'),
-(3731, 'issue', 'form', 3, '2022-04-28 10:35:58'),
-(3732, 'issue', 'add', 3, '2022-04-28 10:35:58'),
-(3733, 'issue', 'form', 3, '2022-04-28 10:37:20'),
-(3734, 'issue', 'form', 3, '2022-04-28 10:49:15'),
-(3735, 'issue', 'form', 3, '2022-04-28 10:49:23'),
-(3736, 'issue', 'add', 3, '2022-04-28 10:49:23'),
-(3737, 'issue', 'form', 3, '2022-04-28 10:51:08'),
-(3738, 'issue', 'form', 3, '2022-04-28 10:51:41'),
-(3739, 'purchase_request', 'form', 3, '2022-04-28 10:52:30'),
-(3740, 'purchase_request', 'form', 3, '2022-04-28 10:58:27'),
-(3741, 'purchase_request', 'form', 3, '2022-04-28 10:58:45'),
-(3742, 'purchase_request', 'form', 3, '2022-04-28 10:59:08'),
-(3743, 'purchase_request', 'form', 3, '2022-04-28 10:59:40'),
-(3744, 'purchase_request', 'form', 3, '2022-04-28 11:01:15'),
-(3745, 'purchase_request', 'form', 3, '2022-04-28 11:02:06'),
-(3746, 'purchase_request', 'form', 3, '2022-04-28 11:17:44'),
-(3747, 'purchase_request', 'form', 3, '2022-04-28 11:18:26'),
-(3748, 'purchase_request', 'form', 3, '2022-04-28 11:19:50'),
-(3749, 'purchase_request', 'form', 3, '2022-04-28 11:20:07'),
-(3750, 'purchase_request', 'form', 3, '2022-04-28 11:20:49'),
-(3751, 'purchase_request', 'form', 3, '2022-04-28 11:21:28'),
-(3752, 'purchase_request', 'form', 3, '2022-04-28 11:22:04'),
-(3753, 'purchase_request', 'form', 3, '2022-04-28 11:32:10'),
-(3754, 'purchase_request', 'form', 3, '2022-04-28 11:32:58'),
-(3755, 'purchase_request', 'form', 3, '2022-04-28 11:33:39'),
-(3756, 'purchase_request', 'form', 3, '2022-04-28 11:34:20'),
-(3757, 'purchase_request', 'form', 3, '2022-04-28 11:34:48'),
-(3758, 'purchase_request', 'form', 3, '2022-04-28 11:36:06'),
-(3759, 'purchase_request', 'form', 3, '2022-04-28 11:36:57'),
-(3760, 'purchase_request', 'form', 3, '2022-04-28 11:37:27'),
-(3761, 'purchase_request', 'form', 3, '2022-04-28 11:38:14'),
-(3762, 'purchase_request', 'form', 3, '2022-04-28 11:39:47'),
-(3763, 'purchase_request', 'form', 3, '2022-04-28 11:40:26'),
-(3764, 'mrn', 'all', 3, '2022-04-28 11:40:43'),
-(3765, 'mrn', 'all', 3, '2022-04-28 11:42:03'),
-(3766, 'purchase_request', 'form', 3, '2022-04-28 11:42:18'),
-(3767, 'purchase_request', 'form', 3, '2022-04-28 11:46:59'),
-(3768, 'purchase_request', 'form', 3, '2022-04-28 11:47:10'),
-(3769, 'purchase_request', 'form', 3, '2022-04-28 11:48:10'),
-(3770, 'purchase_request', 'add', 3, '2022-04-28 11:48:10'),
-(3771, 'purchase_request', 'form', 3, '2022-04-28 11:48:34'),
-(3772, 'purchase_request', 'form', 3, '2022-04-28 11:48:38'),
-(3773, 'purchase_request', 'direct_add', 3, '2022-04-28 11:48:39'),
-(3774, 'issue', 'getForm', 3, '2022-04-28 11:48:45'),
-(3775, 'issue', 'getForm', 3, '2022-04-28 11:48:48'),
-(3776, 'issue', 'getForm', 3, '2022-04-28 11:48:51'),
-(3777, 'dashboard', NULL, 3, '2022-04-29 05:10:53'),
-(3778, 'mrn', 'all', 3, '2022-04-29 05:10:58'),
-(3779, 'mrn', 'view', 3, '2022-04-29 05:11:01'),
-(3780, 'opening_master', 'change_status', 3, '2022-04-29 05:11:05'),
-(3781, 'issue_return', 'all', 3, '2022-04-29 05:11:27'),
-(3782, 'issue_return', 'all', 3, '2022-04-29 05:11:38'),
-(3783, 'issue', 'all', 3, '2022-04-29 05:11:46'),
-(3784, 'issue', 'view', 3, '2022-04-29 05:11:52'),
-(3785, 'issue_return', 'all', 3, '2022-04-29 05:12:04'),
-(3786, 'issue', 'issue_post', 3, '2022-04-29 05:12:15'),
-(3787, 'issue', 'view', 3, '2022-04-29 05:12:15'),
-(3788, 'requisition', 'cancel_row', 3, '2022-04-29 05:12:16'),
-(3789, 'opening_master', 'change_status', 3, '2022-04-29 05:12:21'),
-(3790, 'issue', 'view', 3, '2022-04-29 05:12:21'),
-(3791, 'issue', 'view', 3, '2022-04-29 05:30:58'),
-(3792, 'issue', 'view', 3, '2022-04-29 05:31:05'),
-(3793, 'issue', 'direct_view', 3, '2022-04-29 05:31:06'),
-(3794, 'opening_master', 'change_status', 3, '2022-04-29 05:31:17'),
-(3795, 'requisition', 'cancel_row', 3, '2022-04-29 05:38:47'),
-(3796, 'requisition', 'cancel_row', 3, '2022-04-29 05:39:43'),
-(3797, 'issue', 'direct_view', 3, '2022-04-29 05:39:43'),
-(3798, 'opening_master', 'change_status', 3, '2022-04-29 05:39:45'),
-(3799, 'issue', 'issue_post', 3, '2022-04-29 05:39:47'),
-(3800, 'issue', 'direct_view', 3, '2022-04-29 05:39:47');
-INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALUES
-(3801, 'issue', 'direct_view', 3, '2022-04-29 05:41:35'),
-(3802, 'issue', 'issue_post', 3, '2022-04-29 05:41:39'),
-(3803, 'issue', 'direct_view', 3, '2022-04-29 05:41:39'),
-(3804, 'opening_master', 'change_status', 3, '2022-04-29 05:41:42'),
-(3805, 'issue', 'direct_view', 3, '2022-04-29 05:41:42'),
-(3806, 'requisition', 'cancel_row', 3, '2022-04-29 05:41:45'),
-(3807, 'requisition', 'cancel_row', 3, '2022-04-29 05:42:04'),
-(3808, 'issue', 'direct_view', 3, '2022-04-29 05:42:42'),
-(3809, 'issue', 'issue_post', 3, '2022-04-29 05:42:45'),
-(3810, 'issue', 'direct_view', 3, '2022-04-29 05:42:45'),
-(3811, 'opening_master', 'change_status', 3, '2022-04-29 05:42:50'),
-(3812, 'issue', 'direct_view', 3, '2022-04-29 05:42:50'),
-(3813, 'requisition', 'cancel_row', 3, '2022-04-29 05:42:53'),
-(3814, 'requisition', 'all', 3, '2022-04-29 05:43:10'),
-(3815, 'requisition', 'view', 3, '2022-04-29 05:43:14'),
-(3816, 'opening_master', 'change_status', 3, '2022-04-29 05:43:22'),
-(3817, 'issue', 'direct_view', 3, '2022-04-29 05:46:16'),
-(3818, 'requisition', 'cancel_row', 3, '2022-04-29 05:46:55'),
-(3819, 'issue', 'issue_post', 3, '2022-04-29 05:46:58'),
-(3820, 'issue', 'direct_view', 3, '2022-04-29 05:46:58'),
-(3821, 'issue', 'direct_view', 3, '2022-04-29 05:46:58'),
-(3822, 'dashboard', NULL, 3, '2022-04-29 08:30:10'),
-(3823, 'opening_master', 'all', 3, '2022-04-29 08:30:17'),
-(3824, 'opening_master', 'form', 3, '2022-04-29 08:30:19'),
-(3825, 'opening_master', 'form', 3, '2022-04-29 09:05:39'),
-(3826, 'opening_master', 'form', 3, '2022-04-29 09:36:21'),
-(3827, 'requisition', 'form', 3, '2022-04-29 09:45:31'),
-(3828, 'issue', 'all', 3, '2022-04-29 10:05:02'),
-(3829, 'issue', 'form', 3, '2022-04-29 10:05:05'),
-(3830, 'issue', 'form', 3, '2022-04-29 10:05:09'),
-(3831, 'issue', 'direct_add', 3, '2022-04-29 10:05:09'),
-(3832, 'issue', 'form', 3, '2022-04-29 10:05:13'),
-(3833, 'opening_master', 'form', 3, '2022-04-29 10:16:26'),
-(3834, 'issue', 'view', 3, '2022-04-29 10:16:42'),
-(3835, 'issue', 'direct_view', 3, '2022-04-29 10:16:46'),
-(3836, 'issue', 'view', 3, '2022-04-29 10:26:11'),
-(3837, 'issue', 'direct_view', 3, '2022-04-29 10:26:22'),
-(3838, 'issue', 'direct_view', 3, '2022-04-29 10:28:26'),
-(3839, 'issue', 'direct_view', 3, '2022-04-29 10:29:28'),
-(3840, 'issue', 'view', 3, '2022-04-29 10:29:29'),
-(3841, 'dashboard', NULL, 3, '2022-05-01 05:10:20'),
-(3842, 'issue', 'all', 3, '2022-05-01 05:10:48'),
-(3843, 'issue', 'view', 3, '2022-05-01 05:10:51'),
-(3844, 'issue', 'direct_view', 3, '2022-05-01 05:11:00'),
-(3845, 'issue', 'issue_post', 3, '2022-05-01 05:11:05'),
-(3846, 'issue', 'direct_view', 3, '2022-05-01 05:11:05'),
-(3847, 'requisition', 'cancel_row', 3, '2022-05-01 05:11:06'),
-(3848, 'issue', 'direct_view', 3, '2022-05-01 05:11:06'),
-(3849, 'opening_master', 'change_status', 3, '2022-05-01 05:11:09'),
-(3850, 'issue', 'direct_view', 3, '2022-05-01 05:11:51'),
-(3851, 'issue', 'direct_view', 3, '2022-05-01 05:13:16'),
-(3852, 'dashboard', NULL, 3, '2022-05-01 09:58:18'),
-(3853, 'issue', 'all', 3, '2022-05-01 09:58:23'),
-(3854, 'issue', 'direct_view', 3, '2022-05-01 09:58:26'),
-(3855, 'issue', 'issue_post', 3, '2022-05-01 09:58:29'),
-(3856, 'issue', 'direct_view', 3, '2022-05-01 09:58:29'),
-(3857, 'opening_master', 'change_status', 3, '2022-05-01 09:58:31'),
-(3858, 'issue', 'direct_view', 3, '2022-05-01 09:58:31'),
-(3859, 'issue', 'direct_view', 3, '2022-05-01 10:09:11'),
-(3860, 'issue', 'issue_post', 3, '2022-05-01 10:09:20'),
-(3861, 'issue', 'direct_view', 3, '2022-05-01 10:09:20'),
-(3862, 'issue', 'direct_view', 3, '2022-05-01 10:09:20'),
-(3863, 'dashboard', NULL, 3, '2022-05-01 10:09:42'),
-(3864, 'issue', 'view', 3, '2022-05-01 10:36:53'),
-(3865, 'issue', 'all', 3, '2022-05-01 10:36:55'),
-(3866, 'issue', 'view', 3, '2022-05-01 10:36:57'),
-(3867, 'issue', 'form', 3, '2022-05-01 10:38:05'),
-(3868, 'purchase_request', 'form', 3, '2022-05-01 10:38:15'),
-(3869, 'purchase_request', 'form', 3, '2022-05-01 10:38:23'),
-(3870, 'purchase_request', 'direct_add', 3, '2022-05-01 10:38:23'),
-(3871, 'requisition', 'getStaffOfDepartment', 3, '2022-05-01 10:53:22'),
-(3872, 'mrn', 'all', 3, '2022-05-01 10:55:55'),
-(3873, 'purchase_request', 'direct_add', 3, '2022-05-01 10:56:52'),
-(3874, 'dashboard', NULL, 3, '2022-05-02 06:45:34'),
-(3875, 'issue', 'all', 3, '2022-05-02 06:45:43'),
-(3876, 'issue', 'form', 3, '2022-05-02 06:47:21'),
-(3877, 'purchase_request', 'form', 3, '2022-05-02 06:47:29'),
-(3878, 'purchase_request', 'form', 3, '2022-05-02 06:49:25'),
-(3879, 'purchase_request', 'direct_add', 3, '2022-05-02 06:49:25'),
-(3880, 'purchase_request', 'direct_add', 3, '2022-05-02 06:52:27'),
-(3881, 'purchase_request', 'direct_add', 3, '2022-05-02 06:53:27'),
-(3882, 'purchase_request', 'direct_add', 3, '2022-05-02 07:09:57'),
-(3883, 'issue', 'getForm', 3, '2022-05-02 07:10:04'),
-(3884, 'issue', 'getForm', 3, '2022-05-02 08:35:41'),
-(3885, 'purchase_request', 'direct_add', 3, '2022-05-02 08:50:50'),
-(3886, 'purchase_request', 'getForm', 3, '2022-05-02 08:50:53'),
-(3887, 'purchase_request', 'getForm', 3, '2022-05-02 08:51:00'),
-(3888, 'purchase_request', 'getForm', 3, '2022-05-02 08:51:04'),
-(3889, 'purchase_request', 'direct_add', 3, '2022-05-02 08:52:28'),
-(3890, 'purchase_request', 'getForm', 3, '2022-05-02 08:52:31'),
-(3891, 'purchase_request', 'getForm', 3, '2022-05-02 08:52:34'),
-(3892, 'purchase_request', 'getForm', 3, '2022-05-02 08:52:36'),
-(3893, 'purchase_request', 'direct_add', 3, '2022-05-02 08:56:12'),
-(3894, 'purchase_request', 'getForm', 3, '2022-05-02 08:56:15'),
-(3895, 'purchase_request', 'getForm', 3, '2022-05-02 08:56:18'),
-(3896, 'purchase_request', 'direct_add', 3, '2022-05-02 08:56:27'),
-(3897, 'purchase_request', 'direct_add', 3, '2022-05-02 08:58:38'),
-(3898, 'purchase_request', 'getForm', 3, '2022-05-02 08:58:41'),
-(3899, 'purchase_request', 'getForm', 3, '2022-05-02 08:58:44'),
-(3900, 'purchase_request', 'getForm', 3, '2022-05-02 08:58:46'),
-(3901, 'purchase_request', 'direct_add', 3, '2022-05-02 08:59:15'),
-(3902, 'purchase_request', 'direct_add', 3, '2022-05-02 09:02:53'),
-(3903, 'purchase_request', 'getForm', 3, '2022-05-02 09:02:57'),
-(3904, 'purchase_request', 'getForm', 3, '2022-05-02 09:03:00'),
-(3905, 'purchase_request', 'getForm', 3, '2022-05-02 09:06:41'),
-(3906, 'purchase_request', 'direct_add', 3, '2022-05-02 09:08:34'),
-(3907, 'purchase_request', 'direct_add', 3, '2022-05-02 09:09:10'),
-(3908, 'purchase_request', 'direct_add', 3, '2022-05-02 09:09:24'),
-(3909, 'purchase_request', 'direct_add', 3, '2022-05-02 09:10:02'),
-(3910, 'purchase_request', 'direct_add', 3, '2022-05-02 09:10:23'),
-(3911, 'purchase_request', 'getForm', 3, '2022-05-02 09:10:29'),
-(3912, 'purchase_request', 'getForm', 3, '2022-05-02 09:10:32'),
-(3913, 'purchase_request', 'getForm', 3, '2022-05-02 09:10:34'),
-(3914, 'purchase_request', 'direct_add', 3, '2022-05-02 09:14:33'),
-(3915, 'purchase_request', 'getForm', 3, '2022-05-02 09:14:36'),
-(3916, 'purchase_request', 'getForm', 3, '2022-05-02 09:14:37'),
-(3917, 'purchase_request', 'getForm', 3, '2022-05-02 09:14:39'),
-(3918, 'requisition', 'getStaffOfDepartment', 3, '2022-05-02 09:14:49'),
-(3919, 'purchase_request', 'direct_add', 3, '2022-05-02 09:15:28'),
-(3920, 'purchase_request', 'direct_add', 3, '2022-05-02 09:16:38'),
-(3921, 'purchase_request', 'getForm', 3, '2022-05-02 09:16:42'),
-(3922, 'requisition', 'getStaffOfDepartment', 3, '2022-05-02 09:16:56'),
-(3923, 'purchase_request', 'direct_add', 3, '2022-05-02 09:26:42'),
-(3924, 'requisition', 'getStaffOfDepartment', 3, '2022-05-02 09:26:47'),
-(3925, 'purchase_request', 'getForm', 3, '2022-05-02 09:26:59'),
-(3926, 'purchase_request', 'getForm', 3, '2022-05-02 09:27:00'),
-(3927, 'purchase_request', 'getForm', 3, '2022-05-02 09:27:01'),
-(3928, 'purchase_request', 'direct_add', 3, '2022-05-02 09:28:57'),
-(3929, 'requisition', 'getStaffOfDepartment', 3, '2022-05-02 09:29:01'),
-(3930, 'purchase_request', 'getForm', 3, '2022-05-02 09:29:07'),
-(3931, 'purchase_request', 'getForm', 3, '2022-05-02 09:29:09'),
-(3932, 'purchase_request', 'getForm', 3, '2022-05-02 09:29:10'),
-(3933, 'purchase_request', 'direct_add', 3, '2022-05-02 09:29:41'),
-(3934, 'purchase_request', 'direct_add', 3, '2022-05-02 09:30:01'),
-(3935, 'purchase_request', 'direct_add', 3, '2022-05-02 09:30:36'),
-(3936, 'requisition', 'getStaffOfDepartment', 3, '2022-05-02 09:30:40'),
-(3937, 'purchase_request', 'getForm', 3, '2022-05-02 09:30:48'),
-(3938, 'purchase_request', 'getForm', 3, '2022-05-02 09:30:49'),
-(3939, 'purchase_request', 'getForm', 3, '2022-05-02 09:30:51'),
-(3940, 'purchase_request', 'direct_add', 3, '2022-05-02 09:32:36'),
-(3941, 'purchase_request', 'all', 3, '2022-05-02 09:32:36'),
-(3942, 'purchase_request', 'all', 3, '2022-05-02 09:48:09'),
-(3943, 'purchase_request', 'direct_add', 3, '2022-05-02 09:48:22'),
-(3944, 'purchase_request', 'direct_add', 3, '2022-05-02 09:48:33'),
-(3945, 'purchase_request', 'direct_add', 3, '2022-05-02 09:49:00'),
-(3946, 'purchase_request', 'direct_add', 3, '2022-05-02 09:49:41'),
-(3947, 'purchase_request', 'direct_add', 3, '2022-05-02 09:49:44'),
-(3948, 'purchase_request', 'getForm', 3, '2022-05-02 09:49:52'),
-(3949, 'purchase_request', 'getForm', 3, '2022-05-02 09:49:53'),
-(3950, 'purchase_request', 'getForm', 3, '2022-05-02 09:49:54'),
-(3951, 'purchase_request', 'direct_add', 3, '2022-05-02 09:50:19'),
-(3952, 'purchase_request', 'direct_add', 3, '2022-05-02 09:50:42'),
-(3953, 'purchase_request', 'all', 3, '2022-05-02 09:50:42'),
-(3954, 'purchase_request', 'direct_add', 3, '2022-05-02 09:50:44'),
-(3955, 'purchase_request', 'direct_add', 3, '2022-05-02 09:52:16'),
-(3956, 'issue', 'all', 3, '2022-05-02 09:52:27'),
-(3957, 'issue', 'edit', 3, '2022-05-02 09:52:31'),
-(3958, 'purchase_request', 'all', 3, '2022-05-02 09:53:06'),
-(3959, 'purchase_request', 'direct_add', 3, '2022-05-02 09:53:09'),
-(3960, 'purchase_request', 'all', 3, '2022-05-02 09:53:15'),
-(3961, 'purchase_request', 'form', 3, '2022-05-02 09:59:33'),
-(3962, 'purchase_request', 'form', 3, '2022-05-02 10:02:23'),
-(3963, 'purchase_request', 'form', 3, '2022-05-02 10:02:30'),
-(3964, 'purchase_request', 'add', 3, '2022-05-02 10:02:31'),
-(3965, 'purchase_request', 'form', 3, '2022-05-02 10:02:44'),
-(3966, 'purchase_request', 'add', 3, '2022-05-02 10:02:44'),
-(3967, 'purchase_request', 'form', 3, '2022-05-02 10:03:34'),
-(3968, 'purchase_request', 'form', 3, '2022-05-02 10:03:38'),
-(3969, 'purchase_request', 'add', 3, '2022-05-02 10:03:38'),
-(3970, 'purchase_request', 'form', 3, '2022-05-02 10:03:38'),
-(3971, 'purchase_request', 'form', 3, '2022-05-02 10:05:25'),
-(3972, 'purchase_request', 'form', 3, '2022-05-02 10:05:34'),
-(3973, 'purchase_request', 'add', 3, '2022-05-02 10:05:34'),
-(3974, 'purchase_request', 'form', 3, '2022-05-02 10:05:34'),
-(3975, 'purchase_request', 'form', 3, '2022-05-02 10:06:20'),
-(3976, 'purchase_request', 'form', 3, '2022-05-02 10:06:24'),
-(3977, 'purchase_request', 'form', 3, '2022-05-02 10:07:05'),
-(3978, 'purchase_request', 'form', 3, '2022-05-02 10:07:41'),
-(3979, 'purchase_request', 'add', 3, '2022-05-02 10:07:41'),
-(3980, 'purchase_request', 'add', 3, '2022-05-02 10:08:18'),
-(3981, 'purchase_request', 'form', 3, '2022-05-02 10:08:21'),
-(3982, 'purchase_request', 'add', 3, '2022-05-02 10:08:21'),
-(3983, 'purchase_request', 'form', 3, '2022-05-02 10:08:28'),
-(3984, 'purchase_request', 'add', 3, '2022-05-02 10:08:28'),
-(3985, 'purchase_request', 'form', 3, '2022-05-02 10:29:43'),
-(3986, 'purchase_request', 'form', 3, '2022-05-02 10:29:48'),
-(3987, 'purchase_request', 'add', 3, '2022-05-02 10:29:48'),
-(3988, 'purchase_request', 'form', 3, '2022-05-02 10:30:33'),
-(3989, 'purchase_request', 'form', 3, '2022-05-02 10:30:37'),
-(3990, 'purchase_request', 'direct_add', 3, '2022-05-02 10:30:38'),
-(3991, 'purchase_request', 'form', 3, '2022-05-02 10:30:40'),
-(3992, 'purchase_request', 'add', 3, '2022-05-02 10:30:40'),
-(3993, 'purchase_request', 'add', 3, '2022-05-02 10:33:43'),
-(3994, 'purchase_request', 'add', 3, '2022-05-02 10:34:19'),
-(3995, 'purchase_request', 'add', 3, '2022-05-02 10:37:29'),
-(3996, 'purchase_request', 'add', 3, '2022-05-02 10:38:31'),
-(3997, 'purchase_request', 'add', 3, '2022-05-02 10:42:05'),
-(3998, 'purchase_request', 'add', 3, '2022-05-02 10:42:13'),
-(3999, 'purchase_request', 'add', 3, '2022-05-02 10:45:28'),
-(4000, 'purchase_request', 'add', 3, '2022-05-02 10:45:54'),
-(4001, 'purchase_request', 'form', 3, '2022-05-02 10:46:02'),
-(4002, 'purchase_request', 'form', 3, '2022-05-02 10:46:10'),
-(4003, 'purchase_request', 'add', 3, '2022-05-02 10:46:10'),
-(4004, 'purchase_request', 'form', 3, '2022-05-02 10:46:14'),
-(4005, 'purchase_request', 'add', 3, '2022-05-02 10:46:14'),
-(4006, 'purchase_request', 'add', 3, '2022-05-02 10:51:18'),
-(4007, 'purchase_request', 'add', 3, '2022-05-02 10:51:23'),
-(4008, 'purchase_request', 'add', 3, '2022-05-02 10:54:17'),
-(4009, 'purchase_request', 'add', 3, '2022-05-02 10:57:14'),
-(4010, 'purchase_request', 'add', 3, '2022-05-02 10:57:29'),
-(4011, 'dashboard', NULL, 3, '2022-05-04 09:22:41'),
-(4012, 'issue', 'all', 3, '2022-05-04 09:22:50'),
-(4013, 'issue', 'form', 3, '2022-05-04 09:22:52'),
-(4014, 'purchase_request', 'form', 3, '2022-05-04 09:22:59'),
-(4015, 'purchase_request', 'form', 3, '2022-05-04 09:23:00'),
-(4016, 'purchase_request', 'form', 3, '2022-05-04 09:23:06'),
-(4017, 'purchase_request', 'add', 3, '2022-05-04 09:23:06'),
-(4018, 'purchase_request', 'form', 3, '2022-05-04 09:23:12'),
-(4019, 'purchase_request', 'add', 3, '2022-05-04 09:23:12'),
-(4020, 'purchase_request', 'form', 3, '2022-05-04 09:23:15'),
-(4021, 'purchase_request', 'direct_add', 3, '2022-05-04 09:23:15'),
-(4022, 'purchase_request', 'getForm', 3, '2022-05-04 09:24:13'),
-(4023, 'purchase_request', 'getForm', 3, '2022-05-04 09:24:16'),
-(4024, 'purchase_request', 'all', 3, '2022-05-04 09:24:22'),
-(4025, 'purchase_request', 'direct_add', 3, '2022-05-04 09:24:25'),
-(4026, 'issue', 'form', 3, '2022-05-04 09:37:39'),
-(4027, 'issue', 'form', 3, '2022-05-04 09:37:40'),
-(4028, 'issue', 'form', 3, '2022-05-04 09:37:43'),
-(4029, 'issue', 'add', 3, '2022-05-04 09:37:44'),
-(4030, 'purchase_request', 'form', 3, '2022-05-04 09:38:16'),
-(4031, 'purchase_request', 'form', 3, '2022-05-04 09:38:20'),
-(4032, 'purchase_request', 'direct_add', 3, '2022-05-04 09:38:20'),
-(4033, 'purchase_request', 'getForm', 3, '2022-05-04 09:38:24'),
-(4034, 'purchase_request', 'add', 3, '2022-05-04 09:43:33'),
-(4035, 'purchase_request', 'add', 3, '2022-05-04 09:47:14'),
-(4036, 'purchase_request', 'add', 3, '2022-05-04 09:48:37'),
-(4037, 'purchase_request', 'add', 3, '2022-05-04 09:49:08'),
-(4038, 'purchase_request', 'add', 3, '2022-05-04 09:52:35'),
-(4039, 'purchase_request', 'add', 3, '2022-05-04 09:52:48'),
-(4040, 'purchase_request', 'add', 3, '2022-05-04 09:53:24'),
-(4041, 'purchase_request', 'add', 3, '2022-05-04 09:53:28'),
-(4042, 'purchase_request', 'add', 3, '2022-05-04 09:53:38'),
-(4043, 'purchase_request', 'add', 3, '2022-05-04 09:55:57'),
-(4044, 'purchase_request', 'add', 3, '2022-05-04 09:57:21'),
-(4045, 'purchase_request', 'add', 3, '2022-05-04 09:58:13'),
-(4046, 'purchase_request', 'add', 3, '2022-05-04 09:58:14'),
-(4047, 'purchase_request', 'add', 3, '2022-05-04 09:59:27'),
-(4048, 'purchase_request', 'add', 3, '2022-05-04 09:59:33'),
-(4049, 'purchase_request', 'add', 3, '2022-05-04 09:59:53'),
-(4050, 'purchase_request', 'add', 3, '2022-05-04 10:00:17'),
-(4051, 'purchase_request', 'add', 3, '2022-05-04 10:00:28'),
-(4052, 'purchase_request', 'add', 3, '2022-05-04 10:01:14'),
-(4053, 'purchase_request', 'add', 3, '2022-05-04 10:03:42'),
-(4054, 'purchase_request', 'add', 3, '2022-05-04 10:03:55'),
-(4055, 'purchase_request', 'direct_add', 3, '2022-05-04 10:04:35'),
-(4056, 'purchase_request', 'add', 3, '2022-05-04 10:05:03'),
-(4057, 'purchase_request', 'form', 3, '2022-05-04 10:05:03'),
-(4058, 'purchase_request', 'add', 3, '2022-05-04 10:05:08'),
-(4059, 'purchase_request', 'add', 3, '2022-05-04 10:08:58'),
-(4060, 'purchase_request', 'add', 3, '2022-05-04 10:09:24'),
-(4061, 'purchase_request', 'form', 3, '2022-05-04 10:19:21'),
-(4062, 'purchase_request', 'form', 3, '2022-05-04 10:19:31'),
-(4063, 'purchase_request', 'direct_add', 3, '2022-05-04 10:19:31'),
-(4064, 'purchase_request', 'form', 3, '2022-05-04 10:19:36'),
-(4065, 'purchase_request', 'add', 3, '2022-05-04 10:19:36'),
-(4066, 'purchase_request', 'form', 3, '2022-05-04 10:19:43'),
-(4067, 'purchase_request', 'add', 3, '2022-05-04 10:19:43'),
-(4068, 'purchase_request', 'getForm', 3, '2022-05-04 10:19:53'),
-(4069, 'purchase_request', 'getForm', 3, '2022-05-04 10:19:56'),
-(4070, 'purchase_request', 'add', 3, '2022-05-04 10:21:09'),
-(4071, 'purchase_request', 'add', 3, '2022-05-04 10:21:14'),
-(4072, 'purchase_request', 'direct_add', 3, '2022-05-04 10:21:17'),
-(4073, 'purchase_request', 'getForm', 3, '2022-05-04 10:21:21'),
-(4074, 'purchase_request', 'getForm', 3, '2022-05-04 10:21:32'),
-(4075, 'purchase_request', 'getForm', 3, '2022-05-04 10:21:36'),
-(4076, 'purchase_request', 'getForm', 3, '2022-05-04 10:21:39'),
-(4077, 'issue', 'all', 3, '2022-05-04 10:38:29'),
-(4078, 'issue', 'form', 3, '2022-05-04 10:38:31'),
-(4079, 'issue', 'form', 3, '2022-05-04 10:38:37'),
-(4080, 'issue', 'add', 3, '2022-05-04 10:38:37'),
-(4081, 'issue', 'getAllStock', 3, '2022-05-04 10:38:55'),
-(4082, 'issue', 'add', 3, '2022-05-04 10:44:38'),
-(4083, 'issue', 'getAllStock', 3, '2022-05-04 10:44:52'),
-(4084, 'issue', 'add', 3, '2022-05-04 10:45:01'),
-(4085, 'requisition', 'all', 3, '2022-05-04 10:51:24'),
-(4086, 'requisition', 'form', 3, '2022-05-04 10:51:27'),
-(4087, 'requisition', 'all', 3, '2022-05-04 10:51:44'),
-(4088, 'requisition', 'form', 3, '2022-05-04 10:51:47'),
-(4089, 'requisition', 'all', 3, '2022-05-04 10:51:59'),
-(4090, 'requisition', 'form', 3, '2022-05-04 10:52:06');
+(2133, 'dashboard', NULL, 3, '2022-05-26 09:38:42'),
+(2134, 'opening_master', 'all', 3, '2022-05-26 10:13:06'),
+(2135, 'opening_master', 'form', 3, '2022-05-26 10:13:26'),
+(2136, 'opening_master', 'getForm', 3, '2022-05-26 10:13:35'),
+(2137, 'supplier', 'all', 3, '2022-05-26 10:13:54'),
+(2138, 'supplier', 'form', 3, '2022-05-26 10:14:18'),
+(2139, 'dashboard', NULL, 3, '2022-05-26 12:47:43'),
+(2140, 'dashboard', NULL, 3, '2022-05-26 15:05:57'),
+(2141, 'opening_master', 'form', 3, '2022-05-26 15:06:32'),
+(2142, 'opening_master', 'getForm', 3, '2022-05-26 15:07:15'),
+(2143, 'supplier', 'all', 3, '2022-05-26 15:07:24'),
+(2144, 'supplier', 'form', 3, '2022-05-26 15:07:55'),
+(2145, 'supplier', 'form', 3, '2022-05-26 15:09:14'),
+(2146, 'supplier', 'all', 3, '2022-05-26 15:09:14'),
+(2147, 'supplier', 'form', 3, '2022-05-26 15:09:21'),
+(2148, 'supplier', 'form', 3, '2022-05-26 15:10:33'),
+(2149, 'supplier', 'all', 3, '2022-05-26 15:10:33'),
+(2150, 'opening_master', 'form', 3, '2022-05-26 15:10:50'),
+(2151, 'opening_master', 'getForm', 3, '2022-05-26 15:11:18'),
+(2152, 'opening_master', 'getForm', 3, '2022-05-26 15:12:09'),
+(2153, 'opening_master', 'form', 3, '2022-05-26 15:12:52'),
+(2154, 'opening_master', 'form', 3, '2022-05-26 15:13:51'),
+(2155, 'opening_master', 'all', 3, '2022-05-26 15:13:51'),
+(2156, 'opening_master', 'all', 3, '2022-05-26 15:14:38'),
+(2157, 'site_settings', NULL, 3, '2022-05-26 15:14:48'),
+(2158, 'site_settings', NULL, 3, '2022-05-26 15:15:12'),
+(2159, 'site_settings', NULL, 3, '2022-05-26 15:15:12'),
+(2160, 'opening_master', 'all', 3, '2022-05-26 15:15:23'),
+(2161, 'opening_master', 'form', 3, '2022-05-26 15:15:26'),
+(2162, 'opening_master', 'getForm', 3, '2022-05-26 15:16:01'),
+(2163, 'opening_master', 'getForm', 3, '2022-05-26 15:16:52'),
+(2164, 'opening_master', 'getForm', 3, '2022-05-26 15:16:54'),
+(2165, 'opening_master', 'form', 3, '2022-05-26 15:17:38'),
+(2166, 'opening_master', 'all', 3, '2022-05-26 15:17:39'),
+(2167, 'opening_master', 'form', 3, '2022-05-26 15:17:44'),
+(2168, 'opening_master', 'all', 3, '2022-05-26 15:17:46'),
+(2169, 'opening_master', 'view', 3, '2022-05-26 15:17:49'),
+(2170, 'opening_master', 'opening_post', 3, '2022-05-26 15:17:53'),
+(2171, 'opening_master', 'change_status', 3, '2022-05-26 15:17:57'),
+(2172, 'opening_master', 'view', 3, '2022-05-26 15:17:57'),
+(2173, 'opening_master', 'opening_post', 3, '2022-05-26 15:18:00'),
+(2174, 'opening_master', 'view', 3, '2022-05-26 15:18:00'),
+(2175, 'opening_master', 'opening_post', 3, '2022-05-26 15:28:12'),
+(2176, 'requisition', 'cancel_row', 3, '2022-05-26 15:28:15'),
+(2177, 'requisition', 'all', 3, '2022-05-26 15:28:25'),
+(2178, 'requisition', 'form', 3, '2022-05-26 15:28:30'),
+(2179, 'requisition', 'getStaffOfDepartment', 3, '2022-05-26 15:28:37'),
+(2180, 'staff', 'all', 3, '2022-05-26 15:28:47'),
+(2181, 'requisition', 'getForm', 3, '2022-05-26 15:28:51'),
+(2182, 'staff', 'form', 3, '2022-05-26 15:28:55'),
+(2183, 'staff', 'form', 3, '2022-05-26 15:30:16'),
+(2184, 'staff', 'all', 3, '2022-05-26 15:30:16'),
+(2185, 'opening_master', 'form', 3, '2022-05-26 15:30:27'),
+(2186, 'opening_master', 'getForm', 3, '2022-05-26 15:31:11'),
+(2187, 'opening_master', 'getForm', 3, '2022-05-26 15:31:14'),
+(2188, 'opening_master', 'form', 3, '2022-05-26 15:33:07'),
+(2189, 'opening_master', 'all', 3, '2022-05-26 15:33:08'),
+(2190, 'opening_master', 'view', 3, '2022-05-26 15:34:07'),
+(2191, 'opening_master', 'opening_post', 3, '2022-05-26 15:34:11'),
+(2192, 'opening_master', 'change_status', 3, '2022-05-26 15:34:12'),
+(2193, 'opening_master', 'view', 3, '2022-05-26 15:34:13'),
+(2194, 'opening_master', 'opening_post', 3, '2022-05-26 15:34:14'),
+(2195, 'opening_master', 'view', 3, '2022-05-26 15:34:15'),
+(2196, 'requisition', 'form', 3, '2022-05-26 15:35:20'),
+(2197, 'requisition', 'getStaffOfDepartment', 3, '2022-05-26 15:35:26'),
+(2198, 'requisition', 'getForm', 3, '2022-05-26 15:35:50'),
+(2199, 'requisition', 'getForm', 3, '2022-05-26 15:36:00'),
+(2200, 'requisition', 'form', 3, '2022-05-26 15:36:34'),
+(2201, 'requisition', 'all', 3, '2022-05-26 15:36:35'),
+(2202, 'issue', 'all', 3, '2022-05-26 15:36:47'),
+(2203, 'issue', 'form', 3, '2022-05-26 15:36:50'),
+(2204, 'requisition', 'view', 3, '2022-05-26 15:37:03'),
+(2205, 'opening_master', 'change_status', 3, '2022-05-26 15:37:06'),
+(2206, 'requisition', 'view', 3, '2022-05-26 15:37:07'),
+(2207, 'requisition', 'cancel_row', 3, '2022-05-26 15:37:08'),
+(2208, 'issue', 'form', 3, '2022-05-26 15:37:14'),
+(2209, 'issue', 'form', 3, '2022-05-26 15:37:24'),
+(2210, 'issue', 'add', 3, '2022-05-26 15:37:24'),
+(2211, 'issue', 'add', 3, '2022-05-26 15:38:30'),
+(2212, 'issue', 'all', 3, '2022-05-26 15:38:30'),
+(2213, 'issue', 'edit', 3, '2022-05-26 15:38:36'),
+(2214, 'issue', 'form', 3, '2022-05-26 15:38:46'),
+(2215, 'issue', 'form', 3, '2022-05-26 15:38:51'),
+(2216, 'issue', 'direct_add', 3, '2022-05-26 15:38:52'),
+(2217, 'requisition', 'getStaffOfDepartment', 3, '2022-05-26 15:39:12'),
+(2218, 'issue', 'getForm', 3, '2022-05-26 15:39:18'),
+(2219, 'issue', 'view', 3, '2022-05-26 15:39:39'),
+(2220, 'issue', 'issue_post', 3, '2022-05-26 15:39:43'),
+(2221, 'issue', 'view', 3, '2022-05-26 15:39:44'),
+(2222, 'opening_master', 'change_status', 3, '2022-05-26 15:39:45'),
+(2223, 'issue', 'view', 3, '2022-05-26 15:39:46'),
+(2224, 'issue', 'issue_post', 3, '2022-05-26 15:39:48'),
+(2225, 'issue', 'view', 3, '2022-05-26 15:39:48'),
+(2226, 'issue', 'view', 3, '2022-05-26 15:39:48'),
+(2227, 'issue', 'all', 3, '2022-05-26 15:44:38'),
+(2228, 'issue', 'form', 3, '2022-05-26 15:44:41'),
+(2229, 'issue', 'form', 3, '2022-05-26 15:44:46'),
+(2230, 'issue', 'direct_add', 3, '2022-05-26 15:44:46'),
+(2231, 'issue', 'direct_add', 3, '2022-05-26 15:52:48'),
+(2232, 'requisition', 'getStaffOfDepartment', 3, '2022-05-26 15:53:09'),
+(2233, 'issue', 'getForm', 3, '2022-05-26 15:53:13'),
+(2234, 'issue', 'getForm', 3, '2022-05-26 15:53:15'),
+(2235, 'issue', 'direct_add', 3, '2022-05-26 15:53:42'),
+(2236, 'issue', 'all', 3, '2022-05-26 15:53:42'),
+(2237, 'issue', 'direct_view', 3, '2022-05-26 15:53:46'),
+(2238, 'issue', 'issue_post', 3, '2022-05-26 15:53:49'),
+(2239, 'issue', 'direct_view', 3, '2022-05-26 15:53:49'),
+(2240, 'opening_master', 'change_status', 3, '2022-05-26 15:53:50'),
+(2241, 'issue', 'direct_view', 3, '2022-05-26 15:53:50'),
+(2242, 'issue', 'issue_post', 3, '2022-05-26 15:53:52'),
+(2243, 'issue', 'direct_view', 3, '2022-05-26 15:53:53'),
+(2244, 'issue', 'direct_view', 3, '2022-05-26 15:53:53'),
+(2245, 'issue_return', 'all', 3, '2022-05-26 15:56:59'),
+(2246, 'issue_return', 'form', 3, '2022-05-26 15:57:02'),
+(2247, 'issue_return', 'form', 3, '2022-05-26 15:57:08'),
+(2248, 'issue_return', 'add', 3, '2022-05-26 15:57:08'),
+(2249, 'issue_return', 'add', 3, '2022-05-26 16:38:01'),
+(2250, 'issue_return', 'all', 3, '2022-05-26 16:38:01'),
+(2251, 'issue_return', 'edit', 3, '2022-05-26 16:38:41'),
+(2252, 'issue_return', 'all', 3, '2022-05-26 16:38:47'),
+(2253, 'issue_return', 'view', 3, '2022-05-26 16:38:50'),
+(2254, 'opening_master', 'change_status', 3, '2022-05-26 16:39:02'),
+(2255, 'opening_master', 'change_status', 3, '2022-05-26 16:39:04'),
+(2256, 'opening_master', 'change_status', 3, '2022-05-26 16:39:05'),
+(2257, 'opening_master', 'change_status', 3, '2022-05-26 16:39:05'),
+(2258, 'opening_master', 'change_status', 3, '2022-05-26 16:39:05'),
+(2259, 'opening_master', 'change_status', 3, '2022-05-26 16:39:05'),
+(2260, 'opening_master', 'change_status', 3, '2022-05-26 16:39:05'),
+(2261, 'opening_master', 'change_status', 3, '2022-05-26 16:39:06'),
+(2262, 'opening_master', 'change_status', 3, '2022-05-26 16:39:06'),
+(2263, 'opening_master', 'change_status', 3, '2022-05-26 16:55:10'),
+(2264, 'issue_return', 'view', 3, '2022-05-26 16:58:32'),
+(2265, 'opening_master', 'change_status', 3, '2022-05-26 16:58:40'),
+(2266, 'issue_return', 'view', 3, '2022-05-26 16:58:40'),
+(2267, 'issue', 'all', 3, '2022-05-26 17:41:51'),
+(2268, 'issue', 'direct_view', 3, '2022-05-26 17:41:59'),
+(2269, 'sales_return', 'all', 3, '2022-05-26 17:43:20'),
+(2270, 'sales_return', 'form', 3, '2022-05-26 17:43:24'),
+(2271, 'issue_return', 'all', 3, '2022-05-26 17:43:30'),
+(2272, 'issue_return', 'view', 3, '2022-05-26 17:43:34'),
+(2273, 'issue_return', 'all', 3, '2022-05-26 17:46:30'),
+(2274, 'issue_return', 'form', 3, '2022-05-26 17:46:33'),
+(2275, 'issue_return', 'form', 3, '2022-05-26 17:46:36'),
+(2276, 'issue_return', 'add', 3, '2022-05-26 17:46:36'),
+(2277, 'issue_return', 'add', 3, '2022-05-26 17:47:37'),
+(2278, 'issue_return', 'all', 3, '2022-05-26 17:47:48'),
+(2279, 'issue_return', 'view', 3, '2022-05-26 17:47:50'),
+(2280, 'opening_master', 'form', 3, '2022-05-26 17:48:41'),
+(2281, 'issue', 'form', 3, '2022-05-26 17:48:51'),
+(2282, 'issue', 'form', 3, '2022-05-26 17:48:57'),
+(2283, 'issue', 'direct_add', 3, '2022-05-26 17:48:57'),
+(2284, 'issue_return', 'form', 3, '2022-05-26 17:53:22'),
+(2285, 'issue_return', 'form', 3, '2022-05-26 17:53:55'),
+(2286, 'issue_return', 'add', 3, '2022-05-26 17:53:56'),
+(2287, 'issue', 'form', 3, '2022-05-26 17:56:16'),
+(2288, 'issue', 'form', 3, '2022-05-26 17:56:21'),
+(2289, 'issue', 'direct_add', 3, '2022-05-26 17:56:21'),
+(2290, 'issue', 'direct_add', 3, '2022-05-26 17:58:26'),
+(2291, 'issue_return', 'form', 3, '2022-05-26 17:59:01'),
+(2292, 'issue_return', 'form', 3, '2022-05-26 17:59:26'),
+(2293, 'issue_return', 'add', 3, '2022-05-26 17:59:26'),
+(2294, 'issue_return', 'all', 3, '2022-05-26 17:59:43'),
+(2295, 'issue_return', 'view', 3, '2022-05-26 18:00:19'),
+(2296, 'issue_return', 'view', 3, '2022-05-26 18:00:43'),
+(2297, 'issue_return', 'form', 3, '2022-05-26 18:01:14'),
+(2298, 'issue_return', 'form', 3, '2022-05-26 18:01:17'),
+(2299, 'issue_return', 'add', 3, '2022-05-26 18:01:17'),
+(2300, 'issue_return', 'form', 3, '2022-05-26 18:03:21'),
+(2301, 'issue_return', 'form', 3, '2022-05-26 18:03:24'),
+(2302, 'issue_return', 'add', 3, '2022-05-26 18:03:24'),
+(2303, 'issue_return', 'view', 3, '2022-05-26 18:28:07'),
+(2304, 'requisition', 'cancel_row', 3, '2022-05-26 18:28:30'),
+(2305, 'issue_return', 'issue_return_post', 3, '2022-05-26 18:28:37'),
+(2306, 'issue_return', 'view', 3, '2022-05-26 18:28:37'),
+(2307, 'charge_parameter', 'all', 3, '2022-05-26 18:31:43'),
+(2308, 'charge_parameter', 'form', 3, '2022-05-26 18:31:46'),
+(2309, 'charge_parameter', 'form', 3, '2022-05-26 18:32:12'),
+(2310, 'charge_parameter', 'all', 3, '2022-05-26 18:32:13'),
+(2311, 'charge_parameter', 'all', 3, '2022-05-26 18:32:27'),
+(2312, 'charge_parameter', 'all', 3, '2022-05-26 18:32:51'),
+(2313, 'charge_parameter', 'form', 3, '2022-05-26 18:32:57'),
+(2314, 'charge_parameter', 'all', 3, '2022-05-26 18:33:10'),
+(2315, 'charge_parameter', 'all', 3, '2022-05-26 18:33:23'),
+(2316, 'charge_parameter', 'form', 3, '2022-05-26 18:34:04'),
+(2317, 'supplier', 'all', 3, '2022-05-26 18:34:09'),
+(2318, 'charge_parameter', 'all', 3, '2022-05-26 18:34:18'),
+(2319, 'charge_parameter', 'all', 3, '2022-05-26 18:35:08'),
+(2320, 'charge_parameter', 'all', 3, '2022-05-26 18:35:20'),
+(2321, 'charge_parameter', 'all', 3, '2022-05-26 18:35:36'),
+(2322, 'charge_parameter', 'all', 3, '2022-05-26 18:36:13'),
+(2323, 'charge_parameter', 'all', 3, '2022-05-26 18:36:24'),
+(2324, 'charge_parameter', 'all', 3, '2022-05-26 18:37:01'),
+(2325, 'charge_parameter', 'all', 3, '2022-05-26 18:37:22'),
+(2326, 'charge_parameter', 'all', 3, '2022-05-26 18:38:47'),
+(2327, 'charge_parameter', 'all', 3, '2022-05-26 18:39:03'),
+(2328, 'charge_parameter', 'all', 3, '2022-05-26 18:39:47'),
+(2329, 'charge_parameter', 'all', 3, '2022-05-26 18:40:18'),
+(2330, 'grn', 'all', 3, '2022-05-26 18:40:27'),
+(2331, 'grn', 'direct_add', 3, '2022-05-26 18:40:30'),
+(2332, 'grn', 'form', 3, '2022-05-26 18:40:44'),
+(2333, 'grn', 'direct_add', 3, '2022-05-26 18:40:44'),
+(2334, 'issue', 'all', 3, '2022-05-26 18:41:09'),
+(2335, 'issue', 'form', 3, '2022-05-26 18:41:09'),
+(2336, 'grn', 'getForm', 3, '2022-05-26 18:42:14'),
+(2337, 'grn', 'getForm', 3, '2022-05-26 18:42:16'),
+(2338, 'grn', 'getForm_charges', 3, '2022-05-26 18:49:52'),
+(2339, 'charge_parameter', 'all', 3, '2022-05-26 18:50:44'),
+(2340, 'charge_parameter', 'form', 3, '2022-05-26 18:50:47'),
+(2341, 'charge_parameter', 'form', 3, '2022-05-26 18:51:08'),
+(2342, 'charge_parameter', 'all', 3, '2022-05-26 18:51:09'),
+(2343, 'charge_parameter', 'form', 3, '2022-05-26 18:51:14'),
+(2344, 'charge_parameter', 'form', 3, '2022-05-26 18:51:20'),
+(2345, 'charge_parameter', 'all', 3, '2022-05-26 18:51:20'),
+(2346, 'grn', 'direct_add', 3, '2022-05-26 18:51:22'),
+(2347, 'charge_parameter', 'form', 3, '2022-05-26 18:51:29'),
+(2348, 'charge_parameter', 'form', 3, '2022-05-26 18:51:35'),
+(2349, 'charge_parameter', 'all', 3, '2022-05-26 18:51:35'),
+(2350, 'grn', 'direct_add', 3, '2022-05-26 18:51:41'),
+(2351, 'grn', 'getForm', 3, '2022-05-26 18:52:00'),
+(2352, 'grn', 'getForm', 3, '2022-05-26 18:52:02'),
+(2353, 'grn', 'getForm_charges', 3, '2022-05-26 18:53:02'),
+(2354, 'grn', 'getForm_charges', 3, '2022-05-26 18:53:20'),
+(2355, 'grn', 'getForm', 3, '2022-05-26 18:53:54'),
+(2356, 'grn', 'direct_add', 3, '2022-05-26 18:55:07'),
+(2357, 'grn', 'all', 3, '2022-05-26 18:55:08'),
+(2358, 'grn', 'view', 3, '2022-05-26 18:55:19'),
+(2359, 'grn', 'direct_add', 3, '2022-05-26 18:55:30'),
+(2360, 'charge_parameter', 'all', 3, '2022-05-26 18:55:37'),
+(2361, 'grn', 'direct_add', 3, '2022-05-26 18:55:43'),
+(2362, 'opening_master', 'change_status', 3, '2022-05-26 18:56:21'),
+(2363, 'grn', 'view', 3, '2022-05-26 18:56:21'),
+(2364, 'requisition', 'cancel_row', 3, '2022-05-26 18:56:23'),
+(2365, 'grn', 'view', 3, '2022-05-26 18:58:29'),
+(2366, 'requisition', 'cancel_row', 3, '2022-05-26 19:02:33'),
+(2367, 'grn', 'view', 3, '2022-05-26 19:25:15'),
+(2368, 'issue_return', 'all', 3, '2022-05-26 19:30:27'),
+(2369, 'issue_return', 'view', 3, '2022-05-26 19:30:32'),
+(2370, 'issue_return', 'view', 3, '2022-05-26 19:31:15'),
+(2371, 'issue_return', 'view', 3, '2022-05-26 19:32:09'),
+(2372, 'issue_return', 'issue_return_post', 3, '2022-05-26 19:32:12'),
+(2373, 'issue_return', 'view', 3, '2022-05-26 19:32:12'),
+(2374, 'issue_return', 'view', 3, '2022-05-26 19:32:57'),
+(2375, 'issue_return', 'view', 3, '2022-05-26 19:33:48'),
+(2376, 'issue_return', 'issue_return_post', 3, '2022-05-26 19:33:50'),
+(2377, 'issue', 'all', 3, '2022-05-26 19:33:56'),
+(2378, 'issue', 'direct_view', 3, '2022-05-26 19:33:59'),
+(2379, 'issue', 'issue_post', 3, '2022-05-26 19:34:01'),
+(2380, 'issue', 'direct_view', 3, '2022-05-26 19:34:02'),
+(2381, 'grn', 'all', 3, '2022-05-26 19:34:07'),
+(2382, 'grn', 'view', 3, '2022-05-26 19:34:12'),
+(2383, 'issue_return', 'all', 3, '2022-05-26 19:34:40'),
+(2384, 'issue_return', 'view', 3, '2022-05-26 19:34:46'),
+(2385, 'issue_return', 'issue_return_post', 3, '2022-05-26 19:34:49'),
+(2386, 'issue_return', 'all', 3, '2022-05-26 19:37:41'),
+(2387, 'issue_return', 'view', 3, '2022-05-26 19:37:44'),
+(2388, 'issue_return', 'issue_return_post', 3, '2022-05-26 19:37:48'),
+(2389, 'issue_return', 'view', 3, '2022-05-26 19:37:48'),
+(2390, 'issue_return', 'view', 3, '2022-05-26 19:37:50'),
+(2391, 'issue_return', 'view', 3, '2022-05-26 19:38:14'),
+(2392, 'issue_return', 'view', 3, '2022-05-26 19:38:27'),
+(2393, 'issue_return', 'issue_return_post', 3, '2022-05-26 19:38:30'),
+(2394, 'grn', 'direct_add', 3, '2022-05-26 19:41:27'),
+(2395, 'grn', 'form', 3, '2022-05-26 19:44:00'),
+(2396, 'grn', 'direct_add', 3, '2022-05-26 19:44:00'),
+(2397, 'grn', 'getForm', 3, '2022-05-26 19:44:07'),
+(2398, 'grn', 'view', 3, '2022-05-26 20:16:56'),
+(2399, 'grn', 'getForm', 3, '2022-05-26 20:17:27'),
+(2400, 'grn', 'direct_add', 3, '2022-05-26 20:17:56'),
+(2401, 'grn', 'all', 3, '2022-05-26 20:17:56'),
+(2402, 'grn', 'view', 3, '2022-05-26 20:18:03'),
+(2403, 'opening_master', 'change_status', 3, '2022-05-26 20:18:12'),
+(2404, 'grn', 'view', 3, '2022-05-26 20:18:12'),
+(2405, 'grn', 'direct_add', 3, '2022-05-26 20:19:15'),
+(2406, 'grn', 'getForm', 3, '2022-05-26 20:19:29'),
+(2407, 'grn', 'getForm', 3, '2022-05-26 20:19:31'),
+(2408, 'grn', 'direct_add', 3, '2022-05-26 20:19:57'),
+(2409, 'grn', 'all', 3, '2022-05-26 20:19:57'),
+(2410, 'grn', 'view', 3, '2022-05-26 20:20:03'),
+(2411, 'grn', 'view', 3, '2022-05-26 20:20:59'),
+(2412, 'grn', 'view', 3, '2022-05-26 20:21:15'),
+(2413, 'grn', 'all', 3, '2022-05-26 20:21:15'),
+(2414, 'grn', 'view', 3, '2022-05-26 20:21:23'),
+(2415, 'grn', 'grn_post', 3, '2022-05-26 20:21:32'),
+(2416, 'opening_master', 'change_status', 3, '2022-05-26 20:21:35'),
+(2417, 'grn', 'view', 3, '2022-05-26 20:21:35'),
+(2418, 'grn', 'grn_post', 3, '2022-05-26 20:21:38'),
+(2419, 'grn', 'view', 3, '2022-05-26 20:21:38'),
+(2420, 'grn', 'all', 3, '2022-05-26 20:22:22'),
+(2421, 'grn', 'view', 3, '2022-05-26 20:22:50'),
+(2422, 'grn', 'grn_post', 3, '2022-05-26 20:22:55'),
+(2423, 'grn', 'view', 3, '2022-05-26 20:22:55'),
+(2424, 'grn', 'all', 3, '2022-05-26 20:23:56'),
+(2425, 'grn_return', 'all', 3, '2022-05-26 20:24:03'),
+(2426, 'grn_return', 'form', 3, '2022-05-26 20:24:06'),
+(2427, 'charge_parameter', 'all', 3, '2022-05-26 20:25:44'),
+(2428, 'grn', 'all', 3, '2022-05-26 20:25:48'),
+(2429, 'grn', 'view', 3, '2022-05-26 20:25:52'),
+(2430, 'grn', 'grn_post', 3, '2022-05-26 20:26:05'),
+(2431, 'grn', 'view', 3, '2022-05-26 20:26:05'),
+(2432, 'grn', 'view', 3, '2022-05-26 20:26:43'),
+(2433, 'grn', 'grn_post', 3, '2022-05-26 20:26:45'),
+(2434, 'grn', 'all', 3, '2022-05-26 20:26:49'),
+(2435, 'grn', 'view', 3, '2022-05-26 20:26:53'),
+(2436, 'grn', 'grn_post', 3, '2022-05-26 20:26:58'),
+(2437, 'grn', 'view', 3, '2022-05-26 20:26:58'),
+(2438, 'grn', 'view', 3, '2022-05-26 20:27:00'),
+(2439, 'grn_return', 'all', 3, '2022-05-26 20:27:16'),
+(2440, 'grn_return', 'form', 3, '2022-05-26 20:27:19'),
+(2441, 'grn_return', 'form', 3, '2022-05-26 20:27:24'),
+(2442, 'grn_return', 'add', 3, '2022-05-26 20:27:24'),
+(2443, 'grn_return', 'add', 3, '2022-05-26 20:28:19'),
+(2444, 'grn_return', 'all', 3, '2022-05-26 20:28:19'),
+(2445, 'grn_return', 'view', 3, '2022-05-26 20:28:24'),
+(2446, 'grn_return', 'all', 3, '2022-05-26 20:28:29'),
+(2447, 'grn_return', 'all', 3, '2022-05-26 20:32:15'),
+(2448, 'grn_return', 'form', 3, '2022-05-26 20:32:20'),
+(2449, 'grn_return', 'form', 3, '2022-05-26 20:32:24'),
+(2450, 'grn_return', 'add', 3, '2022-05-26 20:32:24'),
+(2451, 'grn_return', 'add', 3, '2022-05-26 20:33:01'),
+(2452, 'grn_return', 'all', 3, '2022-05-26 20:33:02'),
+(2453, 'grn_return', 'view', 3, '2022-05-26 20:33:08'),
+(2454, 'grn_return', 'view', 3, '2022-05-26 20:33:09'),
+(2455, 'opening_master', 'change_status', 3, '2022-05-26 20:33:13'),
+(2456, 'grn_return', 'view', 3, '2022-05-26 20:33:13'),
+(2457, 'requisition', 'cancel_row', 3, '2022-05-26 20:33:15'),
+(2458, 'opening_master', 'change_status', 3, '2022-05-26 20:33:18'),
+(2459, 'grn_return', 'view', 3, '2022-05-26 20:33:19'),
+(2460, 'requisition', 'cancel_row', 3, '2022-05-26 20:33:20'),
+(2461, 'grn_return', 'all', 3, '2022-05-26 20:33:24'),
+(2462, 'grn_return', 'all', 3, '2022-05-26 20:33:47'),
+(2463, 'grn_return', 'view', 3, '2022-05-26 20:33:52'),
+(2464, 'dashboard', NULL, 3, '2022-05-27 02:47:45'),
+(2465, 'grn_return', 'all', 3, '2022-05-27 02:48:31'),
+(2466, 'grn_return', 'view', 3, '2022-05-27 02:48:36'),
+(2467, 'grn_return', 'form', 3, '2022-05-27 03:13:34'),
+(2468, 'grn_return', 'form', 3, '2022-05-27 03:13:38'),
+(2469, 'grn_return', 'add', 3, '2022-05-27 03:13:38'),
+(2470, 'grn_return', 'all', 3, '2022-05-27 03:23:08'),
+(2471, 'grn_return', 'view', 3, '2022-05-27 03:23:12'),
+(2472, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:23:16'),
+(2473, 'grn_return', 'view', 3, '2022-05-27 03:23:17'),
+(2474, 'grn_return', 'view', 3, '2022-05-27 03:24:23'),
+(2475, 'requisition', 'cancel_row', 3, '2022-05-27 03:26:17'),
+(2476, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:26:19');
 
 -- --------------------------------------------------------
 
@@ -5625,6 +4203,29 @@ INSERT INTO `user_role` (`id`, `name`, `status`, `created_by`, `created_on`, `up
 (3, 'test', '1', 1, '2022-01-28', 0, '0000-00-00', 'test'),
 (4, 'test test', '1', 1, '2022-01-28', 0, '0000-00-00', 'test test');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `year_end`
+--
+
+CREATE TABLE `year_end` (
+  `id` int(11) NOT NULL,
+  `fiscal_year` varchar(10) NOT NULL,
+  `item_code` varchar(25) NOT NULL,
+  `purchase_date` date NOT NULL,
+  `purchase_amt` decimal(11,2) NOT NULL,
+  `depreciated_amt` decimal(11,2) NOT NULL,
+  `book_value` decimal(11,2) NOT NULL,
+  `total_depreciated_amt` decimal(11,2) NOT NULL,
+  `remarks` varchar(150) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_on` datetime NOT NULL,
+  `updated_by` int(11) NOT NULL,
+  `status` enum('0','1','2') DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -5640,6 +4241,13 @@ ALTER TABLE `audit_log`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `charge_parameter`
+--
+ALTER TABLE `charge_parameter`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `charge_code` (`charge_code`);
 
 --
 -- Indexes for table `client_infos`
@@ -5673,7 +4281,7 @@ ALTER TABLE `department_para`
 --
 ALTER TABLE `depreciation_para`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_item_code_itm_infos_depn_para` (`item_code`) USING BTREE;
+  ADD KEY `fk_fiscal_yr_deprec_para_fiscal_yr` (`fiscal_year`);
 
 --
 -- Indexes for table `designation_para`
@@ -5702,6 +4310,13 @@ ALTER TABLE `gate_pass`
 ALTER TABLE `gate_pass_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_item_code_itm_infos_gp_dtls` (`gate_pass_no`);
+
+--
+-- Indexes for table `grn_charges`
+--
+ALTER TABLE `grn_charges`
+  ADD KEY `fk_grn_no_grn_chrgs_grn_mstr` (`grn_no`),
+  ADD KEY `fk_charge_code_grn_chrgs_chrg_para` (`charge_code`);
 
 --
 -- Indexes for table `grn_details`
@@ -5822,6 +4437,22 @@ ALTER TABLE `item_insurance`
   ADD KEY `fk_item_code_itm_infos_itm_insrnc` (`item_code`);
 
 --
+-- Indexes for table `item_scrap`
+--
+ALTER TABLE `item_scrap`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `scrap_code` (`scrap_code`);
+
+--
+-- Indexes for table `item_scrap_detail`
+--
+ALTER TABLE `item_scrap_detail`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_scrap_code_itm_scrap_dtls_itm_scrap` (`scrap_code`),
+  ADD KEY `fk_item_code_itm_scrap_dtls_item_infos` (`item_code`),
+  ADD KEY `fk_location_id_itm_scrap_dtl_location_para` (`location_id`);
+
+--
 -- Indexes for table `item_warranty`
 --
 ALTER TABLE `item_warranty`
@@ -5839,7 +4470,16 @@ ALTER TABLE `location_para`
 -- Indexes for table `location_transfer`
 --
 ALTER TABLE `location_transfer`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `transfer_code` (`transfer_code`);
+
+--
+-- Indexes for table `location_transfer_detail`
+--
+ALTER TABLE `location_transfer_detail`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_item_code_loc_trans_dtls_itm_infos` (`item_code`),
+  ADD KEY `transfer_code` (`transfer_code`);
 
 --
 -- Indexes for table `mrn_details`
@@ -5847,7 +4487,7 @@ ALTER TABLE `location_transfer`
 ALTER TABLE `mrn_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_mrn_no_mrn_mstr_mrn_dtl` (`mrn_no`),
-  ADD KEY `fk_item_code_itminfo_mrndtls` (`item_code`);
+  ADD KEY `fk_item_code_mrn_dtls_item_infos` (`item_code`);
 
 --
 -- Indexes for table `mrn_master`
@@ -5863,15 +4503,15 @@ ALTER TABLE `opening_detail`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_itemcode_itin_opdt` (`item_code`),
   ADD KEY `fk_opnmasterid_opmt_opdt` (`opening_master_id`),
-  ADD KEY `fk_loc_id_loc_para_opn_dtl` (`location_id`);
+  ADD KEY `fk_supplier_id_opnin_dtl_supp_info` (`supplier_id`),
+  ADD KEY `fk_location_id_opnin_dtl_loc_para` (`location_id`);
 
 --
 -- Indexes for table `opening_master`
 --
 ALTER TABLE `opening_master`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_fsyr_opmt_fspr` (`fiscal_year`),
-  ADD KEY `opening_code` (`opening_code`);
+  ADD KEY `fk_fsyr_opmt_fspr` (`fiscal_year`);
 
 --
 -- Indexes for table `purchase_order`
@@ -5881,7 +4521,9 @@ ALTER TABLE `purchase_order`
   ADD UNIQUE KEY `purchase_order_no` (`purchase_order_no`),
   ADD KEY `fk_purchase_request_no_pur_rqst_pur_rqst_ord` (`purchase_request_no`),
   ADD KEY `fk_department_id_dprtmnt_para_pur_rqst` (`department_id`),
-  ADD KEY `fk_staff_id_staff_info_pur_req` (`staff_id`);
+  ADD KEY `fk_staff_id_staff_info_pur_req` (`staff_id`),
+  ADD KEY `fk_mrn_no_pur_ordr_mrn_master` (`mrn_no`),
+  ADD KEY `fk_requisition_no_por_ordr_requisi_mstr` (`requisition_no`);
 
 --
 -- Indexes for table `purchase_order_details`
@@ -5898,7 +4540,9 @@ ALTER TABLE `purchase_request`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `purchase_request_no` (`purchase_request_no`),
   ADD KEY `fk_department_id_dprtmnt_para_pur_rqst` (`department_id`),
-  ADD KEY `fk_staff_id_staff_info_pur_req` (`staff_id`);
+  ADD KEY `fk_staff_id_staff_info_pur_req` (`staff_id`),
+  ADD KEY `fk_requisition_no_pur_rqst_requi_mastr` (`requisition_no`),
+  ADD KEY `fk_mrn_no_pur_rqst_mrn_master` (`mrn_no`);
 
 --
 -- Indexes for table `purchase_request_details`
@@ -5922,7 +4566,8 @@ ALTER TABLE `requisition_details`
 ALTER TABLE `requisition_master`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `requisition_no` (`requisition_no`),
-  ADD KEY `fk_department_id_dprtmnt_para_rqust_mstr` (`department_id`);
+  ADD KEY `fk_staff_id_requi_mstr_staff_infos` (`staff_id`),
+  ADD KEY `fk_department_id_requi_mstrdprtmnt_para` (`department_id`);
 
 --
 -- Indexes for table `sales_details`
@@ -5946,7 +4591,8 @@ ALTER TABLE `sales_master`
 --
 ALTER TABLE `sales_return`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `s_return_no` (`s_return_no`);
+  ADD UNIQUE KEY `s_return_no` (`s_return_no`),
+  ADD KEY `fk_sale_no_sales_rtrn_sales_mstr` (`sale_no`);
 
 --
 -- Indexes for table `sales_return_details`
@@ -5954,8 +4600,7 @@ ALTER TABLE `sales_return`
 ALTER TABLE `sales_return_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_s_return_no_sales_rtn_srtn_dtls` (`s_return_no`),
-  ADD KEY `fk_item_code_itm_inf_srtn_dtls` (`item_code`),
-  ADD KEY `fk_sales_no_sales_mst_sales_rtn_dtls` (`sale_no`);
+  ADD KEY `fk_item_code_itm_inf_srtn_dtls` (`item_code`);
 
 --
 -- Indexes for table `site_settings`
@@ -6006,12 +4651,6 @@ ALTER TABLE `supplier_infos`
   ADD KEY `fk_country_code_inv_ctry` (`country_code`);
 
 --
--- Indexes for table `temp_data`
---
-ALTER TABLE `temp_data`
-  ADD PRIMARY KEY (`temp_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -6035,6 +4674,14 @@ ALTER TABLE `user_role`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `year_end`
+--
+ALTER TABLE `year_end`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_fiscal_yr_year_end_fiscal_yr` (`fiscal_year`),
+  ADD KEY `fk_item_code_year_end_item-infos` (`item_code`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -6042,13 +4689,19 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `charge_parameter`
+--
+ALTER TABLE `charge_parameter`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `client_infos`
@@ -6078,7 +4731,7 @@ ALTER TABLE `department_para`
 -- AUTO_INCREMENT for table `depreciation_para`
 --
 ALTER TABLE `depreciation_para`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `designation_para`
@@ -6108,25 +4761,25 @@ ALTER TABLE `gate_pass_details`
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `grn_master`
 --
 ALTER TABLE `grn_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `grn_return`
 --
 ALTER TABLE `grn_return`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `grn_return_details`
 --
 ALTER TABLE `grn_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `invoice_details`
@@ -6144,25 +4797,25 @@ ALTER TABLE `invoice_master`
 -- AUTO_INCREMENT for table `issue_return_details`
 --
 ALTER TABLE `issue_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `issue_return_master`
 --
 ALTER TABLE `issue_return_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_details`
 --
 ALTER TABLE `issue_slip_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_master`
 --
 ALTER TABLE `issue_slip_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `item_accessories`
@@ -6180,12 +4833,24 @@ ALTER TABLE `item_amc`
 -- AUTO_INCREMENT for table `item_infos`
 --
 ALTER TABLE `item_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `item_insurance`
 --
 ALTER TABLE `item_insurance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `item_scrap`
+--
+ALTER TABLE `item_scrap`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `item_scrap_detail`
+--
+ALTER TABLE `item_scrap_detail`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -6201,28 +4866,34 @@ ALTER TABLE `location_para`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `location_transfer_detail`
+--
+ALTER TABLE `location_transfer_detail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `mrn_details`
 --
 ALTER TABLE `mrn_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mrn_master`
 --
 ALTER TABLE `mrn_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `opening_detail`
 --
 ALTER TABLE `opening_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `opening_master`
 --
 ALTER TABLE `opening_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `purchase_order`
@@ -6240,19 +4911,19 @@ ALTER TABLE `purchase_order_details`
 -- AUTO_INCREMENT for table `purchase_request`
 --
 ALTER TABLE `purchase_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_request_details`
 --
 ALTER TABLE `purchase_request_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `requisition_details`
 --
 ALTER TABLE `requisition_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `requisition_master`
@@ -6294,19 +4965,19 @@ ALTER TABLE `site_settings`
 -- AUTO_INCREMENT for table `staff_desig_depart`
 --
 ALTER TABLE `staff_desig_depart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `staff_infos`
 --
 ALTER TABLE `staff_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `stock_ledger`
 --
 ALTER TABLE `stock_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `supplier_cat`
@@ -6318,13 +4989,7 @@ ALTER TABLE `supplier_cat`
 -- AUTO_INCREMENT for table `supplier_infos`
 --
 ALTER TABLE `supplier_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `temp_data`
---
-ALTER TABLE `temp_data`
-  MODIFY `temp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -6336,13 +5001,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4091;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2477;
 
 --
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `year_end`
+--
+ALTER TABLE `year_end`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -6353,6 +5024,19 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `client_infos`
   ADD CONSTRAINT `fk_country_code_cntry_client` FOREIGN KEY (`country_code`) REFERENCES `country_para` (`country_code`);
+
+--
+-- Constraints for table `depreciation_para`
+--
+ALTER TABLE `depreciation_para`
+  ADD CONSTRAINT `fk_fiscal_yr_deprec_para_fiscal_yr` FOREIGN KEY (`fiscal_year`) REFERENCES `fiscal_year_para` (`fiscal_year`);
+
+--
+-- Constraints for table `grn_charges`
+--
+ALTER TABLE `grn_charges`
+  ADD CONSTRAINT `fk_charge_code_grn_chrgs_chrg_para` FOREIGN KEY (`charge_code`) REFERENCES `charge_parameter` (`charge_code`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_grn_no_grn_chrgs_grn_mstr` FOREIGN KEY (`grn_no`) REFERENCES `grn_master` (`grn_no`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `grn_master`
@@ -6418,17 +5102,41 @@ ALTER TABLE `item_infos`
   ADD CONSTRAINT `fk_loc_id_loc_para_itm_infos` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`);
 
 --
+-- Constraints for table `item_scrap_detail`
+--
+ALTER TABLE `item_scrap_detail`
+  ADD CONSTRAINT `fk_item_code_itm_scrap_dtls_item_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
+  ADD CONSTRAINT `fk_location_id_itm_scrap_dtl_location_para` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`),
+  ADD CONSTRAINT `fk_scrap_code_itm_scrap_dtls_itm_scrap` FOREIGN KEY (`scrap_code`) REFERENCES `item_scrap` (`scrap_code`);
+
+--
+-- Constraints for table `location_transfer_detail`
+--
+ALTER TABLE `location_transfer_detail`
+  ADD CONSTRAINT `fk_item_code_loc_trans_dtls_itm_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
+  ADD CONSTRAINT `location_transfer_detail_ibfk_1` FOREIGN KEY (`transfer_code`) REFERENCES `location_transfer` (`transfer_code`);
+
+--
 -- Constraints for table `mrn_details`
 --
 ALTER TABLE `mrn_details`
-  ADD CONSTRAINT `fk_item_code_itminfo_mrndtls` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
+  ADD CONSTRAINT `fk_item_code_mrn_dtls_item_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
+
+--
+-- Constraints for table `opening_detail`
+--
+ALTER TABLE `opening_detail`
+  ADD CONSTRAINT `fk_location_id_opnin_dtl_loc_para` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`),
+  ADD CONSTRAINT `fk_supplier_id_opnin_dtl_supp_info` FOREIGN KEY (`supplier_id`) REFERENCES `supplier_infos` (`id`);
 
 --
 -- Constraints for table `purchase_order`
 --
 ALTER TABLE `purchase_order`
   ADD CONSTRAINT `fk_department_id_dprtmnt_para_pur_rqst` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
+  ADD CONSTRAINT `fk_mrn_no_pur_ordr_mrn_master` FOREIGN KEY (`mrn_no`) REFERENCES `mrn_master` (`mrn_no`),
   ADD CONSTRAINT `fk_purchase_request_no_pur_rqst_pur_rqst_ord` FOREIGN KEY (`purchase_request_no`) REFERENCES `purchase_request` (`purchase_request_no`),
+  ADD CONSTRAINT `fk_requisition_no_por_ordr_requisi_mstr` FOREIGN KEY (`requisition_no`) REFERENCES `requisition_master` (`requisition_no`),
   ADD CONSTRAINT `fk_staff_id_staff_info_pur_req` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
 
 --
@@ -6437,6 +5145,28 @@ ALTER TABLE `purchase_order`
 ALTER TABLE `purchase_order_details`
   ADD CONSTRAINT `fk_item_code_itm_infos_pur_req_dtls` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
   ADD CONSTRAINT `fk_purchase_order_no_pur_rqst_ord_pur_rqst_ord_dtl` FOREIGN KEY (`purchase_order_no`) REFERENCES `purchase_order` (`purchase_order_no`);
+
+--
+-- Constraints for table `purchase_request`
+--
+ALTER TABLE `purchase_request`
+  ADD CONSTRAINT `fk_mrn_no_pur_rqst_mrn_master` FOREIGN KEY (`mrn_no`) REFERENCES `mrn_details` (`mrn_no`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_requisition_no_pur_rqst_requi_mastr` FOREIGN KEY (`requisition_no`) REFERENCES `requisition_master` (`requisition_no`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_staff_id_usr_pur_rqst` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `requisition_master`
+--
+ALTER TABLE `requisition_master`
+  ADD CONSTRAINT `fk_department_id_requi_mstrdprtmnt_para` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
+  ADD CONSTRAINT `fk_staff_id_requi_mstr_staff_infos` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
+
+--
+-- Constraints for table `year_end`
+--
+ALTER TABLE `year_end`
+  ADD CONSTRAINT `fk_fiscal_yr_year_end_fiscal_yr` FOREIGN KEY (`fiscal_year`) REFERENCES `fiscal_year_para` (`fiscal_year`),
+  ADD CONSTRAINT `fk_item_code_year_end_item-infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

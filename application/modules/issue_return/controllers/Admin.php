@@ -760,40 +760,41 @@ class Admin extends Auth_controller
 				if ($table || $row_id) {
 					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
 					if (isset($detail->approved_by) && $detail->approved_by != '') {
-						if (isset($detail->posted_by) && $detail->posted_by != '') {
+						if (isset($detail->posted_tag) && $detail->posted_tag == '1') {
 							$response = array(
 								'status' => 'error',
 								'status_code' => 300,
 								'status_message' => 'Already Posted !!',
 							);
 						} else {
-							$opening_details = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
+							$childs = $this->crud_model->get_where('issue_return_details', array('issue_return_no' => $detail->issue_return_no));
 							// echo "<pre>";
-							// var_dump($opening_details);
+							// var_dump($childs);
 							// exit;
-							if (isset($opening_details)) {
-								foreach ($opening_details as $key => $value) {
+							if (!empty($childs)) {
+								foreach ($childs as $key => $value) {
+									$iss_tran_detail_frm_stock_ledger = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $value->item_code, 'transactioncode' => $detail->issue_no));
 									$data = array(
 										'item_code' =>  $value->item_code,
-										'transaction_date' => $detail->opening_date,
-										'transaction_type' => 'OPN',
-										'in_qty' => $value->qty,
+										'transaction_date' => $detail->return_date,
+										'transaction_type' => 'ISR',
+										'in_qty' => $value->returned_qty,
 										// 'out_qty' => 0,
-										'rem_qty' => $value->qty,
-										'in_unit_price' => $value->unit_price,
-										'in_total_price' => ($value->qty * $value->unit_price),
-										'in_actual_unit_price' => $value->actual_unit_price,
-										'in_actual_total_price' => ($value->qty * $value->actual_unit_price),
+										'rem_qty' => $value->returned_qty,
+										'in_unit_price' => $iss_tran_detail_frm_stock_ledger->out_unit_price,
+										'in_total_price' => ($value->returned_qty * $iss_tran_detail_frm_stock_ledger->out_unit_price),
+										'in_actual_unit_price' => $iss_tran_detail_frm_stock_ledger->out_actual_unit_price,
+										'in_actual_total_price' => ($value->returned_qty * $iss_tran_detail_frm_stock_ledger->out_actual_unit_price),
 										'out_unit_price' => 0,
 										'out_total_price' => 0,
 										'out_actual_unit_price' => 0,
 										'out_actual_total_price' => 0,
-										'location_id' => $value->location_id,
-										'batch_no' => $value->batch_no,
-										'vendor_id' => $value->supplier_id,
+										// 'location_id' => $value->location_id,
+										// 'batch_no' => $value->batch_no,
+										// 'vendor_id' => $value->supplier_id,
 										// 'client_id' => '???',
-										'remarks' => 'posted from opening',
-										'transactioncode' => $detail->opening_code,
+										'remarks' => 'posted from issue return',
+										'transactioncode' => $detail->issue_return_no,
 										'created_on' => date('Y-m-d'),
 										'created_by' => $this->current_user->id,
 										// 'updated_on' => '???',
@@ -817,10 +818,10 @@ class Admin extends Auth_controller
 								}
 
 								$update['posted_tag'] = '1';
-								$update['posted_by'] = $this->current_user->id;
+								// $update['posted_by'] = $this->current_user->id;
 								$update['posted_on'] = date('Y-m-d');
 
-								$this->crud_model->update('opening_master', $update, array('id' => $detail->id));
+								$this->crud_model->update('issue_return_master', $update, array('id' => $detail->id));
 
 								$response = array(
 									'status' => 'success',
@@ -831,7 +832,7 @@ class Admin extends Auth_controller
 								$response = array(
 									'status' => 'error',
 									'status_code' => 300,
-									'status_message' => 'No Details Available !!!',
+									'status_message' => 'No Childs Available !!!',
 								);
 							}
 						}
