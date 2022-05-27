@@ -170,14 +170,20 @@ $total = 0;
                                                     #
                                                 </label>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-2">
                                                 <label>Product</label>
                                             </div>
                                             <div class="col-md-1">
                                                 <label>Quantity</label>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-1">
                                                 <label>Unit Price</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Batch No.</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Location</label>
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Total Price</label>
@@ -197,15 +203,26 @@ $total = 0;
                                                         <div class="col-md-1">
                                                             <?php echo ($key + 1) . '.'; ?>
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-2">
                                                             <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                                                             <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                                                         </div>
                                                         <div class="col-md-1">
                                                             <input type="number" name="qty[]" min="1" class="form-control qty_grn" id="qty_grn-<?php echo  $key + 1 ?>" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-1">
                                                             <input type="number" name="unit_price[]" min="1" class="form-control unit_price_grn" id="unit_price_grn-<?php echo $key + 1; ?>" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <select name="location_id[]" class="form-control" id="location_id" required>
+                                                                <option value>Select Location</option>
+                                                                <?php foreach ($locations as $key_l => $value_l) { ?>
+                                                                    <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                                                                <?php } ?>
+                                                            </select>
                                                         </div>
                                                         <div class="col-md-2">
                                                             <input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>

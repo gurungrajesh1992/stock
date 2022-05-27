@@ -1219,6 +1219,9 @@
     $(document).off('change', '#item_opening').on('change', '#item_opening', function(e) {
       e.preventDefault();
       var val = $(this).val();
+      var type = $('#item_type').val();
+      // alert(type);
+      // return false;
       // alert(val);return false;
       var already_items = $('input[name^=item_code]').map(function(idx, elem) {
         return $(elem).val();
@@ -1245,6 +1248,7 @@
         dataType: "json",
         data: {
           "val": val,
+          "type": type
         },
         success: function(resp) {
           // console.log(resp.data);return false;
@@ -1252,6 +1256,46 @@
           // console.log(resp.status);return false;
           if (resp.status == "success") {
             $('#items_opening').append(resp.data);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+          }
+        }
+      });
+    });
+
+    // onchange item type get items and heading a/c to type
+
+    $(document).off('change', '#item_type').on('change', '#item_type', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);
+      // return false;
+      // alert(val);return false; 
+      $.ajax({
+        url: '<?php echo base_url('opening_master/admin/getItemsAndHeadings'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items_opening').html(resp.html);
+            $('#item_opening').html(resp.option);
           } else {
             Toastify({
 

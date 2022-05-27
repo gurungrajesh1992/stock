@@ -109,6 +109,7 @@ class Admin extends Auth_controller
 					'fiscal_year' => $this->input->post('fiscal_year'),
 					'opening_date' => $this->input->post('opening_date'),
 					'remarks' => $this->input->post('remark'),
+					'type' => $this->input->post('type'),
 
 				);
 
@@ -221,7 +222,21 @@ class Admin extends Auth_controller
 		}
 		$data['fiscals'] = $this->crud_model->get_where('fiscal_year_para', array('status' => '1'));
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
-		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
+		if (isset($detail->type)) {
+			// var_dump($detail->type);
+			// exit;
+			if ($detail->type == 'Inventory') {
+				$type = 'I';
+			} else {
+				$type = 'A';
+			}
+			$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1', 'item_type' => $type));
+		} else {
+			// echo "down";
+			// exit;
+			$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1', 'item_type' => 'A'));
+		}
+
 		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['title'] = 'Add/Edit ' . $this->title;
 		$data['page'] = 'form';
@@ -271,55 +286,58 @@ class Admin extends Auth_controller
 				// echo "here";exit;
 				// $check = $this->load->view('listall/image_form');
 				$val = $this->input->post('val');
+				$type = $this->input->post('type');
 				if ($val) {
 					// var_dump($val);
 					// exit;
-					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
-					$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
-					$suppliers = $this->crud_model->get_where_order_by('supplier_infos', array('status' => '1'), 'id', 'DESC');
-					$html = '';
-					if ($item_detail) {
-						$html .= '
+					if ($type) {
+						if ($type == 'Assets') {
+							$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+							$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
+							$suppliers = $this->crud_model->get_where_order_by('supplier_infos', array('status' => '1'), 'id', 'DESC');
+							$html = '';
+							if ($item_detail) {
+								$html .= '
 						<div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-2">
 								<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 								<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
                             </div>
+							<div class="col-md-1">
+								<input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="' . date('Y-m-d') . '" required>
+							</div>
                             <div class="col-md-1">
-                              <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="1" required>
+                              <input type="number" name="qty[]" min="1" max="1" class="form-control" placeholder="Quantity" value="1" required>
                             </div>
                             <div class="col-md-1">
                               <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="0" required>
                             </div>
 							<div class="col-md-1">
                               <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="0" required>
-                            </div>
+                            </div> 
 							<div class="col-md-1">
-								<input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="0" required>
-							</div>
-							<div class="col-md-1">
-								<input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="0" required>
-							</div>
-							<div class="col-md-1">
-								<input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="' . date('Y-m-d') . '" required>
-							</div>
+								<textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch Number"></textarea>
+								</div>
 							<div class="col-md-1">
 							<select name="supplier_id[]" class="form-control" id="supplier_id" required>';
-						foreach ($suppliers as $key_s => $value_s) {
-							$html   .=   '<option value="' . $value_s->id . '" >' . $value_s->supplier_name . '</option>';
-						}
-						$html   .= '</select>
+								foreach ($suppliers as $key_s => $value_s) {
+									$html   .=   '<option value="' . $value_s->id . '" >' . $value_s->supplier_name . '</option>';
+								}
+								$html   .= '</select>
 							</div>
 								<div class="col-md-1">
 								<select name="location_id[]" class="form-control" id="location_id" required>';
-						foreach ($locations as $key => $value) {
-							$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
-						}
-						$html	.= '</select>
+								foreach ($locations as $key => $value) {
+									$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
+								}
+								$html	.= '</select>
 								</div>
 								<div class="col-md-1">
-								<textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch Number"></textarea>
+									<input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="0" required>
 								</div>
+								<div class="col-md-1">
+									<input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="0" required>
+								</div>  
 								<div class="col-md-1">
 									<div class="rmv">
 										<span class="rmv_itm">X</span>
@@ -327,19 +345,87 @@ class Admin extends Auth_controller
 								</div>
 							</div> 
 							';
-					}
-					if ($html) {
-						$response = array(
-							'status' => 'success',
-							'status_code' => 200,
-							'status_message' => 'Successfully retrived',
-							'data' => $html,
-						);
+							}
+							if ($html) {
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully retrived',
+									'data' => $html,
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'Unable To Get Form',
+								);
+							}
+						} else {
+							$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
+							$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
+							$suppliers = $this->crud_model->get_where_order_by('supplier_infos', array('status' => '1'), 'id', 'DESC');
+							$html = '';
+							if ($item_detail) {
+								$html .= '
+								<div class="row" style="margin-bottom: 15px;">
+									<div class="col-md-2">
+										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
+										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
+									</div>
+									<div class="col-md-1">
+									<input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="1" required>
+									</div>
+									<div class="col-md-1">
+									<input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="0" required>
+									</div>
+									<div class="col-md-1">
+									<input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="0" required>
+									</div>
+									<div class="col-md-2">
+										<textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch Number"></textarea>
+									</div>
+									<div class="col-md-2">
+									<select name="supplier_id[]" class="form-control" id="supplier_id" required>';
+								foreach ($suppliers as $key_s => $value_s) {
+									$html   .=   '<option value="' . $value_s->id . '" >' . $value_s->supplier_name . '</option>';
+								}
+								$html   .= '</select>
+									</div>
+										<div class="col-md-2">
+										<select name="location_id[]" class="form-control" id="location_id" required>';
+								foreach ($locations as $key => $value) {
+									$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
+								}
+								$html	.= '</select>
+										</div> 
+										<div class="col-md-1">
+											<div class="rmv">
+												<span class="rmv_itm">X</span>
+											</div>
+										</div>
+									</div> 
+									';
+							}
+							if ($html) {
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully retrived',
+									'data' => $html,
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'Unable To Get Form',
+								);
+							}
+						}
 					} else {
 						$response = array(
 							'status' => 'error',
 							'status_code' => 300,
-							'status_message' => 'Unable To Get Form',
+							'status_message' => 'Please Select Type First',
 						);
 					}
 				} else {
@@ -517,6 +603,126 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'table and row invalid !!!',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function getItemsAndHeadings()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				//access ok
+				// echo "here";exit;
+				// $check = $this->load->view('listall/image_form');
+				$val = $this->input->post('val');
+				if ($val) {
+					$html = '';
+					$option = '';
+					if ($val == 'Assets') {
+						$items = $this->crud_model->get_where('item_infos', array('status' => '1', 'item_type' => 'A'));
+						if ($items) {
+							$option .= '<option value>Select item</option>';
+							foreach ($items as $key => $value) {
+								$option .= '<option value="' . $value->item_code . '">' . $value->item_name . '</option>';
+							}
+						} else {
+							$option = '<option value>Select item</option>';
+						}
+						$html = '<div class="row">
+									<div class="col-md-2">
+									<label>Product</label>
+									</div>
+									<div class="col-md-1">
+									<label>Purchase Date</label>
+									</div>
+									<div class="col-md-1">
+									<label>Quantity</label>
+									</div>
+									<div class="col-md-1">
+									<label>Unit Price</label>
+									</div>
+									<div class="col-md-1">
+									<label>Actual Unit Price</label>
+									</div> 
+									<div class="col-md-1">
+									<label>Batch No</label>
+									</div>
+									<div class="col-md-1">
+									<label>Supplier</label>
+									</div>
+									<div class="col-md-1">
+									<label>Location</label>
+									</div> 
+									<div class="col-md-1">
+									<label>Depreciated Amount</label>
+									</div>
+									<div class="col-md-1">
+									<label>Book Value</label>
+									</div> 
+									<div class="col-md-1">
+
+									</div>
+								</div>';
+					} else {
+						$items = $this->crud_model->get_where('item_infos', array('status' => '1', 'item_type' => 'I'));
+						if ($items) {
+							$option .= '<option value>Select item</option>';
+							foreach ($items as $key => $value) {
+								$option .= '<option value="' . $value->item_code . '">' . $value->item_name . '</option>';
+							}
+						} else {
+							$option = '<option value>Select item</option>';
+						}
+						$html = '<div class="row">
+									<div class="col-md-2">
+									<label>Product</label>
+									</div>
+									<div class="col-md-1">
+									<label>Quantity</label>
+									</div>
+									<div class="col-md-1">
+									<label>Unit Price</label>
+									</div>
+									<div class="col-md-1">
+									<label>Actual Unit Price</label>
+									</div>
+									<div class="col-md-2">
+									<label>Batch No</label>
+									</div>
+									<div class="col-md-2">
+									<label>Supplier</label>
+									</div>
+									<div class="col-md-2">
+									<label>Location</label>
+									</div> 
+									<div class="col-md-1">
+
+									</div>
+								</div>';
+					}
+					$response = array(
+						'status' => 'success',
+						'status_code' => 200,
+						'status_message' => 'Successfully retrived',
+						'html' => $html,
+						'option' => $option,
+					);
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'Please Select Type First',
 					);
 				}
 			}

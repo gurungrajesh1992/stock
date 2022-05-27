@@ -20,7 +20,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Select Fiscal Year<span class="req">*</span></label>
-                <select name="fiscal_year" class="form-control selct2" id="fiscal_year">
+                <select name="fiscal_year" class="form-control selct2" id="fiscal_year" required>
                   <option value>Select Fiscal Year</option>
                   <?php foreach ($fiscals as $key => $value) { ?>
                     <option value="<?php echo $value->fiscal_year; ?>" <?php echo  set_select('fiscal_year', $value->fiscal_year, (isset($detail->fiscal_year) && $detail->fiscal_year == $value->fiscal_year) ? TRUE : ''); ?>><?php echo $value->fiscal_year; ?></option>
@@ -34,6 +34,16 @@
                 <label>Opening Date<span class="req">*</span></label>
                 <input type="date" name="opening_date" class="form-control" id="opening_date" placeholder="Opening Date" value="<?php echo set_value('opening_date', (((isset($detail->opening_date)) && $detail->opening_date != '') ? $detail->opening_date : '')); ?>">
                 <?php echo form_error('opening_date', '<div class="error_message">', '</div>'); ?>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Select Type <span class="req">*</span></label>
+                <select name="type" class="form-control selct2" id="item_type">
+                  <option value="Assets" <?php echo  set_select('type', 'Assets', (isset($detail->type) && $detail->type == 'Assets') ? TRUE : ''); ?>>Assets</option>
+                  <option value="Inventory" <?php echo  set_select('type', 'Inventory', (isset($detail->type) && $detail->type == 'Inventory') ? TRUE : ''); ?>>Inventory</option>
+                </select>
               </div>
             </div>
 
@@ -74,97 +84,176 @@
           <div class="row">
             <div class="col-md-12">
               <div class="req_item" id="items_opening">
-                <div class="row">
-                  <div class="col-md-2">
-                    <label>Product</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Quantity</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Unit Price</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Actual Unit Price</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Depreciated Amount</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Book Value</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Purchase Date</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Supplier</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Location</label>
-                  </div>
-                  <div class="col-md-1">
-                    <label>Batch No</label>
-                  </div>
-                  <div class="col-md-1">
+                <?php if ((isset($detail->type)) && $detail->type == 'Inventory') { ?>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>Product</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Quantity</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Unit Price</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Actual Unit Price</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Batch No</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Supplier</label>
+                    </div>
+                    <div class="col-md-2">
+                      <label>Location</label>
+                    </div>
+                    <div class="col-md-1">
 
+                    </div>
                   </div>
-                </div>
-                <?php
-                if (isset($detail->id)) {
-                  $childs = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
-                  if ($childs) {
-                    foreach ($childs as $key => $value) {
-                      $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
-                ?>
-                      <div class="row" style="margin-bottom: 15px;">
-                        <div class=" col-md-2">
-                          <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
-                          <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
-                        </div>
-                        <div class="col-md-1">
-                          <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="<?php echo $value->actual_unit_price; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="<?php echo $value->depreciated_amt; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="<?php echo $value->book_value; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="<?php echo $value->purchase_date; ?>" required>
-                        </div>
-                        <div class="col-md-1">
-                          <select name="supplier_id[]" class="form-control" id="supplier_id" required>
-                            <option value>Select Location</option>
-                            <?php foreach ($suppliers as $key_s => $value_s) { ?>
-                              <option value="<?php echo $value_s->id; ?>" <?php echo (isset($value->supplier_id) && $value->supplier_id == $value_s->id) ? 'selected' : ''; ?>><?php echo $value_s->supplier_name; ?></option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                        <div class="col-md-1">
-                          <select name="location_id[]" class="form-control" id="location_id" required>
-                            <option value>Select Location</option>
-                            <?php foreach ($locations as $key_l => $value_l) { ?>
-                              <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                        <div class="col-md-1">
-                          <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
-                        </div>
-                        <div class="col-md-1">
-                          <div class="rmv">
-                            <span class="rmv_itm">X</span>
+                  <?php
+                  if (isset($detail->id)) {
+                    $childs = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
+                    if ($childs) {
+                      foreach ($childs as $key => $value) {
+                        $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                  ?>
+                        <div class="row" style="margin-bottom: 15px;">
+                          <div class=" col-md-2">
+                            <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                            <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="<?php echo $value->actual_unit_price; ?>" required>
+                          </div>
+                          <div class="col-md-2">
+                            <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
+                          </div>
+                          <div class="col-md-2">
+                            <select name="supplier_id[]" class="form-control" id="supplier_id" required>
+                              <option value>Select Supplier</option>
+                              <?php foreach ($suppliers as $key_s => $value_s) { ?>
+                                <option value="<?php echo $value_s->id; ?>" <?php echo (isset($value->supplier_id) && $value->supplier_id == $value_s->id) ? 'selected' : ''; ?>><?php echo $value_s->supplier_name; ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                          <div class="col-md-2">
+                            <select name="location_id[]" class="form-control" id="location_id" required>
+                              <option value>Select Location</option>
+                              <?php foreach ($locations as $key_l => $value_l) { ?>
+                                <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                          <div class="col-md-1">
+                            <div class="rmv">
+                              <span class="rmv_itm">X</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                  <?php }
+                    }
+                  }
+                } else {
+                  ?>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>Product</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Purchase Date</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Quantity</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Unit Price</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Actual Unit Price</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Batch No</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Supplier</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Location</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Depreciated Amount</label>
+                    </div>
+                    <div class="col-md-1">
+                      <label>Book Value</label>
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+                  </div>
+                  <?php
+                  if (isset($detail->id)) {
+                    $childs = $this->crud_model->get_where('opening_detail', array('opening_master_id' => $detail->id));
+                    if ($childs) {
+                      foreach ($childs as $key => $value) {
+                        $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                  ?>
+                        <div class="row" style="margin-bottom: 15px;">
+                          <div class=" col-md-2">
+                            <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
+                            <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
+                          </div>
+                          <div class="col-md-1">
+                            <input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="<?php echo $value->purchase_date; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="qty[]" class="form-control" min='1' max='1' placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="<?php echo $value->actual_unit_price; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
+                          </div>
+                          <div class="col-md-1">
+                            <select name="supplier_id[]" class="form-control" id="supplier_id" required>
+                              <option value>Select Location</option>
+                              <?php foreach ($suppliers as $key_s => $value_s) { ?>
+                                <option value="<?php echo $value_s->id; ?>" <?php echo (isset($value->supplier_id) && $value->supplier_id == $value_s->id) ? 'selected' : ''; ?>><?php echo $value_s->supplier_name; ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                          <div class="col-md-1">
+                            <select name="location_id[]" class="form-control" id="location_id" required>
+                              <option value>Select Location</option>
+                              <?php foreach ($locations as $key_l => $value_l) { ?>
+                                <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                              <?php } ?>
+                            </select>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="<?php echo $value->depreciated_amt; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="<?php echo $value->book_value; ?>" required>
+                          </div>
+                          <div class="col-md-1">
+                            <div class="rmv">
+                              <span class="rmv_itm">X</span>
+                            </div>
+                          </div>
+                        </div>
                 <?php }
+                    }
                   }
                 } ?>
               </div>

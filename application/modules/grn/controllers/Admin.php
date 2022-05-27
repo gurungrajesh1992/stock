@@ -187,6 +187,8 @@ class Admin extends Auth_controller
 					$item_code =  $this->input->post('item_code');
 					$qty =  $this->input->post('qty');
 					$unit_price =  $this->input->post('unit_price');
+					$batch_no =  $this->input->post('batch_no');
+					$location_id =  $this->input->post('location_id');
 
 					if (count($item_code) > 0) {
 						$total = 0;
@@ -197,6 +199,9 @@ class Admin extends Auth_controller
 							$insert_detail['qty'] = $qty[$i];
 							$insert_detail['unit_price'] = $unit_price[$i];
 							$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
+							$insert_detail['location_id'] = $location_id[$i];
+							$insert_detail['batch_no'] = $batch_no[$i];
 
 							$insert_detail['created_on'] = date('Y-m-d H:i:s');
 							$insert_detail['created_by'] = $this->current_user->id;
@@ -265,6 +270,7 @@ class Admin extends Auth_controller
 		// exit;
 		$data['type'] = $type;
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
@@ -336,6 +342,8 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
+						$batch_no =  $this->input->post('batch_no');
+						$location_id =  $this->input->post('location_id');
 
 						if (count($item_code) > 0) {
 							$total = 0;
@@ -346,6 +354,9 @@ class Admin extends Auth_controller
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['unit_price'] = $unit_price[$i];
 								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
+								$insert_detail['location_id'] = $location_id[$i];
+								$insert_detail['batch_no'] = $batch_no[$i];
 
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
@@ -422,6 +433,7 @@ class Admin extends Auth_controller
 
 		$data['type_no'] = isset($master_detail->type_no) ? $master_detail->type_no : '';
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
 
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
@@ -514,6 +526,8 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
+						$batch_no =  $this->input->post('batch_no');
+						$location_id =  $this->input->post('location_id');
 
 						if (count($item_code) > 0) {
 							$total = 0;
@@ -524,6 +538,8 @@ class Admin extends Auth_controller
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['unit_price'] = $unit_price[$i];
 								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+								$insert_detail['location_id'] = $location_id[$i];
+								$insert_detail['batch_no'] = $batch_no[$i];
 
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
@@ -600,6 +616,8 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
+						$batch_no =  $this->input->post('batch_no');
+						$location_id =  $this->input->post('location_id');
 
 						if (count($item_code) > 0) {
 							$total = 0;
@@ -610,6 +628,8 @@ class Admin extends Auth_controller
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['unit_price'] = $unit_price[$i];
 								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+								$insert_detail['location_id'] = $location_id[$i];
+								$insert_detail['batch_no'] = $batch_no[$i];
 
 								$insert_detail['created_on'] = date('Y-m-d H:i:s');
 								$insert_detail['created_by'] = $this->current_user->id;
@@ -683,6 +703,7 @@ class Admin extends Auth_controller
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['charges'] = $this->crud_model->get_where('charge_parameter', array('status' => '1', 'display_in_list' => 'Yes'));
 		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
+		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['invs'] = $this->crud_model->get_where('invoice_master', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['pos'] = $this->crud_model->get_where('purchase_order', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
 		$data['prqs'] = $this->crud_model->get_where('purchase_request', array('status' => '1', 'approved_by !=' => '', 'cancel_tag' => '0'));
@@ -787,19 +808,31 @@ class Admin extends Auth_controller
 					$html = '';
 
 					if ($item_detail) {
+						$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
+
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 									<div class="col-md-1">
 									' . ($total + 1) . '.
 									</div>
-									<div class="col-md-5">
+									<div class="col-md-2">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
 									</div>
 									<div class="col-md-1">
 										<input type="number" name="qty[]" min="1"  class="form-control qty_grn" id="qty_grn-' . ($next_key + 1) . '" placeholder="Quantity" value="1" required>
 									</div> 
-									<div class="col-md-2">
+									<div class="col-md-1">
 										<input type="number" name="unit_price[]" min="1" class="form-control unit_price_grn" id="unit_price_grn-' . ($next_key + 1) . '" placeholder="Unit Price" value="0" required>
+									</div>
+									<div class="col-md-2">
+										<textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"></textarea>
+									</div>
+									<div class="col-md-2">
+										<select name="location_id[]" class="form-control" id="location_id" required>';
+						foreach ($locations as $key => $value) {
+							$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
+						}
+						$html	.= '</select>
 									</div>
 									<div class="col-md-2">
 										<input type="number" name="total_price[]" min="1" class="form-control" id="each_total_grn-' . ($next_key + 1) . '" placeholder="Total Price" value="0" readonly>
