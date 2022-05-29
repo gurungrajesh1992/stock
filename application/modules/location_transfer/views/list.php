@@ -15,7 +15,6 @@
                   <th>Transfer Code</th>
                   <th>From Location</th>
                   <th>To Location</th>
-                  <th>Transfer By</th>
                   <th>Is Cancelled</th>
                   <th>Is Approved</th>
                   <th>Is Posted</th>
@@ -48,7 +47,10 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->scrap_code; ?></td>
+                      <td><?php echo $value->transfer_code; ?></td>
+                      <td><?php echo $value->from_loc; ?></td>
+                      <td><?php echo $value->to_loc; ?></td>
+
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Approved' : 'Not Approved'; ?></td>
                       <td><?php echo $posted_tag; ?></td>

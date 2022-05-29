@@ -178,4 +178,10 @@ class Crud_model extends CI_Model
 
         return $result;
     }
+
+    public function getItems($location_id)
+    {
+        $query = $this->db->get_where('stock_ledger', array('location_id' => $location_id));
+        return $query->result();
+    }
 }

@@ -345,11 +345,9 @@
             });
         });
 
-        // loc_trans get form
-        $(document).off('change', '#from_loc').on('change', '#from_loc', function(e) {
+        // // loc_trans get form
+        $(document).off('change', '#item_loc_transfer').on('change', '#item_loc_transfer', function(e) {
             e.preventDefault();
-            // console.log('heree');
-            // return false;
             var selected_val = $(this).val();
             var splited = selected_val.split(",");
             var val = splited[0];
@@ -378,21 +376,21 @@
             // return false;
             $.ajax({
 
-                url: '<?php echo base_url('location_transfer/admin/getItem'); ?>',
+                url: '<?php echo base_url('location_transfer/admin/getForm'); ?>',
                 type: "POST",
                 // contentType: "application/json",  
                 dataType: "json",
                 data: {
                     "val": val,
-                    // "unit_price": unit_price,
-                    // "total": already_items.length,
+                    "unit_price": unit_price,
+                    "total": already_items.length,
                 },
                 success: function(resp) {
                     // console.log(resp.data);return false;
                     // var obj = jQuery.parseJSON(resp);
                     // console.log(resp.status);return false;
                     if (resp.status == "success") {
-                        $('#item_loc_trans').append(resp.data);
+                        $('#items').append(resp.data);
                     } else {
                         Toastify({
 
@@ -407,6 +405,33 @@
                         }).showToast();
                         // alert(resp.status_message);
                     }
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('#from_loc').on('change', function() {
+                var id = $('#from_loc').val();
+                //   alert(id);
+                if (id == '') {
+                    $('#item_loc_transfer').prop('disabled', true);
+                } else {
+                    $('#item_loc_transfer').prop('disabled', false);
+                    $.ajax({
+                        url: "<?php echo base_url() ?>location_transfer/admin/getItems",
+                        type: "POST",
+                        data: {
+                            'id': id
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            // alert(data);
+                            $('#item_loc_transfer').html(data);
+                        },
+                        error: function() {
+                            alert('This Item is not available in the Stock !!');
+                        }
+                    });
                 }
             });
         });
