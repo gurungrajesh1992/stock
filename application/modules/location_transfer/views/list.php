@@ -27,6 +27,9 @@
                 <?php
                 if ($items) {
                   foreach ($items as $key => $value) {
+
+                    $from_loc = $this->crud_model->get_where_single_order_by('location_para', array('id' => $value->from_loc), 'id', 'DECS');
+                    $to_loc = $this->crud_model->get_where_single_order_by('location_para', array('id' => $value->to_loc), 'id', 'DECS');
                     if ($value->status == '1') {
                       $status = 'Active';
                     } else {
@@ -48,8 +51,8 @@
                     <tr>
                       <td><?php echo $key + 1; ?></td>
                       <td><?php echo $value->transfer_code; ?></td>
-                      <td><?php echo $value->from_loc; ?></td>
-                      <td><?php echo $value->to_loc; ?></td>
+                      <td><?php echo isset($from_loc->store_name) ? $from_loc->store_name : ''; ?></td>
+                      <td><?php echo isset($to_loc->store_name) ? $to_loc->store_name : ''; ?></td>
 
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Approved' : 'Not Approved'; ?></td>
