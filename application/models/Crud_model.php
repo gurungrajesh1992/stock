@@ -179,9 +179,31 @@ class Crud_model extends CI_Model
         return $result;
     }
 
-    public function getItems($location_id)
+    // public function getItems($location_id)
+    // {
+    //     $query = $this->db->get_where('stock_ledger', array('location_id' => $location_id));
+    //     return $query->result();
+    // }
+
+    public function getItems($table, $where, $group_by)
     {
-        $query = $this->db->get_where('stock_ledger', array('location_id' => $location_id));
-        return $query->result();
+        $this->db->select('sum(rem_qty) total_stock, item_code, location_id', false);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->group_by($group_by);
+        $result = $this->db->get('')->result();
+
+        return $result;
+    }
+
+    public function get_single_item_stock($table, $where, $group_by)
+    {
+        $this->db->select('sum(rem_qty) total_stock, item_code, location_id', false);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->group_by($group_by);
+        $result = $this->db->get('')->row();
+
+        return $result;
     }
 }

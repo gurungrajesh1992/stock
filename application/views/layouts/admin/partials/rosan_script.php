@@ -281,77 +281,14 @@
             }
         });
 
-        // loc_trans get form
-        $(document).off('change', '#item_loc_trans').on('change', '#item_loc_trans', function(e) {
-            e.preventDefault();
-            var selected_val = $(this).val();
-            var splited = selected_val.split(",");
-            var val = splited[0];
-            var unit_price = splited[1];
-            // alert(unit_price);
-            // return false;
-            var already_items = $('input[name^=item_code]').map(function(idx, elem) {
-                return $(elem).val();
-            }).get();
-
-            if (jQuery.inArray(val, already_items) !== -1) {
-                Toastify({
-
-                    text: 'already selected, you can change quantity',
-
-                    duration: 6000,
-
-                    style: {
-                        background: "linear-gradient(to right, red, yellow)",
-                    }
-
-                }).showToast();
-                return false;
-            }
-            // console.log(already_items.length);
-            // return false;
-            $.ajax({
-
-                url: '<?php echo base_url('location_transfer/admin/getForm'); ?>',
-                type: "POST",
-                // contentType: "application/json",  
-                dataType: "json",
-                data: {
-                    "val": val,
-                    "unit_price": unit_price,
-                    "total": already_items.length,
-                },
-                success: function(resp) {
-                    // console.log(resp.data);return false;
-                    // var obj = jQuery.parseJSON(resp);
-                    // console.log(resp.status);return false;
-                    if (resp.status == "success") {
-                        $('#items').append(resp.data);
-                    } else {
-                        Toastify({
-
-                            text: resp.status_message,
-
-                            duration: 6000,
-
-                            style: {
-                                background: "linear-gradient(to right, red, yellow)",
-                            }
-
-                        }).showToast();
-                        // alert(resp.status_message);
-                    }
-                }
-            });
-        });
 
         // // loc_trans get form
         $(document).off('change', '#item_loc_transfer').on('change', '#item_loc_transfer', function(e) {
             e.preventDefault();
             var selected_val = $(this).val();
-            var splited = selected_val.split(",");
+            var splited = selected_val.split("_");
             var val = splited[0];
-            var unit_price = splited[1];
+            var total_stock = splited[1];
             // alert(unit_price);
             // return false;
             var already_items = $('input[name^=item_code]').map(function(idx, elem) {
@@ -382,7 +319,7 @@
                 dataType: "json",
                 data: {
                     "val": val,
-                    "unit_price": unit_price,
+                    "total_stock": total_stock,
                     "total": already_items.length,
                 },
                 success: function(resp) {
@@ -409,31 +346,70 @@
             });
         });
 
-        $(document).ready(function() {
-            $('#from_loc').on('change', function() {
-                var id = $('#from_loc').val();
-                //   alert(id);
-                if (id == '') {
-                    $('#item_loc_transfer').prop('disabled', true);
-                } else {
-                    $('#item_loc_transfer').prop('disabled', false);
-                    $.ajax({
-                        url: "<?php echo base_url() ?>location_transfer/admin/getItems",
-                        type: "POST",
-                        data: {
-                            'id': id
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            // alert(data);
-                            $('#item_loc_transfer').html(data);
-                        },
-                        error: function() {
-                            alert('This Item is not available in the Stock !!');
+        // onchange from location get item
+        // $('#from_loc').on('change', function() {
+        $(document).off('change', '#from_loc').on('change', '#from_loc', function() {
+            var id = $('#from_loc').val();
+            var transaction_date = $('#transfered_on').val();
+            //   alert(id);
+            if (id == '') {
+                Toastify({
+
+                    text: 'Please Select Warehouse First',
+
+                    duration: 6000,
+
+                    style: {
+                        background: "linear-gradient(to right, red, yellow)",
+                    }
+
+                }).showToast();
+                $('#item_loc_transfer').prop('disabled', true);
+            } else {
+                $('#item_loc_transfer').prop('disabled', false);
+                $.ajax({
+                    url: "<?php echo base_url() ?>location_transfer/admin/getItems",
+                    type: "POST",
+                    data: {
+                        'id': id,
+                        'transaction_date': transaction_date
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        // alert(data);
+                        if (data.status == 'success') {
+                            $('#item_loc_transfer').html(data.option);
+                        } else {
+                            Toastify({
+
+                                text: data.message,
+
+                                duration: 6000,
+
+                                style: {
+                                    background: "linear-gradient(to right, red, yellow)",
+                                }
+
+                            }).showToast();
                         }
-                    });
-                }
-            });
+
+                    },
+                    error: function() {
+                        Toastify({
+
+                            text: 'server error',
+
+                            duration: 6000,
+
+                            style: {
+                                background: "linear-gradient(to right, red, yellow)",
+                            }
+
+                        }).showToast();
+                    }
+                });
+            }
+            $('#items').html("<div class='row'> <div class = 'col-md-4' > <label> Product </label> </div>  <div class = 'col-md-1'> <label> Quantity </label> </div> <div class = 'col-md-2'> <label> Stock </label></div> <div class = 'col-md-2' ><label> Unit Price </label> </div> <div class = 'col-md-2' ><label > Total Price </label> </div><div class = 'col-md-1'></div> </div > ");
         });
 
         // REMOVE item direct add sales return

@@ -99,7 +99,6 @@ class Admin extends Auth_controller
 			if ($this->form_validation->run()) {
 				$data = array(
 					'transfer_code' => $this->input->post('transfer_code'),
-					'date' => $this->input->post('date'),
 					'from_loc' => $this->input->post('from_loc'),
 					'to_loc' => $this->input->post('to_loc'),
 					'transfered_on' => $this->input->post('transfered_on'),
@@ -202,7 +201,9 @@ class Admin extends Auth_controller
 		// var_dump($data['location_para_details'][0]->id);
 		// exit;
 
-		$data['items'] = $this->crud_model->get_total_item_stock_group_by_item('stock_ledger', array('status' => '1', 'transaction_date <=' => date('Y-m-d'), 'location_id' => $data['location_para_details'][0]->id));
+		// $data['items'] = $this->crud_model->get_total_item_stock_group_by_item('stock_ledger', array('status' => '1', 'transaction_date <=' => date('Y-m-d'), 'location_id' => $data['location_para_details'][0]->id));
+
+		$data['items'] = $this->crud_model->getItems('stock_ledger', array('status' => '1', 'location_id' => $data['location_para_details'][0]->id, 'transaction_date <=' => date('Y-m-d')), 'item_code');
 		// echo "<pre>";
 		// var_dump($data['items']);
 		// exit;
@@ -245,25 +246,42 @@ class Admin extends Auth_controller
 
 	public function getItems()
 	{
-
 		$location_id = $this->input->post('id');
-		$items = $this->crud_model->getItems($location_id);
-		// var_dump($items);
-		// exit;
-		// $data = array(
-		// 	'location_id' => $items;
-		// );
-		$data['items'] = $this->crud_model->get_where_single('item_infos', array('status' => '1', 'item_code' => $items[0]->item_code));
-		// var_dump($data['items']);
-		if (count($items) > 0) {
-			$pro_select_box = '';
-			$pro_select_box .= '<option value="">Select Items</option>';
-			// foreach ($items as $item) {
-			// var_dump($item); exit;
-			$pro_select_box .= '<option value="' . $data['items']->item_code . '">' . $data['items']->item_name . '</option>';
-			// }
-			echo json_encode($pro_select_box);
+		$transaction_date = $this->input->post('transaction_date');
+		$items = $this->crud_model->getItems('stock_ledger', array('location_id' => $location_id, 'transaction_date <=' => $transaction_date), 'item_code');
+		if ($location_id) {
+			if (count($items) > 0) {
+				$pro_select_box = '';
+				$pro_select_box .= '<option value="">Select Items</option>';
+				foreach ($items as $key => $val) {
+					$total_stock = isset($val->total_stock) ? $val->total_stock : 0;
+					$data['items'] = $this->crud_model->get_where_single('item_infos', array('status' => '1', 'item_code' => $val->item_code));
+					$pro_select_box .= '<option value="' . $data['items']->item_code . '_' . $total_stock . '">' . $data['items']->item_name . '</option>';
+				}
+				// echo json_encode($pro_select_box);
+				$response = array(
+					'status' => 'success',
+					'message' => 'No Items Found',
+					'code' => 305,
+					'option' => $pro_select_box,
+				);
+			} else {
+				$response = array(
+					'status' => 'error',
+					'message' => 'No Items Found',
+					'code' => 305,
+				);
+			}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'message' => 'Please Select Location First',
+				'code' => 304,
+			);
 		}
+
+		$decoded_response = json_encode($response);
+		echo $decoded_response;
 	}
 
 
@@ -279,6 +297,7 @@ class Admin extends Auth_controller
 				// exit;
 				// $check = $this->load->view('listall/image_form');  
 				$item_code = $this->input->post('val');
+				$total_stock = $this->input->post('total_stock');
 				// $unit_price = $this->input->post('unit_price');
 				// $total = $this->input->post('total');
 
@@ -286,7 +305,7 @@ class Admin extends Auth_controller
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $item_code));
-					$stock_detail = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $item_code));
+					// $stock_detail = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $item_code));
 					// var_dump($stock_detail);
 					// exit;
 					$html = '';
@@ -294,29 +313,26 @@ class Admin extends Auth_controller
 					if ($item_detail) {
 						$html .= '<div class="row" style="margin-bottom: 15px;">
 								
-									<div class="col-md-2">
+									<div class="col-md-4">
 										<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 										<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $item_code . '" readonly>
 									</div>
 							
 									<div class="col-md-1">
-										<input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="' . $stock_detail->in_qty . '" readonly>
-									</div>
-									<div class="col-md-2">
-									<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="' . $stock_detail->in_unit_price . '" readonly>
+										<input type="number" name="qty[]" min="1" max="' . $total_stock . '" class="form-control" placeholder="Quantity" value="">
 									</div>
 
 									<div class="col-md-2">
-									<input type="number" name="actual_unit_price[]" min="1" class="form-control" placeholder="Quantity" value="' . $stock_detail->in_actual_unit_price . '" readonly>
-									</div>
+									<input type="number" name="stock[]" min="1" class="form-control" placeholder="Stock" value="' . $total_stock . '" readonly>
+									</div> 
 
 									<div class="col-md-2">
-									<input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="' . $stock_detail->in_total_price . '" readonly>
-									</div>
+									<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="" readonly>
+									</div> 
 
 									<div class="col-md-2">
-									<input type="number" name="actual_total_price[]" min="1" class="form-control" placeholder="Quantity" value="' . $stock_detail->in_actual_total_price . '" readonly>
-									</div>
+									<input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="" readonly>
+									</div> 
 
 									<div class="col-md-1">
 										<div class="rmv">

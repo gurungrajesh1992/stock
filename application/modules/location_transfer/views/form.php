@@ -43,7 +43,7 @@
               <div class="form-group">
                 <label>To Location / To Store</label>
                 <select name="to_loc" class="form-control selct2" id="to_loc" required>
-                  <option value>Select Store</option>
+                  <option value=''>Select Store</option>
                   <?php
                   foreach ($location_para_details as $key => $value) {
                     // var_dump($items[0]->location_id); exit;
@@ -53,13 +53,6 @@
                     <?    ?>
                   <?php } ?>
                 </select>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Entry Date </label>
-                <input type="date" name="date" class="form-control" id="date" placeholder="Sales Date" value="<?php echo set_value('date', date('Y-m-d')); ?>" required>
-                <?php echo form_error('date', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
             <div class="col-md-4">
@@ -101,19 +94,12 @@
                     <select name="item" class="form-control selct2" id="item_loc_transfer">
                       <option value="">Select Items</option>
                       <?php
-                      $l[''] = 'Select Items';
-                      $sel = '';
                       foreach ($items as $value) {
                         // var_dump($value);exit;
                         $item_detail = $this->crud_model->get_where_single_order_by('item_infos', array('status' => '1', 'item_code' => $value->item_code), 'id', 'DESC');
-                        // var_dump($items[0]->item_code);exit;
-                        if (isset($items[0]->item_code) && $items[0]->item_code == $value->item_code) {
-                          $sel = ' selected="selected"';
-                        } else {
-                          $sel = '';
-                        }
+                        // var_dump($items[0]->item_code);exit; 
                       ?>
-                        <option value="<?php echo $value->item_code; ?>" <?php echo $sel; ?>><?php echo $item_detail->item_name; ?></option>
+                        <option value="<?php echo $value->item_code . '_' . $value->total_stock; ?>"><?php echo $item_detail->item_name; ?></option>
                         <?php    ?>
 
                       <?php
@@ -128,23 +114,20 @@
                 <div class="col-md-12">
                   <div class="req_item" id="items">
                     <div class=" row">
-                      <div class="col-md-2">
+                      <div class="col-md-4">
                         <label>Product</label>
                       </div>
                       <div class="col-md-1">
                         <label>Quantity</label>
                       </div>
                       <div class="col-md-2">
+                        <label>Stock</label>
+                      </div>
+                      <div class="col-md-2">
                         <label>Unit Price</label>
                       </div>
                       <div class="col-md-2">
-                        <label>Actual Unit Price</label>
-                      </div>
-                      <div class="col-md-2">
                         <label>Total Price</label>
-                      </div>
-                      <div class="col-md-2">
-                        <label>Actual Total Price</label>
                       </div>
 
                       <div class="col-md-1">
@@ -159,36 +142,29 @@
                           // var_dump($value);
                           // exit;
                           $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+                          $stock = $this->crud_model->get_single_item_stock('stock_ledger', array('item_code' => $value->item_code, 'transaction_date <=' => date('Y-m-d')), 'item_code');
                           // var_dump($item_detail);
                           // exit;
                     ?>
                           <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-1">
-                              <?php echo ($key + 1) . '.'; ?>
-                            </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                               <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                               <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                               <input type="hidden" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>">
                             </div>
 
                             <div class="col-md-1">
-                              <input type="number" name="qty[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
+                              <input type="number" name="qty[]" min="1" max="<?php echo (isset($stock->total_stock) && $stock->total_stock != '') ? $stock->total_stock : 0; ?>" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>">
+                            </div>
+                            <div class="col-md-2">
+                              <input type="number" name="stock[]" min="1" class="form-control" placeholder="Stock" value="<?php echo (isset($stock->total_stock) && $stock->total_stock != '') ? $stock->total_stock : 0; ?>" readonly>
                             </div>
                             <div class="col-md-2">
                               <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
                             </div>
 
                             <div class="col-md-2">
-                              <input type="number" name="actual_unit_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
-                            </div>
-
-                            <div class="col-md-2">
                               <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
-                            </div>
-
-                            <div class="col-md-2">
-                              <input type="number" name="actual_total_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
                             </div>
 
                             <div class="col-md-1">
