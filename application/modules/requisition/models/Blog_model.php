@@ -12,4 +12,5 @@ class Blog_model extends CI_Model
         $blogs = $this->db->select('*')->from($table)->where($where)->get('')->result_array();
         return $blogs;
     }
+     
 }
