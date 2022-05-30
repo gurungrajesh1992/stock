@@ -112,6 +112,7 @@ $total = 0;
                                                     //     'item_code' => $value->item_code,
                                                     //     'qty <=' => $value->qty,
                                                     // );
+                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                                     $return_qty = $value->qty;
 

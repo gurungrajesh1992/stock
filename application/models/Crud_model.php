@@ -145,7 +145,7 @@ class Crud_model extends CI_Model
 
     public function get_total_item_stock_group_by_item($table, $where)
     {
-        $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut, item_code, in_unit_price as unit_price', false);
+        $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut, item_code, in_unit_price as unit_price, location_id', false);
         $this->db->from($table);
         $this->db->where($where);
         $this->db->group_by('item_code');
@@ -177,5 +177,11 @@ class Crud_model extends CI_Model
         $result = $this->db->get('')->result();
 
         return $result;
+    }
+
+    public function getItems($location_id)
+    {
+        $query = $this->db->get_where('stock_ledger', array('location_id' => $location_id));
+        return $query->result();
     }
 }
