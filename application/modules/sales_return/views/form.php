@@ -1,7 +1,7 @@
 <style>
-  .reqsn_cls {
+  /* .reqsn_cls {
     display: none;
-  }
+  } */
 </style>
 <section class="content">
   <div class="container-fluid">
@@ -22,21 +22,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-3">
-              <div class="form-group">
-                <label>Select Invoice Type</label>
-                <select name="type" class="form-control selct2" id="issue_type" required>
-                  <option value>Select</option>
-                  <option value="DR">Direct</option>
-                  <option value="RQ">By Request</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
               <div class="form-group reqsn_cls" id="reqsn">
-                <label>Select Requisition no</label>
-                <select name="purchase_order_no" class="form-control selct2" id="purchase_order_no">
-                  <?php foreach ($purchase_order_no as $key => $value) { ?>
-                    <option value="<?php echo $value->purchase_order_no; ?>"><?php echo $value->purchase_order_no; ?></option>
+                <label>Select Sales no</label>
+                <select name="sale_no" class="form-control selct2" id="sale_no">
+                  <?php foreach ($sales_det as $key => $value) { ?>
+                    <option value="<?php echo $value->sale_no; ?>"><?php echo $value->sale_no; ?></option>
                   <?php } ?>
                 </select>
               </div>

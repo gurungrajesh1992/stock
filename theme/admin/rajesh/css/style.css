@@ -105,6 +105,31 @@ span.rmv_itm {
     cursor: pointer;
 }
 
+.rmv_sales {
+    background: red;
+    height: 25px;
+    width: 25px;
+    padding: 0px 0px 0px 9px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.rmv_sales_return {
+    background: red;
+    height: 25px;
+    width: 25px;
+    padding: 0px 0px 0px 9px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.grn_item {
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+}
+
 .out_of_stock {
     color: red;
 }

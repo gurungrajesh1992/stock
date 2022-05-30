@@ -320,25 +320,13 @@ class Admin extends Auth_controller
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('purchase_request', array('id' => $id));
 		if (!$master_detail) {
-			$this->session->set_flashdata('error', 'Record Not Found!!!');
-			redirect($this->redirect . '/admin/all');
-		}
-		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
-		}
-
-		// echo "<pre>";
-		// var_dump($detail);
-		// exit;
-		if (!$requisition_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);

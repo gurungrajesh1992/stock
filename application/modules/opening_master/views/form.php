@@ -78,17 +78,35 @@
                   <div class="col-md-2">
                     <label>Product</label>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label>Quantity</label>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label>Unit Price</label>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-1">
+                    <label>Actual Unit Price</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Depreciated Amount</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Book Value</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Purchase Date</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Supplier</label>
+                  </div>
+                  <div class="col-md-1">
                     <label>Location</label>
                   </div>
-                  <div class="col-md-2">
-                    <label>Remarks</label>
+                  <div class="col-md-1">
+                    <label>Batch No</label>
+                  </div>
+                  <div class="col-md-1">
+
                   </div>
                 </div>
                 <?php
@@ -103,13 +121,33 @@
                           <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" value="<?php echo $item_detail->item_name; ?>" readonly>
                           <input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="<?php echo $value->item_code; ?>">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                           <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" required>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                           <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="<?php echo $value->unit_price; ?>" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-1">
+                          <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="<?php echo $value->actual_unit_price; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="<?php echo $value->depreciated_amt; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="<?php echo $value->book_value; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="<?php echo $value->purchase_date; ?>" required>
+                        </div>
+                        <div class="col-md-1">
+                          <select name="supplier_id[]" class="form-control" id="supplier_id" required>
+                            <option value>Select Location</option>
+                            <?php foreach ($suppliers as $key_s => $value_s) { ?>
+                              <option value="<?php echo $value_s->id; ?>" <?php echo (isset($value->supplier_id) && $value->supplier_id == $value_s->id) ? 'selected' : ''; ?>><?php echo $value_s->supplier_name; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                        <div class="col-md-1">
                           <select name="location_id[]" class="form-control" id="location_id" required>
                             <option value>Select Location</option>
                             <?php foreach ($locations as $key_l => $value_l) { ?>
@@ -117,8 +155,8 @@
                             <?php } ?>
                           </select>
                         </div>
-                        <div class="col-md-2">
-                          <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"><?php echo $value->remarks; ?></textarea>
+                        <div class="col-md-1">
+                          <textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch No"><?php echo $value->batch_no; ?></textarea>
                         </div>
                         <div class="col-md-1">
                           <div class="rmv">

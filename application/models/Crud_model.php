@@ -226,11 +226,38 @@ class Crud_model extends CI_Model
         $this->db->from($table);
         $this->db->where($where);
         $result = $this->db->get('')->row();
+        // var_dump($this->db->last_query());
+        // exit;
         if ($result) {
             $stock = ($result->totalIn - $result->totalOut);
             return $stock;
         } else {
             return 0;
+        }
+    }
+
+    public function get_total_item_stock_group_by_item($table, $where)
+    {
+        $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut, item_code, in_unit_price as unit_price', false);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->group_by('item_code');
+        $this->db->order_by('id', 'asc');
+        $result = $this->db->get('')->result();
+        // echo "<pre>";
+        // var_dump($result);
+        // exit;
+        if ($result) {
+            $items = array();
+            foreach ($result as $key => $value) {
+                $stock = ($value->totalIn - $value->totalOut);
+                if ($stock > 0) {
+                    $items[] = $value;
+                }
+            }
+            return $items;
+        } else {
+            return array();
         }
     }
 

@@ -68,17 +68,32 @@
                   <div class="col-md-2">
                     <label>Product</label>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label>Quantity</label>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label>Unit Price</label>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-1">
+                    <label>Actual Unit Price</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Depreiated Amount</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Book Value</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Purchase Date</label>
+                  </div>
+                  <div class="col-md-1">
+                    <label>Supplier</label>
+                  </div>
+                  <div class="col-md-1">
                     <label>Location</label>
                   </div>
                   <div class="col-md-2">
-                    <label>Remarks</label>
+                    <label>Batch No</label>
                   </div>
                 </div>
                 <?php
@@ -92,23 +107,38 @@
                         <div class=" col-md-2">
                           <?php echo $item_detail->item_name; ?>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                           <?php echo $value->qty; ?>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                           <?php echo $value->unit_price; ?>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-1">
+                          <?php echo $value->actual_unit_price; ?>
+                        </div>
+                        <div class="col-md-1">
+                          <?php echo $value->depreciated_amt; ?>
+                        </div>
+                        <div class="col-md-1">
+                          <?php echo $value->book_value; ?>
+                        </div>
+                        <div class="col-md-1">
+                          <?php echo $value->purchase_date; ?>
+                        </div>
+                        <div class="col-md-1">
+                          <?php
+                          $supplier = $this->crud_model->get_where_single('supplier_infos', array('id' => $value->supplier_id));
+                          echo $supplier->supplier_name;
+                          ?>
+                        </div>
+                        <div class="col-md-1">
                           <?php
                           $location = $this->crud_model->get_where_single('location_para', array('id' => $value->location_id));
                           echo $location->store_name;
                           ?>
-
-
-
                         </div>
-                        <div class="col-md-3">
-                          <?php echo $value->remarks; ?>
+                        <div class="col-md-2">
+                          <?php echo $value->batch_no; ?>
                         </div>
 
                       </div>

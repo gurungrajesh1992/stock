@@ -138,6 +138,29 @@ $current_user = $this->session->userdata('current_user');
           <a href="#" class="nav-link ">
             <i class="nav-icon fa fa-list-alt"></i>
             <p>
+              Depreciation Rate
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('depreciation_para/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('depreciation_para/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa fa-list-alt"></i>
+            <p>
               Item Category
               <i class="right fas fa-angle-left"></i>
             </p>
@@ -583,6 +606,29 @@ $current_user = $this->session->userdata('current_user');
           <a href="#" class="nav-link ">
             <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
             <p>
+              GRN Return
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('grn_return/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('grn_return/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
+            <p>
               Sales
               <i class="right fas fa-angle-left"></i>
             </p>
@@ -596,6 +642,59 @@ $current_user = $this->session->userdata('current_user');
             </li>
             <li class="nav-item">
               <a href="<?php echo base_url('sales/admin/add'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url('gate_pass/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Gate Pass</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
+            <p>
+              Sales Return
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('sales_return/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('sales_return/admin/add'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fa-solid fa fa-file-invoice-dollar"></i>
+            <p>
+              Item Scarp
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('scrap/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>List</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('scrap/admin/add'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
               </a>

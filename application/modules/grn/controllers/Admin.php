@@ -225,8 +225,11 @@ class Admin extends Auth_controller
 						$this->db->insert_batch('grn_details', $batch_data);
 					}
 
+					//extra charges
+
 					$charge_code = $this->input->post('charge_code');
 					$charge_amount = $this->input->post('charge_amount');
+					$charge_remarks = $this->input->post('charge_remarks');
 
 					if (count($charge_code) > 0) {
 						$total_charge = 0;
@@ -235,6 +238,7 @@ class Admin extends Auth_controller
 							$insert_grn_charges['grn_no'] = $data['grn_no'];
 							$insert_grn_charges['charge_code'] = $charge_code[$i];
 							$insert_grn_charges['amount'] = $charge_amount[$i];
+							$insert_grn_charges['remarks'] = $charge_remarks[$i];
 
 							$total_charge = $total_charge + $charge_amount[$i];
 							$batch_data_grn_charges[] = $insert_grn_charges;
@@ -373,6 +377,7 @@ class Admin extends Auth_controller
 
 						$charge_code = $this->input->post('charge_code');
 						$charge_amount = $this->input->post('charge_amount');
+						$charge_remarks = $this->input->post('charge_remarks');
 
 						if (count($charge_code) > 0) {
 							$total_charge = 0;
@@ -381,6 +386,7 @@ class Admin extends Auth_controller
 								$insert_grn_charges['grn_no'] = $data['grn_no'];
 								$insert_grn_charges['charge_code'] = $charge_code[$i];
 								$insert_grn_charges['amount'] = $charge_amount[$i];
+								$insert_grn_charges['remarks'] = $charge_remarks[$i];
 
 								$total_charge = $total_charge + $charge_amount[$i];
 								$batch_data_grn_charges[] = $insert_grn_charges;
@@ -428,25 +434,15 @@ class Admin extends Auth_controller
 
 	public function view($id = '')
 	{
-		$master_detail = $this->crud_model->get_where_single('issue_slip_master', array('id' => $id));
+		$master_detail = $this->crud_model->get_where_single('grn_master', array('id' => $id));
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
-		if ($master_detail) {
-			$requisition_detail = $this->crud_model->get_where_single('requisition_master', array('requisition_no' => $master_detail->requisition_no));
-		}
-
 		// echo "<pre>";
-		// var_dump($detail);
+		// var_dump($master_detail);
 		// exit;
-		if (!$requisition_detail) {
-			$this->session->set_flashdata('error', 'Record Not Found!!!');
-			redirect($this->redirect . '/admin/all');
-		}
-
 		$data['master_detail'] = $master_detail;
-		$data['requisition_detail'] = $requisition_detail;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);
@@ -558,6 +554,7 @@ class Admin extends Auth_controller
 
 						$charge_code = $this->input->post('charge_code');
 						$charge_amount = $this->input->post('charge_amount');
+						$charge_remarks = $this->input->post('charge_remarks');
 
 						if (count($charge_code) > 0) {
 							$total_charge = 0;
@@ -566,6 +563,7 @@ class Admin extends Auth_controller
 								$insert_grn_charges['grn_no'] = $data['grn_no'];
 								$insert_grn_charges['charge_code'] = $charge_code[$i];
 								$insert_grn_charges['amount'] = $charge_amount[$i];
+								$insert_grn_charges['remarks'] = $charge_remarks[$i];
 
 								$total_charge = $total_charge + $charge_amount[$i];
 								$batch_data_grn_charges[] = $insert_grn_charges;
@@ -642,6 +640,7 @@ class Admin extends Auth_controller
 
 						$charge_code = $this->input->post('charge_code');
 						$charge_amount = $this->input->post('charge_amount');
+						$charge_remarks = $this->input->post('charge_remarks');
 
 						if (count($charge_code) > 0) {
 							$total_charge = 0;
@@ -650,6 +649,7 @@ class Admin extends Auth_controller
 								$insert_grn_charges['grn_no'] = $data['grn_no'];
 								$insert_grn_charges['charge_code'] = $charge_code[$i];
 								$insert_grn_charges['amount'] = $charge_amount[$i];
+								$insert_grn_charges['remarks'] = $charge_remarks[$i];
 
 								$total_charge = $total_charge + $charge_amount[$i];
 								$batch_data_grn_charges[] = $insert_grn_charges;
@@ -858,6 +858,7 @@ class Admin extends Auth_controller
 				// exit;
 				// $check = $this->load->view('listall/image_form');  
 				$val = $this->input->post('val');
+				$next_sn = $this->input->post('sn');
 
 				if ($val) {
 					// var_dump($val);
@@ -867,19 +868,23 @@ class Admin extends Auth_controller
 
 					if ($charge_detail) {
 						$html .= '<div class="row">
-                                        <div class="col-md-3"></div>
-                                        <div class="col-md-5"></div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label style="float: left;margin-right: 20px;">' . $charge_detail->charge_name . '</label>
-                                                <input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="' . $val . '">
-                                            </div>
-                                        </div>
-                                        <div class=" col-md-2">
-                                            <div class="form-group">
-                                                <input type="number" name="charge_amount[]" class="form-control" id="charge_amount" placeholder="Charge Amount" value="0">
-                                            </div>
-                                        </div>
+                                        <div class="col-md-1">' . ($next_sn + 1) . '</div>
+                                        <div class="col-md-4">
+											<div class="form-group">
+												' . $charge_detail->charge_name . '
+												<input type="hidden" name="charge_code[]" class="form-control" placeholder="Charge Code" value="' . $val . '">
+											</div>
+										</div> 
+										<div class="col-md-4">
+											<div class="form-group">
+												<textarea name="charge_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
+											</div>
+										</div>
+                                        <div class=" col-md-2"> 
+											<div class="form-group">
+                                                <input type="number" name="charge_amount[]" class="form-control charge_amt" id="charge_amount" placeholder="Charge Amount" value="0"> 
+											</div>
+										</div>
                                     </div>';
 					}
 
@@ -904,6 +909,123 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function grn_post()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+
+				if ($table || $row_id) {
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						if (isset($detail->posted_tag) && $detail->posted_tag == '1') {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Already Posted !!',
+							);
+						} else {
+							$childs = $this->crud_model->get_where('grn_details', array('grn_no' => $detail->grn_no));
+							// echo "<pre>";
+							// var_dump($childs);
+							// exit;
+							if (isset($childs)) {
+								foreach ($childs as $key => $value) {
+									$total_extra_cost = $detail->vat_amount + $detail->total_charge;
+									$in_actual_total_price = ($total_extra_cost / $detail->total) * ($value->qty * $value->unit_price);
+									$in_actual_unit_price = $in_actual_total_price / $value->qty;
+									$data = array(
+										'item_code' =>  $value->item_code,
+										'transaction_date' => $detail->grn_date,
+										'transaction_type' => 'GRN',
+										'in_qty' => $value->qty,
+										// 'out_qty' => 0,
+										'rem_qty' => $value->qty,
+										'in_unit_price' => $value->unit_price,
+										'in_total_price' => ($value->qty * $value->unit_price),
+										'in_actual_unit_price' => $in_actual_unit_price,
+										'in_actual_total_price' => $in_actual_total_price,
+										'out_unit_price' => 0,
+										'out_total_price' => 0,
+										'out_actual_unit_price' => 0,
+										'out_actual_total_price' => 0,
+										// 'location_id' => $value->location_id,
+										// 'batch_no' => $value->batch_no,
+										'vendor_id' => $detail->supplier_id,
+										// 'client_id' => '???',
+										'remarks' => 'posted from GRN',
+										'transactioncode' => $detail->grn_no,
+										'created_on' => date('Y-m-d'),
+										'created_by' => $this->current_user->id,
+										// 'updated_on' => '???',
+										// 'updated_by' => '???',
+										// 'staff_id' => '???',
+										// 'status' => '1',
+									);
+									$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+									if (isset($last_row_no->ledger_code)) {
+										$string = $last_row_no->ledger_code;
+										$explode = explode("-", $string);
+										$int_value = intval($explode[1]) + 1;
+										// var_dump(sprintf("%04d", $int_value));
+										// exit;
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+									} else {
+										$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+									}
+
+									$this->crud_model->insert('stock_ledger', $data);
+								}
+
+								$update['posted_tag'] = '1';
+								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_on'] = date('Y-m-d');
+
+								$this->crud_model->update('grn_master', $update, array('id' => $detail->id));
+
+								$response = array(
+									'status' => 'success',
+									'status_code' => 200,
+									'status_message' => 'Successfully Posted !!!',
+								);
+							} else {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'No Details Available !!!',
+								);
+							}
+						}
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Record is not approved yet !!!',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid !!!',
 					);
 				}
 			}

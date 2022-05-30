@@ -131,9 +131,14 @@ class Admin extends Auth_controller
 
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
-						$remark =  $this->input->post('remarks');
+						$batch_no =  $this->input->post('batch_no');
 						$unit_price = $this->input->post('unit_price');
+						$actual_unit_price = $this->input->post('actual_unit_price');
 						$location = $this->input->post('location_id');
+						$supplier_id = $this->input->post('supplier_id');
+						$depreciated_amt = $this->input->post('depreciated_amt');
+						$book_value = $this->input->post('book_value');
+						$purchase_date = $this->input->post('purchase_date');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
@@ -142,8 +147,14 @@ class Admin extends Auth_controller
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['unit_price'] = $unit_price[$i];
 								$insert_detail['total_price'] = $unit_price[$i] * $qty[$i];
+								$insert_detail['actual_unit_price'] = $actual_unit_price[$i];
+								$insert_detail['actual_total_price'] = $actual_unit_price[$i] * $qty[$i];
 								$insert_detail['location_id'] = $location[$i];
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['batch_no'] = $batch_no[$i];
+								$insert_detail['supplier_id'] = $supplier_id[$i];
+								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
+								$insert_detail['book_value'] = $book_value[$i];
+								$insert_detail['purchase_date'] = $purchase_date[$i];
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}
@@ -170,9 +181,14 @@ class Admin extends Auth_controller
 
 						$item_code =  $this->input->post('item_code');
 						$qty =  $this->input->post('qty');
-						$remark =  $this->input->post('remarks');
+						$batch_no =  $this->input->post('batch_no');
 						$unit_price = $this->input->post('unit_price');
+						$actual_unit_price = $this->input->post('actual_unit_price');
 						$location = $this->input->post('location_id');
+						$supplier_id = $this->input->post('supplier_id');
+						$depreciated_amt = $this->input->post('depreciated_amt');
+						$book_value = $this->input->post('book_value');
+						$purchase_date = $this->input->post('purchase_date');
 
 						if (count($item_code) > 0) {
 							for ($i = 0; $i < count($item_code); $i++) {
@@ -181,8 +197,14 @@ class Admin extends Auth_controller
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['unit_price'] = $unit_price[$i];
 								$insert_detail['total_price'] = $unit_price[$i] * $qty[$i];
+								$insert_detail['actual_unit_price'] = $actual_unit_price[$i];
+								$insert_detail['actual_total_price'] = $actual_unit_price[$i] * $qty[$i];
 								$insert_detail['location_id'] = $location[$i];
-								$insert_detail['remarks'] = $remark[$i];
+								$insert_detail['batch_no'] = $batch_no[$i];
+								$insert_detail['supplier_id'] = $supplier_id[$i];
+								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
+								$insert_detail['book_value'] = $book_value[$i];
+								$insert_detail['purchase_date'] = $purchase_date[$i];
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}
@@ -198,6 +220,7 @@ class Admin extends Auth_controller
 			}
 		}
 		$data['fiscals'] = $this->crud_model->get_where('fiscal_year_para', array('status' => '1'));
+		$data['suppliers'] = $this->crud_model->get_where('supplier_infos', array('status' => '1'));
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['title'] = 'Add/Edit ' . $this->title;
@@ -253,6 +276,7 @@ class Admin extends Auth_controller
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $val));
 					$locations = $this->crud_model->get_where_order_by('location_para', array('status' => '1'), 'id', 'DESC');
+					$suppliers = $this->crud_model->get_where_order_by('supplier_infos', array('status' => '1'), 'id', 'DESC');
 					$html = '';
 					if ($item_detail) {
 						$html .= '
@@ -261,30 +285,48 @@ class Admin extends Auth_controller
 								<input type="text" name="item_name[]" class="form-control" placeholder="Item Code" value="' . $item_detail->item_name . '" readonly>
 								<input type="hidden" name="item_code[]" class="form-control" placeholder="Item Code" value="' . $val . '" readonly>
                             </div>
-                            <div class="col-md-2">
-                              <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="" required>
+                            <div class="col-md-1">
+                              <input type="number" name="qty[]" class="form-control" placeholder="Quantity" value="1" required>
                             </div>
-                            <div class="col-md-2">
-                              <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="" required>
+                            <div class="col-md-1">
+                              <input type="number" name="unit_price[]" class="form-control" placeholder="Unit Price" value="0" required>
                             </div>
-                            <div class="col-md-3">
-                            <select name="location_id[]" class="form-control" id="location_id" required>
-								<option value>Select Location</option>';
+							<div class="col-md-1">
+                              <input type="number" name="actual_unit_price[]" class="form-control" placeholder="Actual Unit Price" value="0" required>
+                            </div>
+							<div class="col-md-1">
+								<input type="number" name="depreciated_amt[]" class="form-control" placeholder="Depreciated Amount" value="0" required>
+							</div>
+							<div class="col-md-1">
+								<input type="number" name="book_value[]" class="form-control" placeholder="Book Value" value="0" required>
+							</div>
+							<div class="col-md-1">
+								<input type="date" name="purchase_date[]" class="form-control" placeholder="Book Value" value="' . date('Y-m-d') . '" required>
+							</div>
+							<div class="col-md-1">
+							<select name="supplier_id[]" class="form-control" id="supplier_id" required>';
+						foreach ($suppliers as $key_s => $value_s) {
+							$html   .=   '<option value="' . $value_s->id . '" >' . $value_s->supplier_name . '</option>';
+						}
+						$html   .= '</select>
+							</div>
+								<div class="col-md-1">
+								<select name="location_id[]" class="form-control" id="location_id" required>';
 						foreach ($locations as $key => $value) {
 							$html	.=	'<option value="' . $value->id . '">' . $value->store_name . '</option>';
 						}
 						$html	.= '</select>
-                            </div>
-                            <div class="col-md-2">
-                              <textarea name="remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
-                            </div>
-							<div class="col-md-1">
-								<div class="rmv">
-									<span class="rmv_itm">X</span>
 								</div>
-							</div>
-                          </div> 
-						  ';
+								<div class="col-md-1">
+								<textarea name="batch_no[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Batch Number"></textarea>
+								</div>
+								<div class="col-md-1">
+									<div class="rmv">
+										<span class="rmv_itm">X</span>
+									</div>
+								</div>
+							</div> 
+							';
 					}
 					if ($html) {
 						$response = array(
@@ -410,15 +452,15 @@ class Admin extends Auth_controller
 										'rem_qty' => $value->qty,
 										'in_unit_price' => $value->unit_price,
 										'in_total_price' => ($value->qty * $value->unit_price),
-										'in_actual_unit_price' => 0,
-										'in_actual_total_price' => 0,
+										'in_actual_unit_price' => $value->actual_unit_price,
+										'in_actual_total_price' => ($value->qty * $value->actual_unit_price),
 										'out_unit_price' => 0,
 										'out_total_price' => 0,
 										'out_actual_unit_price' => 0,
 										'out_actual_total_price' => 0,
 										'location_id' => $value->location_id,
-										// 'batch_no' => '',
-										// 'vendor_id' => '???',
+										'batch_no' => $value->batch_no,
+										'vendor_id' => $value->supplier_id,
 										// 'client_id' => '???',
 										'remarks' => 'posted from opening',
 										'transactioncode' => $detail->opening_code,
