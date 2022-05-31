@@ -117,28 +117,33 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						$unit_price = $this->input->post('unit_price');
 						$qty =  $this->input->post('qty');
+						$unit_price = $this->input->post('unit_price');
 						$actual_unit_price =  $this->input->post('actual_unit_price');
-						$total_price = $this->input->post('total_price');
-						$actual_total_price = $this->input->post('actual_total_price');
+						// $total_price = $this->input->post('total_price');
+						// $actual_total_price = $this->input->post('actual_total_price');
 
 						if (count($item_code) > 0) {
 							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['transfer_code'] = $data['transfer_code'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['unit_price'] = $unit_price[$i];
+								$insert_detail['unit_price']  = $unit_price[$i];
 								$insert_detail['qty'] = $qty[$i];
 								$insert_detail['actual_unit_price'] = $actual_unit_price[$i];
-								$insert_detail['total_price'] = $total_price[$i];
-								$insert_detail['actual_total_price'] = $actual_total_price[$i];
+								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
+								$insert_detail['actual_total_price'] = $actual_unit_price[$i] * $qty[$i];
 
 								$insert_detail['created_on'] = date('Y-m-d');
 								$insert_detail['created_by'] = $this->current_user->id;
 
+
+
 								$batch_data[] = $insert_detail;
 							}
+							// var_dump($batch_data);
+							// exit;
 
 							$this->db->insert_batch('location_transfer_detail', $batch_data);
 						}
@@ -154,36 +159,47 @@ class Admin extends Auth_controller
 						$this->session->set_flashdata('error', 'Can not edit, Already Approved');
 						redirect($this->redirect . '/admin/form/' . $id);
 					}
+					$data = array(
+						'transfer_code' => $this->input->post('transfer_code'),
+						'from_loc' => $this->input->post('from_loc'),
+						'to_loc' => $this->input->post('to_loc'),
+						'transfered_on' => $this->input->post('transfered_on'),
+						'remarks' => $this->input->post('remarks'),
+						'status' => $this->input->post('status'),
+					);
 					$data['updated_on'] = date('Y-m-d');
 					$data['updated_by'] = $this->current_user->id;
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 
-						$this->db->delete('item_scrap_detail', array('transfer_code' => $detail->transfer_code));
+						$this->db->delete('location_transfer_detail', array('transfer_code' => $detail->transfer_code));
 
 
 						$item_code =  $this->input->post('item_code');
-						$unit_price = $this->input->post('unit_price');
 						$qty =  $this->input->post('qty');
-						$item_remark =  $this->input->post('item_remark');
-						$type = $this->input->post('type');
+						$unit_price = $this->input->post('unit_price');
+						$actual_unit_price =  $this->input->post('actual_unit_price');
 
 						if (count($item_code) > 0) {
 							$batch_data = array();
 							for ($i = 0; $i < count($item_code); $i++) {
 								$insert_detail['transfer_code'] = $data['transfer_code'];
 								$insert_detail['item_code'] = $item_code[$i];
-								$insert_detail['type'] = $type[$i];
+								$insert_detail['unit_price']  = $unit_price[$i];
 								$insert_detail['qty'] = $qty[$i];
-								$insert_detail['unit_price'] = $unit_price[$i];
-								$insert_detail['total_price'] = $qty[$i] * $unit_price[$i];
-								$insert_detail['remarks'] = $item_remark[$i];
-								$insert_detail['updated_on'] = date('Y-m-d');
-								$insert_detail['updated_by'] = $this->current_user->id;
+								$insert_detail['actual_unit_price'] = $actual_unit_price[$i];
+								$insert_detail['total_price'] = ($qty[$i] * $unit_price[$i]);
+
+								$insert_detail['actual_total_price'] = $actual_unit_price[$i] * $qty[$i];
+
+								$insert_detail['created_on'] = date('Y-m-d');
+								$insert_detail['created_by'] = $this->current_user->id;
+
+
 
 								$batch_data[] = $insert_detail;
 							}
-							$this->db->insert_batch('item_scrap_detail', $batch_data);
+							$this->db->insert_batch('location_transfer_detail', $batch_data);
 						}
 
 						$this->session->set_flashdata('success', 'Successfully Updated.');
@@ -298,6 +314,8 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$item_code = $this->input->post('val');
 				$total_stock = $this->input->post('total_stock');
+				$in_unit_price = $this->input->post('in_unit_price');
+
 				// $unit_price = $this->input->post('unit_price');
 				// $total = $this->input->post('total');
 
@@ -305,7 +323,7 @@ class Admin extends Auth_controller
 					// var_dump($val);
 					// exit;
 					$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $item_code));
-					// $stock_detail = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $item_code));
+					$stock_detail = $this->crud_model->get_where_single('stock_ledger', array('item_code' => $item_code));
 					// var_dump($stock_detail);
 					// exit;
 					$html = '';
@@ -327,11 +345,11 @@ class Admin extends Auth_controller
 									</div> 
 
 									<div class="col-md-2">
-									<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="" readonly>
+									<input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="' . $stock_detail->in_unit_price . '" readonly>
 									</div> 
 
 									<div class="col-md-2">
-									<input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="" readonly>
+									<input type="number" name="actual_unit_price[]" min="1" class="form-control" placeholder="Unit Price" value="' . $stock_detail->in_actual_unit_price . '" readonly hidden>
 									</div> 
 
 									<div class="col-md-1">

@@ -409,7 +409,7 @@
                     }
                 });
             }
-            $('#items').html("<div class='row'> <div class = 'col-md-4' > <label> Product </label> </div>  <div class = 'col-md-1'> <label> Quantity </label> </div> <div class = 'col-md-2'> <label> Stock </label></div> <div class = 'col-md-2' ><label> Unit Price </label> </div> <div class = 'col-md-2' ><label > Total Price </label> </div><div class = 'col-md-1'></div> </div > ");
+            $('#items').html("<div class='row'> <div class = 'col-md-4' > <label> Product </label> </div>  <div class = 'col-md-1'> <label> Quantity </label> </div> <div class = 'col-md-2'> <label> Stock </label></div> <div class = 'col-md-2' ><label> Unit Price </label> </div> <div class = 'col-md-2' ></div><div class = 'col-md-1'></div> </div > ");
         });
 
         // REMOVE item direct add sales return

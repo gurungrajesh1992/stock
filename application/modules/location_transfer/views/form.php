@@ -32,7 +32,7 @@
                   foreach ($location_para_details as $key => $value) {
                     // var_dump($items[0]->location_id); exit;
                   ?>
-                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('from_loc', $value->id, (isset($items[0]->location_id) && $items[0]->location_id  == $value->id) ? TRUE : ''); ?>><?php echo $value->store_name; ?></option>
+                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('from_loc', $value->id, (isset($items[0]->location_id) && $items[0]->location_id  == $value->id) ? TRUE : ''); ?><?php echo  set_select('from_loc', $value->id, (isset($detail->from_loc) && $detail->from_loc   == $value->id) ? TRUE : ''); ?>><?php echo $value->store_name; ?></option>
 
                     <?    ?>
                   <?php } ?>
@@ -48,7 +48,7 @@
                   foreach ($location_para_details as $key => $value) {
                     // var_dump($items[0]->location_id); exit;
                   ?>
-                    <option value="<?php echo $value->id; ?>"><?php echo $value->store_name; ?></option>
+                    <option value="<?php echo $value->id; ?>" <?php echo  set_select('to_loc', $value->id, (isset($detail->to_loc) && $detail->to_loc   == $value->id) ? TRUE : ''); ?>><?php echo $value->store_name; ?></option>
 
                     <?    ?>
                   <?php } ?>
@@ -58,7 +58,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Location Transfer Date </label>
-                <input type="date" name="transfered_on" class="form-control" id="transfered_on" placeholder="Sales transfered_on" value="<?php echo set_value('transfered_on', date('Y-m-d')); ?>" required>
+                <input type="date" name="transfered_on" class="form-control" id="transfered_on" placeholder="Sales transfered_on" value="<?php echo set_value('transfered_on', (((isset($detail->transfered_on)) && $detail->transfered_on != '') ? $detail->transfered_on : date('Y-m-d'))); ?>" required>
                 <?php echo form_error('transfered_on', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
@@ -126,9 +126,9 @@
                       <div class="col-md-2">
                         <label>Unit Price</label>
                       </div>
-                      <div class="col-md-2">
+                      <!-- <div class="col-md-2">
                         <label>Total Price</label>
-                      </div>
+                      </div> -->
 
                       <div class="col-md-1">
 
@@ -160,12 +160,16 @@
                               <input type="number" name="stock[]" min="1" class="form-control" placeholder="Stock" value="<?php echo (isset($stock->total_stock) && $stock->total_stock != '') ? $stock->total_stock : 0; ?>" readonly>
                             </div>
                             <div class="col-md-2">
-                              <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
+                              <input type="number" name="unit_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->unit_price; ?>" readonly>
                             </div>
 
                             <div class="col-md-2">
-                              <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
+                              <input type="number" name="actual_unit_price[]" min="1" class="form-control" placeholder="Unit Price" value=<?php echo $value->actual_unit_price ?> readonly hidden>
                             </div>
+
+                            <!-- <div class="col-md-2">
+                              <input type="number" name="total_price[]" min="1" class="form-control" placeholder="Quantity" value="<?php echo $value->qty; ?>" readonly>
+                            </div> -->
 
                             <div class="col-md-1">
                               <div class="rmv">
