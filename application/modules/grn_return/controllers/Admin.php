@@ -480,8 +480,8 @@ class Admin extends Auth_controller
 										'out_total_price' => ($value->qty * $grn_tran_detail_frm_stock_ledger->in_unit_price),
 										'out_actual_unit_price' => $grn_tran_detail_frm_stock_ledger->in_actual_unit_price,
 										'out_actual_total_price' => ($value->qty * $grn_tran_detail_frm_stock_ledger->in_actual_unit_price),
-										// 'location_id' => $value->location_id,
-										// 'batch_no' => $value->batch_no,
+										'location_id' => $grn_tran_detail_frm_stock_ledger->location_id,
+										'batch_no' => $grn_tran_detail_frm_stock_ledger->batch_no,
 										'vendor_id' => $detail->supplier_id,
 										// 'client_id' => '???',
 										'remarks' => 'posted from goods return',
@@ -509,7 +509,7 @@ class Admin extends Auth_controller
 								}
 
 								$update['posted_tag'] = '1';
-								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_by'] = $this->current_user->id;
 								$update['posted_on'] = date('Y-m-d');
 
 								$this->crud_model->update('grn_return', $update, array('id' => $detail->id));

@@ -98,7 +98,10 @@ $total = 0;
                                             <div class="col-md-1">
                                                 <label>Total Price</label>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
+                                                <label>Location</label>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label>Remarks</label>
                                             </div>
 
@@ -112,7 +115,7 @@ $total = 0;
                                                     //     'item_code' => $value->item_code,
                                                     //     'qty <=' => $value->qty,
                                                     // );
-                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+                                                    // $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                                     $return_qty = $value->qty;
 
@@ -137,7 +140,15 @@ $total = 0;
                                                         <div class="col-md-1">
                                                             <input type="number" name="total_price[]" min="1" class="form-control" id="each_total_sales-<?php echo $key + 1; ?>" placeholder="Total Price" value="<?php echo ($value->qty * $value->unit_price); ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-2">
+                                                            <select name="location_id[]" class="form-control" id="location_id" required>
+                                                                <option value>Select Location</option>
+                                                                <?php foreach ($locations as $key_l => $value_l) { ?>
+                                                                    <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
                                                             <textarea name="return_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Remarks"></textarea>
                                                         </div>
 

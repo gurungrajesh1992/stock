@@ -19,8 +19,9 @@
                   <th>Bank Name</th>
                   <th>Total Amt</th>
                   <th>Advance Amt</th>
-                  <th>Is Cancelled</th>
-                  <th>Is Approved</th>
+                  <th>Cancelled</th>
+                  <th>Approved</th>
+                  <th>Posted</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -42,6 +43,12 @@
                       $cancel_tag = 'Yes';
                     } else {
                       $cancel_tag = 'No';
+                    }
+
+                    if ($value->posted_tag == '1') {
+                      $posted_tag = 'Yes';
+                    } else {
+                      $posted_tag = 'No';
                     }
 
                     if ($value->payment_type == 'CH') {
@@ -67,6 +74,7 @@
 
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
+                      <td><?php echo $posted_tag; ?></td>
                       <td>
                         <?php if ($value->sale_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>

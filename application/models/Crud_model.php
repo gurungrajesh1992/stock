@@ -7,98 +7,90 @@ class Crud_model extends CI_Model
         parent::__construct();
     }
 
-    public function count_all_data($staff_id,$department_id,$requisition_date_from,$requisition_date_to,$requisition_no,$approved,$cancelled){
+    public function count_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled)
+    {
         $this->db->select('*')->from('requisition_master');
-		if($requisition_date_from && !$requisition_date_to){
+        if ($requisition_date_from && !$requisition_date_to) {
             $this->db->where('created_on >=', $requisition_date_from);
-		
-		}
-		if(!$requisition_date_from && $requisition_date_to){
-          $this->db->where('created_on <=', $requisition_date_to);
-			
-		}
-		if($requisition_date_from && $requisition_date_to){
-			$this->db->where('created_on >=', $requisition_date_from);
-			$this->db->where('created_on <=', $requisition_date_to);
-			
-		}
-        if($requisition_no!=NULL){      
-			$this->db->where('requisition_no', $requisition_no);
-			
-		}
-        if($department_id!=NULL){
-      		$this->db->where('department_id', $department_id);
-			$this->db->order_by("id", "desc");
-      
-		}
-         if($staff_id!=NULL){
-      		$this->db->where('staff_id', $staff_id);
-			 $this->db->order_by("id", "desc");
-      
-		}
-         if($approved=="0"){
-			$this->db->where('approved_on IS NOT NULL');
+        }
+        if (!$requisition_date_from && $requisition_date_to) {
+            $this->db->where('created_on <=', $requisition_date_to);
+        }
+        if ($requisition_date_from && $requisition_date_to) {
+            $this->db->where('created_on >=', $requisition_date_from);
+            $this->db->where('created_on <=', $requisition_date_to);
+        }
+        if ($requisition_no != NULL) {
+            $this->db->where('requisition_no', $requisition_no);
+        }
+        if ($department_id != NULL) {
+            $this->db->where('department_id', $department_id);
+            $this->db->order_by("id", "desc");
+        }
+        if ($staff_id != NULL) {
+            $this->db->where('staff_id', $staff_id);
+            $this->db->order_by("id", "desc");
+        }
+        if ($approved == "0") {
+            $this->db->where('approved_on IS NOT NULL');
             $this->db->where('approved_by  IS NOT NULL');
-			
-      
-		}
-        if($approved =="1"){
-			$this->db->where('approved_on IS NULL');
-            $this->db->where('approved_by IS NULL');     
-		}
+        }
+        if ($approved == "1") {
+            $this->db->where('approved_on IS NULL');
+            $this->db->where('approved_by IS NULL');
+        }
 
-        if($cancelled){
-    		$this->db->where('cancel_tag',$cancelled);
-		}
+        if ($cancelled) {
+            $this->db->where('cancel_tag', $cancelled);
+        }
         $this->db->order_by("id", "desc");
-    
+
         $query = $this->db->get();
 
-		$q=$query->result();//echo $this->db->last_query();exit;
-			return $q;
-      
+        $q = $query->result(); //echo $this->db->last_query();exit;
+        return $q;
     }
-    public function get_all_data($staff_id,$department_id,$requisition_date_from,$requisition_date_to,$requisition_no,$approved,$cancelled,$limit,$offset){
+    public function get_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled, $limit, $offset)
+    {
         $this->db->select('*')->from('requisition_master');
-		if($requisition_date_from && !$requisition_date_to){
+        if ($requisition_date_from && !$requisition_date_to) {
             $this->db->where('created_on >=', $requisition_date_from);
-		}
-		if(!$requisition_date_from && $requisition_date_to){
-          $this->db->where('created_on <=', $requisition_date_to);
-		}
-		if($requisition_date_from && $requisition_date_to){
-			$this->db->where('created_on >=', $requisition_date_from);
-			$this->db->where('created_on <=', $requisition_date_to);
-		}
-        if($requisition_no!=NULL){      
-			$this->db->where('requisition_no', $requisition_no);
-		}
-        if($department_id!=NULL){
-      		$this->db->where('department_id', $department_id);
-			 $this->db->order_by("id", "desc");
-		}
-         if($staff_id!=NULL){
-      		$this->db->where('staff_id', $staff_id);
-			 $this->db->order_by("id", "desc");
-		}
-         if($approved=="0"){
-			$this->db->where('approved_on IS NOT NULL');
+        }
+        if (!$requisition_date_from && $requisition_date_to) {
+            $this->db->where('created_on <=', $requisition_date_to);
+        }
+        if ($requisition_date_from && $requisition_date_to) {
+            $this->db->where('created_on >=', $requisition_date_from);
+            $this->db->where('created_on <=', $requisition_date_to);
+        }
+        if ($requisition_no != NULL) {
+            $this->db->where('requisition_no', $requisition_no);
+        }
+        if ($department_id != NULL) {
+            $this->db->where('department_id', $department_id);
+            $this->db->order_by("id", "desc");
+        }
+        if ($staff_id != NULL) {
+            $this->db->where('staff_id', $staff_id);
+            $this->db->order_by("id", "desc");
+        }
+        if ($approved == "0") {
+            $this->db->where('approved_on IS NOT NULL');
             $this->db->where('approved_by  IS NOT NULL');
-		}
-        if($approved =="1"){
-			$this->db->where('approved_on IS NULL');
-            $this->db->where('approved_by IS NULL');     
-		}
-        if($cancelled){
-       		$this->db->where('cancel_tag',$cancelled);
-		}
+        }
+        if ($approved == "1") {
+            $this->db->where('approved_on IS NULL');
+            $this->db->where('approved_by IS NULL');
+        }
+        if ($cancelled) {
+            $this->db->where('cancel_tag', $cancelled);
+        }
         $this->db->order_by("id", "desc");
         $this->db->limit($limit, $offset);
         $query = $this->db->get();
 
-		$q=$query->result();//echo $this->db->last_query();exit;
-			return $q;
-      
+        $q = $query->result(); //echo $this->db->last_query();exit;
+        return $q;
     }
     public function getAll($table, $where, $limit, $offset)
     {

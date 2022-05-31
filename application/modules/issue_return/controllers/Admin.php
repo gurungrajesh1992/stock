@@ -155,6 +155,7 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$returned_qty =  $this->input->post('returned_qty');
 						$issued_qty =  $this->input->post('issued_qty');
+						$location_id =  $this->input->post('location_id');
 						$remarks =  $this->input->post('detail_remarks');
 
 						if (count($item_code) > 0) {
@@ -162,6 +163,7 @@ class Admin extends Auth_controller
 								$insert_detail['issue_return_no'] = $data['issue_return_no'];
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['returned_qty'] = $returned_qty[$i];
+								$insert_detail['location_id'] = $location_id[$i];
 								$insert_detail['issued_qty'] = $issued_qty[$i];
 								$insert_detail['remarks'] = $remarks[$i];
 
@@ -177,6 +179,8 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+
+		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['title'] = 'Add Requested ' . $this->title;
 		$data['page'] = 'add';
 		$this->load->view('layouts/admin/index', $data);
@@ -258,6 +262,7 @@ class Admin extends Auth_controller
 						$item_code =  $this->input->post('item_code');
 						$returned_qty =  $this->input->post('returned_qty');
 						$issued_qty =  $this->input->post('issued_qty');
+						$location_id =  $this->input->post('location_id');
 						$remarks =  $this->input->post('detail_remarks');
 
 						if (count($item_code) > 0) {
@@ -266,6 +271,7 @@ class Admin extends Auth_controller
 								$insert_detail['item_code'] = $item_code[$i];
 								$insert_detail['returned_qty'] = $returned_qty[$i];
 								$insert_detail['issued_qty'] = $issued_qty[$i];
+								$insert_detail['location_id'] = $location_id[$i];
 								$insert_detail['remarks'] = $remarks[$i];
 
 								$this->crud_model->insert('issue_return_details', $insert_detail);
@@ -280,6 +286,7 @@ class Admin extends Auth_controller
 				}
 			}
 		}
+		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
 		$data['title'] = 'Edit Requested ' . $this->title;
 		$data['page'] = 'edit';
 		$this->load->view('layouts/admin/index', $data);
@@ -789,7 +796,7 @@ class Admin extends Auth_controller
 										'out_total_price' => 0,
 										'out_actual_unit_price' => 0,
 										'out_actual_total_price' => 0,
-										// 'location_id' => $value->location_id,
+										'location_id' => $value->location_id,
 										// 'batch_no' => $value->batch_no,
 										// 'vendor_id' => $value->supplier_id,
 										// 'client_id' => '???',
@@ -818,7 +825,7 @@ class Admin extends Auth_controller
 								}
 
 								$update['posted_tag'] = '1';
-								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_by'] = $this->current_user->id;
 								$update['posted_on'] = date('Y-m-d');
 
 								$this->crud_model->update('issue_return_master', $update, array('id' => $detail->id));

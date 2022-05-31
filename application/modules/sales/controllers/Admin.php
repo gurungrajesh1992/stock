@@ -124,7 +124,7 @@ class Admin extends Auth_controller
 					if ($result == true) {
 
 						$item_code =  $this->input->post('item_code');
-						var_dump($item_code);exit;
+						// var_dump($item_code);exit;
 						$qty =  $this->input->post('qty');
 						$unit_price =  $this->input->post('unit_price');
 
@@ -764,7 +764,7 @@ class Admin extends Auth_controller
 		echo json_encode($response);
 	}
 
-	public function issue_post()
+	public function sales_post()
 	{
 		try {
 			if (!$this->input->is_ajax_request()) {
@@ -792,17 +792,17 @@ class Admin extends Auth_controller
 									'status_message' => 'Can not be posted, Already Cancelled !!',
 								);
 							} else {
-								$invoice_detail = $this->crud_model->get_where('issue_slip_details', array('invoice_master' => $detail->invoice_no));
+								$childs = $this->crud_model->get_where('sales_details', array('sale_no' => $detail->sale_no));
 
-								if (isset($invoice_detail)) {
+								if (isset($childs)) {
 									$batch_data = array();
-									foreach ($invoice_detail as $key => $value) {
+									foreach ($childs as $key => $value) {
 										$data = array(
 											'item_code' =>  $value->item_code,
-											'transaction_date' => $detail->issue_date,
-											'transaction_type' => 'ISS',
+											'transaction_date' => $detail->sales_date,
+											'transaction_type' => 'SAL',
 											'in_qty' => 0,
-											'out_qty' => $value->issued_qnty,
+											'out_qty' => $value->qty,
 											'rem_qty' => 0,
 											'in_unit_price' => 0,
 											'in_total_price' => 0,
@@ -815,9 +815,9 @@ class Admin extends Auth_controller
 											// 'location_id' => $value->location_id,
 											// 'batch_no' => '',
 											// 'vendor_id' => '???',
-											// 'client_id' => '???',
-											'remarks' => 'posted from issue',
-											// 'transactioncode' => $detail->issue_slip_no,
+											'client_id' => $detail->client_id,
+											'remarks' => 'posted from sales',
+											'transactioncode' => $detail->sale_no,
 											'created_on' => date('Y-m-d'),
 											'created_by' => $this->current_user->id,
 											// 'updated_on' => '???',
@@ -838,83 +838,71 @@ class Admin extends Auth_controller
 										}
 
 										$batch_data[] = $data;
-
-										// $this->crud_model->insert('stock_ledger', $data);
-
-										// if (isset($detail->requisition_no)) {
-										// 	//by request 
-										// 	$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-										// 	$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$value->issued_qnty);
-										// 	$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$value->issued_qnty);
-
-										// 	$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $value->item_code));
-										// } else {
-										// 	// direct
-										// }
 									}
-									// echo "<pre>";
-									// var_dump($batch_data);
-									// exit;
+
 									$batch_result = $this->db->insert_batch('stock_ledger', $batch_data);
 
 									if ($batch_result) {
-										//update remaining and received qty in requisition table
-										foreach ($issue_details as $ku => $vu) {
-
-											if (isset($detail->requisition_no)) {
-												//by request 
-												$each_row_detail_child = $this->crud_model->get_where_single('requisition_details', array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-												$update_request_child['received_qnty'] = ((int)$each_row_detail_child->received_qnty + (int)$vu->issued_qnty);
-												$update_request_child['remaining_qnty'] = ((int)$each_row_detail_child->remaining_qnty - (int)$vu->issued_qnty);
-
-												$this->crud_model->update('requisition_details', $update_request_child, array('requisition_no' => $detail->requisition_no, 'item_code' => $vu->item_code));
-											} else {
-												// direct
-											}
-										}
 
 										//update stock_ledger remaining qty
 										foreach ($batch_data as $k_batch => $v_batch) {
-											$issued_qty = $v_batch['out_qty'];
+											$sale_qty = $v_batch['out_qty'];
 											$transaction_date = ((isset($v_batch['transaction_date'])) && $v_batch['transaction_date'] != '') ? $v_batch['transaction_date'] : date('Y-m-d');
-											// $where_stock1 = array(
-											// 	'item_code' => $v_batch['item_code'],
-											// 	'transaction_date <=' => $transaction_date,
-											// );
-											// $total_item_stock_before_issue_slip_date_1 = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock1);
+
 											$offset = 0;
-											while ($issued_qty > 0) {
+											$total_out_price = 0;
+											$total_actual_out_price = 0;
+											while ($sale_qty > 0) {
 												$where_loop = array(
 													'item_code' => $v_batch['item_code'],
 													'transaction_date <=' => $transaction_date,
 													'rem_qty >=' => 0
 												);
 												$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
+
 												if (isset($first_inserted_product_qty->rem_qty)) {
-													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$issued_qty;
+
+													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$sale_qty;
 													if ($remaining >= 0) {
 														$update_old['rem_qty'] = $remaining;
-														$issued_qty = 0;
+
+														$total_out_price = $total_out_price + ((int)$sale_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$sale_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+														$sale_qty = 0;
 													} else {
 														$update_old['rem_qty'] = 0;
-														$issued_qty = (int)$issued_qty - (int)$first_inserted_product_qty->rem_qty;
+
+														$total_out_price = $total_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+														$sale_qty = (int)$sale_qty - (int)$first_inserted_product_qty->rem_qty;
 													}
 
 													$this->crud_model->update('stock_ledger', $update_old, array('id' => $first_inserted_product_qty->id));
 												} else {
-													$issued_qty = 0;
+													$sale_qty = 0;
 												}
 
 												$offset = $offset + 1;
 											}
+
+											$out_unit_price = $total_out_price / $v_batch['out_qty'];
+											$out_actual_unit_price = $total_actual_out_price / $v_batch['out_qty'];
+
+											$update_own['out_unit_price'] = $out_unit_price;
+											$update_own['out_total_price'] = $out_unit_price * $v_batch['out_qty'];
+											$update_own['out_actual_unit_price'] = $out_actual_unit_price;
+											$update_own['out_actual_total_price'] = $out_actual_unit_price * $v_batch['out_qty'];
+											$this->crud_model->update('stock_ledger', $update_own, array('transactioncode' => $v_batch['transactioncode'], 'item_code' => $v_batch['item_code']));
 										}
 
-										//update posted tag  on issue_slip_master
+										//update posted tag  on sales_master
 										$update['posted_tag'] = '1';
 										$update['posted_by'] = $this->current_user->id;
 										$update['posted_on'] = date('Y-m-d');
 
-										$this->crud_model->update('issue_slip_master', $update, array('id' => $detail->id));
+										$this->crud_model->update('sales_master', $update, array('id' => $detail->id));
 
 
 

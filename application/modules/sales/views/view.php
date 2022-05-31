@@ -7,6 +7,7 @@
 
                     <div class="card-tools">
                         <a class="btn btn-sm btn-info" id="approve" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <a class="btn btn-sm btn-success" id="post_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
                         <a class="btn btn-sm btn-danger" id="cancel" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
@@ -93,6 +94,9 @@
                                                 <label>Product</label>
                                             </div>
                                             <div class="col-md-2">
+                                                <label>Stock</label>
+                                            </div>
+                                            <div class="col-md-2">
                                                 <label>Quantity</label>
                                             </div>
                                             <div class="col-md-2">
@@ -115,7 +119,7 @@
                                                         'item_code' => $value->item_code,
                                                         'transaction_date <=' => $issue_slip_date,
                                                     );
-                                                    $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+                                                    $total_item_stock_before_sales_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
 
                                                     $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
                                                     // $requisition_detail_item = $this->crud_model->get_where_single('requisition_details', array('item_code' => $value->item_code, 'requisition_no' => $master_detail->requisition_no));
@@ -130,6 +134,9 @@
                                                     <div class="row" style="margin-bottom: 15px;">
                                                         <div class="col-md-2">
                                                             <?php echo $item_detail->item_name; ?>
+                                                        </div>
+                                                        <div class="col-md-2 <?php echo ($value->qty > $total_item_stock_before_sales_date) ? 'out_of_stock' : 'in_stock'; ?>">
+                                                            <?php echo $total_item_stock_before_sales_date; ?>
                                                         </div>
                                                         <div class="col-md-2">
                                                             <?php echo $value->qty; ?>

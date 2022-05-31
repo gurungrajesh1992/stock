@@ -15,8 +15,9 @@
                   <th>Sales Return No</th>
                   <th>Sales No</th>
                   <th>Return Date</th>
-                  <th>Is Cancled</th>
-                  <th>Is Approved</th>
+                  <th>Cancelled</th>
+                  <th>Approved</th>
+                  <th>Posted</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -37,6 +38,12 @@
                     } else {
                       $cancel_tag = 'No';
                     }
+
+                    if ($value->posted_tag == '1') {
+                      $posted_tag = 'Yes';
+                    } else {
+                      $posted_tag = 'No';
+                    }
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
@@ -45,6 +52,7 @@
                       <td><?php echo $value->sales_rtn_date; ?></td>
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
+                      <td><?php echo $posted_tag; ?></td>
                       <td>
                         <?php if ($value->s_return_no == NULL) { ?>
                           <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>

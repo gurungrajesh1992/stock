@@ -994,14 +994,14 @@ class Admin extends Auth_controller
 										'rem_qty' => $value->qty,
 										'in_unit_price' => $value->unit_price,
 										'in_total_price' => ($value->qty * $value->unit_price),
-										'in_actual_unit_price' => $in_actual_unit_price,
-										'in_actual_total_price' => $in_actual_total_price,
+										'in_actual_unit_price' => ($value->unit_price + $in_actual_unit_price),
+										'in_actual_total_price' => ($value->qty * $value->unit_price) + $in_actual_total_price,
 										'out_unit_price' => 0,
 										'out_total_price' => 0,
 										'out_actual_unit_price' => 0,
 										'out_actual_total_price' => 0,
-										// 'location_id' => $value->location_id,
-										// 'batch_no' => $value->batch_no,
+										'location_id' => $value->location_id,
+										'batch_no' => $value->batch_no,
 										'vendor_id' => $detail->supplier_id,
 										// 'client_id' => '???',
 										'remarks' => 'posted from GRN',
@@ -1029,7 +1029,7 @@ class Admin extends Auth_controller
 								}
 
 								$update['posted_tag'] = '1';
-								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_by'] = $this->current_user->id;
 								$update['posted_on'] = date('Y-m-d');
 
 								$this->crud_model->update('grn_master', $update, array('id' => $detail->id));
