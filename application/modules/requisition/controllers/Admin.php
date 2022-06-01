@@ -14,21 +14,36 @@ class Admin extends Auth_controller
 		$this->redirect = 'requisition';
 	}
 
-	public function search($page = ''){
-	
+	public function search($page = '')
+	{
+
 		// print_r($this->input->post());
-			$staff_id=$this->input->post('staff_id');
-			$department_id=$this->input->post('department_id');
-			$requisition_date_from=$this->input->post('requisition_date_from');
-			$requisition_date_to=$this->input->post('requisition_date_to');
-			$requisition_no=$this->input->post('requisition_no');
-			$approved=$this->input->post('approved');
-			$cancelled=$this->input->post('cancelled');
-			
-			$all_data = $this->crud_model->count_all_data($staff_id,$department_id,$requisition_date_from,$requisition_date_to,$requisition_no,$approved,$cancelled);
-		
+		$staff_id = $this->input->post('staff_id');
+		$department_id = $this->input->post('department_id');
+		$requisition_date_from = $this->input->post('requisition_date_from');
+		$requisition_date_to = $this->input->post('requisition_date_to');
+		$requisition_no = $this->input->post('requisition_no');
+		$approved = $this->input->post('approved');
+		$cancelled = $this->input->post('cancelled');
+
+		$data_filter = array(
+			'created_on >=' => $requisition_date_from,
+			'created_on <=' => $requisition_date_to,
+			'requisition_no' => $requisition_no,
+			'department_id' => $department_id,
+			'staff_id' => $staff_id,
+			'approved_by' => $approved,
+			'cancel_tag' => $cancelled,
+		);
+		// echo "<pre>";
+		// var_dump($data_filter);
+		// exit;
+		// $all_data = $this->crud_model->count_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled);
+		$all_data = $this->crud_model->count_all_data('requisition_master', $data_filter);
+		// var_dump($all_data);
+		// exit;
 		$config['base_url'] = base_url($this->redirect . '/admin/search');
-		$config['total_rows'] =count($all_data);
+		$config['total_rows'] = $all_data->total;
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
 
@@ -58,12 +73,13 @@ class Admin extends Auth_controller
 		$this->pagination->initialize($config);
 
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-		$items = $this->crud_model->get_all_data($staff_id,$department_id,$requisition_date_from,$requisition_date_to,$requisition_no,$approved,$cancelled, $config['per_page'], $page);
-		
+		// $items = $this->crud_model->get_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled, $config['per_page'], $page);
+		$items = $this->crud_model->get_all_data('requisition_master', $data_filter, $config['per_page'], $page);
+
 		$data = array(
 			'title' => $this->title . ' List',
 			'page' => 'list',
-			'items' => $all_data,
+			'items' => $items,
 			'redirect' => $this->redirect,
 			'pagination' =>  $this->pagination->create_links()
 		);
@@ -74,6 +90,20 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
+		// $data = array(
+		// 	'created_on >=' => '',
+		// 	'created_on <=' => '',
+		// 	'requisition_no' => '',
+		// 	'department_id' => '',
+		// 	'staff_id' => '',
+		// 	'approved_by' => '1',
+		// 	'cancel_tag' => '0',
+		// );
+		// $count = $this->crud_model->count_all_data_test('requisition_master', $data);
+		// $all_data = $this->crud_model->get_all_data_test('requisition_master', $data, 1, 0);
+		// echo "<pre>";
+		// var_dump($all_data);
+		// exit;
 		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;

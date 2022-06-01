@@ -58,6 +58,81 @@
 <script>
   $(document).ready(function() {
 
+    //location transfer post
+    $(document).off('click', '#post_loc_transfer').on('click', '#post_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      // var list = $('.req_item .out_of_stock').map(function() {
+      //   return 'out of stock';
+      // }).get();
+      // console.log(list.length);
+      // return false;
+      // if (list.length > 0) {
+      //   Toastify({
+
+      //     text: 'Some Product Out of stock !!!',
+
+      //     duration: 1000,
+
+      //     style: {
+      //       background: "linear-gradient(to right, red, yellow)",
+      //     },
+
+      //   }).showToast();
+      //   return false;
+      // }
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/location_transfer_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+
+            $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
+          }
+        }
+      });
+
+    });
+
     //sales return post
     $(document).off('click', '#post_sales_return').on('click', '#post_sales_return', function() {
       var table_id = $(this).attr('table_id');

@@ -6,7 +6,7 @@
 
                 <div class="card-tools">
                     <a class="btn btn-sm btn-info" id="approve" table_id="location_transfer-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                    <a class="btn btn-sm btn-success" id="post_open" table_id="location_transfer-<?php echo $detail->id; ?>"><?php echo (isset($detail->posted_tag) && $detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
+                    <a class="btn btn-sm btn-success" id="post_loc_transfer" table_id="location_transfer-<?php echo $detail->id; ?>"><?php echo (isset($detail->posted_tag) && $detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
                     <a class="btn btn-sm btn-danger" id="cancel" table_id="location_transfer-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                 </div>
             </div>

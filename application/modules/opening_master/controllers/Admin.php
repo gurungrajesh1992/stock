@@ -153,9 +153,9 @@ class Admin extends Auth_controller
 								$insert_detail['location_id'] = $location[$i];
 								$insert_detail['batch_no'] = $batch_no[$i];
 								$insert_detail['supplier_id'] = $supplier_id[$i];
-								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
-								$insert_detail['book_value'] = $book_value[$i];
-								$insert_detail['purchase_date'] = $purchase_date[$i];
+								$insert_detail['depreciated_amt'] = isset($depreciated_amt[$i]) ? $depreciated_amt[$i] : '';
+								$insert_detail['book_value'] = isset($book_value[$i]) ? $book_value[$i] : '';
+								$insert_detail['purchase_date'] = isset($purchase_date[$i]) ? $purchase_date[$i] : '';
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}
@@ -203,9 +203,9 @@ class Admin extends Auth_controller
 								$insert_detail['location_id'] = $location[$i];
 								$insert_detail['batch_no'] = $batch_no[$i];
 								$insert_detail['supplier_id'] = $supplier_id[$i];
-								$insert_detail['depreciated_amt'] = $depreciated_amt[$i];
-								$insert_detail['book_value'] = $book_value[$i];
-								$insert_detail['purchase_date'] = $purchase_date[$i];
+								$insert_detail['depreciated_amt'] = isset($depreciated_amt[$i]) ? $depreciated_amt[$i] : '';
+								$insert_detail['book_value'] = isset($book_value[$i]) ? $book_value[$i] : '';
+								$insert_detail['purchase_date'] = isset($purchase_date[$i]) ? $purchase_date[$i] : '';
 
 								$this->crud_model->insert('opening_detail', $insert_detail);
 							}

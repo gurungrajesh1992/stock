@@ -158,14 +158,11 @@
                             <div class=" row">
                                 <div class="col-md-4">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label>Total =</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="total" class="form-control" id="total_price_sales" placeholder="Total Price" value="<?php echo $master_detail->total; ?>" readonly>
-                                </div>
-                                <div class="col-md-1">
-
                                 </div>
                             </div>
                         </div>

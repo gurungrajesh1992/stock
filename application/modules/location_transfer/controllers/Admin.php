@@ -109,6 +109,14 @@ class Admin extends Auth_controller
 				// exit;
 
 				$id = $this->input->post('id');
+				if ($this->input->post('from_loc') == $this->input->post('to_loc')) {
+					$this->session->set_flashdata('error', 'Two Location Can Not Be Same');
+					if ($id == '') {
+						redirect($this->redirect . '/admin/form/');
+					} else {
+						redirect($this->redirect . '/admin/form/' . $id);
+					}
+				}
 				if ($id == '') {
 					$data['created_on'] = date('Y-m-d');
 					$data['created_by'] = $this->current_user->id;
@@ -381,6 +389,295 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'Please Select Item First',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	public function location_transfer_post()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+
+				if ($table || $row_id) {
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						if (isset($detail->posted_by) && $detail->posted_by != '') {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Already Posted !!',
+							);
+						} else {
+							if (isset($detail->cancel_tag) && $detail->cancel_tag == '1') {
+								$response = array(
+									'status' => 'error',
+									'status_code' => 300,
+									'status_message' => 'Can not be posted, Already Cancelled !!',
+								);
+							} else {
+								$childs = $this->crud_model->get_where('location_transfer_detail', array('transfer_code' => $detail->transfer_code));
+
+								if (isset($childs)) {
+									//Location Transfer Out
+									$batch_data = array();
+									foreach ($childs as $key => $value) {
+										$data = array(
+											'item_code' =>  $value->item_code,
+											'transaction_date' => $detail->transfered_on,
+											'transaction_type' => 'LCO',
+											'in_qty' => 0,
+											'out_qty' => $value->qty,
+											'rem_qty' => 0,
+											'in_unit_price' => 0,
+											'in_total_price' => 0,
+											'in_actual_unit_price' => 0,
+											'in_actual_total_price' => 0,
+											'out_unit_price' => 0,
+											'out_total_price' => 0,
+											'out_actual_unit_price' => 0,
+											'out_actual_total_price' => 0,
+											// 'location_id' => $value->to_loc,
+											// 'batch_no' => '',
+											// 'vendor_id' => '???',
+											// 'client_id' => $detail->client_id,
+											'remarks' => 'posted from location transfer out',
+											'transactioncode' => $detail->transfer_code,
+											'created_on' => date('Y-m-d'),
+											'created_by' => $this->current_user->id,
+											// 'updated_on' => '???',
+											// 'updated_by' => '???',
+											// 'staff_id' => '???',
+											// 'status' => '1',
+										);
+										$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+										if (isset($last_row_no->ledger_code)) {
+											$string = $last_row_no->ledger_code;
+											$explode = explode("-", $string);
+											$int_value = intval($explode[1]) + intval($key) + 1;
+											// var_dump(sprintf("%04d", $int_value));
+											// exit;
+											$data['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+										} else {
+											$data['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+										}
+
+										$batch_data[] = $data;
+									}
+
+									$batch_result = $this->db->insert_batch('stock_ledger', $batch_data);
+
+									if ($batch_result) {
+
+										//update stock_ledger remaining qty
+										foreach ($batch_data as $k_batch => $v_batch) {
+											$out_qty = $v_batch['out_qty'];
+											$transaction_date = ((isset($v_batch['transaction_date'])) && $v_batch['transaction_date'] != '') ? $v_batch['transaction_date'] : date('Y-m-d');
+
+											$offset = 0;
+											$total_out_price = 0;
+											$total_actual_out_price = 0;
+											while ($out_qty > 0) {
+												$where_loop = array(
+													'item_code' => $v_batch['item_code'],
+													'transaction_date <=' => $transaction_date,
+													'location_id' => $detail->from_loc,
+													'rem_qty >=' => 0
+												);
+												$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
+
+												if (isset($first_inserted_product_qty->rem_qty)) {
+
+													$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$out_qty;
+													if ($remaining >= 0) {
+														$update_old['rem_qty'] = $remaining;
+
+														$total_out_price = $total_out_price + ((int)$out_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$out_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+														$out_qty = 0;
+													} else {
+														$update_old['rem_qty'] = 0;
+
+														$total_out_price = $total_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_unit_price);
+														$total_actual_out_price = $total_actual_out_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+														$out_qty = (int)$out_qty - (int)$first_inserted_product_qty->rem_qty;
+													}
+
+													$this->crud_model->update('stock_ledger', $update_old, array('id' => $first_inserted_product_qty->id));
+												} else {
+													$out_qty = 0;
+												}
+
+												$offset = $offset + 1;
+											}
+
+											$out_unit_price = $total_out_price / $v_batch['out_qty'];
+											$out_actual_unit_price = $total_actual_out_price / $v_batch['out_qty'];
+
+											$update_own['out_unit_price'] = $out_unit_price;
+											$update_own['out_total_price'] = $out_unit_price * $v_batch['out_qty'];
+											$update_own['out_actual_unit_price'] = $out_actual_unit_price;
+											$update_own['out_actual_total_price'] = $out_actual_unit_price * $v_batch['out_qty'];
+											$this->crud_model->update('stock_ledger', $update_own, array('transactioncode' => $v_batch['transactioncode'], 'item_code' => $v_batch['item_code'], 'transaction_type' => 'LCO'));
+										}
+
+										//insert location transfer in
+										$batch_data_in = array();
+										foreach ($childs as $key_in => $value_in) {
+											$data_in = array(
+												'item_code' =>  $value_in->item_code,
+												'transaction_date' => $detail->transfered_on,
+												'transaction_type' => 'LCI',
+												'in_qty' => $value_in->qty,
+												'out_qty' => 0,
+												'rem_qty' => $value_in->qty,
+												'in_unit_price' => 0,
+												'in_total_price' => 0,
+												'in_actual_unit_price' => 0,
+												'in_actual_total_price' => 0,
+												'out_unit_price' => 0,
+												'out_total_price' => 0,
+												'out_actual_unit_price' => 0,
+												'out_actual_total_price' => 0,
+												'location_id' => $detail->to_loc,
+												// 'batch_no' => '',
+												// 'vendor_id' => '???',
+												// 'client_id' => $detail->client_id,
+												'remarks' => 'posted from location transfer in',
+												'transactioncode' => $detail->transfer_code,
+												'created_on' => date('Y-m-d'),
+												'created_by' => $this->current_user->id,
+												// 'updated_on' => '???',
+												// 'updated_by' => '???',
+												// 'staff_id' => '???',
+												// 'status' => '1',
+											);
+											$last_row_no = $this->crud_model->get_where_single_order_by('stock_ledger', array('status' => '1'), 'id', 'DESC');
+											if (isset($last_row_no->ledger_code)) {
+												$string = $last_row_no->ledger_code;
+												$explode = explode("-", $string);
+												$int_value = intval($explode[1]) + intval($key_in) + 1;
+												// var_dump(sprintf("%04d", $int_value));
+												// exit;
+												$data_in['ledger_code'] = 'LEDG' . date('dmY') . '-' . sprintf("%04d", $int_value);
+											} else {
+												$data_in['ledger_code'] = 'LEDG' . date('dmY') . '-0001';
+											}
+
+											$batch_data_in[] = $data_in;
+										}
+
+										$batch_in_result = $this->db->insert_batch('stock_ledger', $batch_data_in);
+
+										if ($batch_in_result) {
+											//update stock_ledger in prices
+											foreach ($batch_data_in as $k_batch => $v_batch_in) {
+												$in_qty = $v_batch_in['in_qty'];
+												$transaction_date = ((isset($v_batch_in['transaction_date'])) && $v_batch_in['transaction_date'] != '') ? $v_batch_in['transaction_date'] : date('Y-m-d');
+
+												$offset = 0;
+												$total_in_price = 0;
+												$total_actual_in_price = 0;
+												while ($in_qty > 0) {
+													$where_loop = array(
+														'item_code' => $v_batch_in['item_code'],
+														'transaction_date <=' => $transaction_date,
+														'location_id' => $detail->from_loc,
+														'rem_qty >=' => 0
+													);
+													$first_inserted_product_qty = $this->crud_model->get_where_single_order_by_with_offset('stock_ledger', $where_loop, 'id', 'ASC', $offset);
+
+													if (isset($first_inserted_product_qty->rem_qty)) {
+
+														$remaining = (int)$first_inserted_product_qty->rem_qty - (int)$in_qty;
+														if ($remaining >= 0) {
+															$total_in_price = $total_in_price + ((int)$in_qty * $first_inserted_product_qty->in_unit_price);
+															$total_actual_in_price = $total_actual_in_price + ((int)$in_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+															$in_qty = 0;
+														} else {
+															$total_in_price = $total_in_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_unit_price);
+															$total_actual_in_price = $total_actual_in_price + ((int)$first_inserted_product_qty->rem_qty * $first_inserted_product_qty->in_actual_unit_price);
+
+															$in_qty = (int)$in_qty - (int)$first_inserted_product_qty->rem_qty;
+														}
+													} else {
+														$in_qty = 0;
+													}
+
+													$offset = $offset + 1;
+												}
+
+												$in_unit_price = $total_in_price / $v_batch_in['in_qty'];
+												$in_actual_unit_price = $total_actual_in_price / $v_batch_in['in_qty'];
+
+												$update_own_in['in_unit_price'] = $in_unit_price;
+												$update_own_in['in_total_price'] = $in_unit_price * $v_batch_in['in_qty'];
+												$update_own_in['in_actual_unit_price'] = $in_actual_unit_price;
+												$update_own_in['in_actual_total_price'] = $in_actual_unit_price * $v_batch_in['in_qty'];
+												$this->crud_model->update('stock_ledger', $update_own_in, array('transactioncode' => $v_batch_in['transactioncode'], 'item_code' => $v_batch_in['item_code'], 'transaction_type' => 'LCI'));
+											}
+										}
+
+										//update posted tag  on location_transfer
+										$update['posted_tag'] = '1';
+										$update['posted_by'] = $this->current_user->id;
+										$update['posted_on'] = date('Y-m-d');
+
+										$this->crud_model->update('location_transfer', $update, array('id' => $detail->id));
+
+
+
+										$response = array(
+											'status' => 'success',
+											'status_code' => 200,
+											'status_message' => 'Successfully Posted !!!',
+										);
+									} else {
+
+										$response = array(
+											'status' => 'error',
+											'status_code' => 200,
+											'status_message' => 'Unable To Post !!!',
+										);
+									}
+								} else {
+									$response = array(
+										'status' => 'error',
+										'status_code' => 300,
+										'status_message' => 'No Details Available !!!',
+									);
+								}
+							}
+						}
+					} else {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Record is not approved yet !!!',
+						);
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid !!!',
 					);
 				}
 			}
