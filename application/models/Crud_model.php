@@ -343,4 +343,11 @@ class Crud_model extends CI_Model
 
         return $result;
     }
+
+    public function get_new_items_for_year_end()
+    {
+        $sql = "SELECT DISTINCT a.item_code, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date FROM item_infos a LEFT JOIN stock_ledger b on a.item_code = b.item_code LEFT JOIN year_end c on a.item_code = c.item_code WHERE b.rem_qty > 0 AND a.item_type = 'A' AND c.id is null";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
 }

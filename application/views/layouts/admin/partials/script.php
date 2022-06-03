@@ -58,6 +58,53 @@
 <script>
   $(document).ready(function() {
 
+    //generate year_end
+    $(document).off('click', '#generate_year_end').on('click', '#generate_year_end', function() {
+      $('#loader_year_end').css('display', 'block');
+      // $('#generate_year_end').css('display', 'none');
+      $.ajax({
+
+        url: '<?php echo base_url('year_end/admin/generate_year_end'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        // data: {
+        //   "table": table,
+        //   "row_id": row_id,
+        // },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            $('#loader_year_end').css('display', 'none');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            $('#loader_year_end').css('display', 'none');
+          }
+        }
+      });
+
+    });
+
     //location transfer post
     $(document).off('click', '#post_loc_transfer').on('click', '#post_loc_transfer', function() {
       var table_id = $(this).attr('table_id');
