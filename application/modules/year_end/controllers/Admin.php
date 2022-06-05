@@ -75,7 +75,7 @@ class Admin extends Auth_controller
 			'page' => 'list',
 			'items' => $items,
 			'fiscal_years' => $fiscal_years,
-			'fiscal_year' => $fiscal_year,
+			'fiscal_year_selected' => $fiscal_year,
 			'loader_icon' => $site_settings->default_img,
 			'redirect' => $this->redirect,
 			'pagination' =>  $this->pagination->create_links()
