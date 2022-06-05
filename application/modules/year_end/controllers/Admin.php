@@ -16,14 +16,17 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
+		// echo "<pre>";
+		// var_dump($this->crud_model->get_opening_detail());
+		// exit;
 		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$fiscal_year = $this->input->post('fiscal_year');
 		if ($fiscal_year) {
 			$fiscal_year = $fiscal_year;
 		} else {
-			$fiscal_year = date('Y') . '/' . (date('Y') + 1);
+			$fiscal_year = (date('Y') - 1) . '/' . date('Y');
 		}
-		// var_dump(date('Y') . '/' . (date('Y') + 1));
+		// var_dump((date('Y') - 1) . '/' . date('Y'));
 		// exit;
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2', 'fiscal_year' => $fiscal_year), 'id');
 		$config['uri_segment'] = 4;
@@ -68,10 +71,11 @@ class Admin extends Auth_controller
 		// exit;
 		$site_settings = $this->session->userdata('site_settings');
 		$data = array(
-			'title' => $this->title . ' List',
+			'title' => $this->title,
 			'page' => 'list',
 			'items' => $items,
 			'fiscal_years' => $fiscal_years,
+			'fiscal_year' => $fiscal_year,
 			'loader_icon' => $site_settings->default_img,
 			'redirect' => $this->redirect,
 			'pagination' =>  $this->pagination->create_links()
@@ -153,10 +157,92 @@ class Admin extends Auth_controller
 			if (!$this->input->is_ajax_request()) {
 				exit('No direct script access allowed');
 			} else {
-				$items = $this->crud_model->get_new_items_for_year_end();
-				echo "<pre>";
-				var_dump($items);
-				exit;
+				$fiscal_year = (date('Y') - 1) . '/' . date('Y');
+
+				$fiscal_year_detail = $this->crud_model->get_where_single('fiscal_year_para', array('fiscal_year' => $fiscal_year));
+				$start_date = isset($fiscal_year_detail->start_date) ? $fiscal_year_detail->start_date : date('Y-m-d');
+				$end_date = isset($fiscal_year_detail->end_date) ? $fiscal_year_detail->end_date : date('Y-m-d');
+				$old_fiscal_year = (date('Y') - 1 - 1) . '/' . (date('Y') - 1);
+
+				// old year end items
+				$old_year_end_items = $this->crud_model->get_where('year_end', array('fiscal_year' => $old_fiscal_year));
+				// var_dump($old_year_end_items);
+				// exit;
+				if (!empty($old_year_end_items)) {
+					$batch_data_old = array();
+					foreach ($old_year_end_items as $key_old => $value_old) {
+						$item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value_old->item_code));
+						if ($item_detail->depreciation_rate) {
+							$depreciated_amount = ($value_old->book_value * $item_detail->depreciation_rate) / 100;
+						} else {
+							$depreciated_amount = 0;
+						}
+						$data_old = array(
+							'fiscal_year' => $fiscal_year,
+							'item_code ' => $value_old->item_code,
+							'purchase_date' => $value_old->purchase_date,
+							'purchase_amt' => $value_old->purchase_amt,
+							'depreciated_amt' => $depreciated_amount,
+							'book_value' => $value_old->book_value - $depreciated_amount,
+							'total_depreciated_amt' => ($value_old->total_depreciated_amt + $depreciated_amount),
+							'remarks' => 'Year End Of ' . $fiscal_year . ' old items',
+						);
+
+						$batch_data_old[] = $data_old;
+					}
+
+					$result_old_items = $this->db->insert_batch('year_end', $old_year_end_items);
+				}
+
+				// new items in stock
+				$items = $this->crud_model->get_new_items_for_year_end($start_date, $end_date);
+
+				if (!empty($items)) {
+					$batch_data = array();
+					foreach ($items as $key => $value) {
+						if ($value->transaction_type == 'OPN') {
+							$opening_detail = $this->crud_model->get_opening_detail($value->transactioncode, $value->item_code);
+							if ($opening_detail->purchase_date) {
+								$purchase_date = $opening_detail->purchase_date;
+							} else {
+								$purchase_date = $value->transaction_date;
+							}
+							$depreciated_amount = $opening_detail->depreciated_amt;
+							$book_value = $opening_detail->book_value;
+						} else {
+							$purchase_date = $value->transaction_date;
+
+							$depreciated_amount = ($value->in_unit_price * $value->depreciation_rate) / 100;
+							//for government rule get quarter and its rate
+							$depreciation_para = $this->crud_model->get_where_single('depreciation_para', array('from <=' => $purchase_date, 'to >=' => $purchase_date));
+							if ($depreciation_para->depreciation_rate) {
+								$depreciated_amount = $depreciated_amount * $depreciation_para->depreciation_rate;
+							} else {
+								$depreciated_amount = $depreciation_para;
+							}
+							$book_value = ($value->in_unit_price - $depreciated_amount);
+						}
+						$data = array(
+							'fiscal_year' => $fiscal_year,
+							'item_code ' => $value->item_code,
+							'purchase_date' => $purchase_date,
+							'purchase_amt' => $value->in_unit_price,
+							'depreciated_amt' => $depreciated_amount,
+							'book_value' => $book_value,
+							'total_depreciated_amt' => ($value->in_unit_price - $book_value),
+							'remarks' => 'Year End Of ' . $fiscal_year . ' New Items',
+						);
+						$batch_data[] = $data;
+					}
+
+					$result = $this->db->insert_batch('year_end', $batch_data);
+				}
+
+				$response = array(
+					'status' => 'success',
+					'status_message' => 'Year End Successfully Generated',
+					'status_code' => 200,
+				);
 			}
 		} catch (Exception $e) {
 			$response = array(

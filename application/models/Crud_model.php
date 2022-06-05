@@ -344,10 +344,31 @@ class Crud_model extends CI_Model
         return $result;
     }
 
-    public function get_new_items_for_year_end()
+    public function get_new_items_for_year_end($start_date, $end_date)
     {
-        $sql = "SELECT DISTINCT a.item_code, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date FROM item_infos a LEFT JOIN stock_ledger b on a.item_code = b.item_code LEFT JOIN year_end c on a.item_code = c.item_code WHERE b.rem_qty > 0 AND a.item_type = 'A' AND c.id is null";
+        $sql = "SELECT DISTINCT a.item_code, a.depreciation_rate, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date, b.transaction_type 
+                FROM item_infos a 
+                LEFT JOIN stock_ledger b on a.item_code = b.item_code 
+                LEFT JOIN year_end c on a.item_code = c.item_code 
+                WHERE b.in_qty > 0 AND b.transaction_date = ( SELECT MAX(transaction_date) FROM stock_ledger WHERE item_code = a.item_code) AND b.transaction_date <= $start_date AND b.transaction_date >= $end_date AND a.item_type = 'A' AND c.id is null;";
         $query = $this->db->query($sql);
         return $query->result();
     }
+
+    public function get_opening_detail($opening_code, $item_code)
+    {
+        $this->db->select('b.item_code, b.unit_price, b.depreciated_amt, b.purchase_date, b.book_value', 'true');
+        $this->db->from('opening_master a');
+        $this->db->join('opening_detail b', 'a.id = b.opening_master_id');
+        $this->db->where('a.opening_code', $opening_code);
+        $this->db->where('b.item_code', $item_code);
+        return $this->db->get('')->row();
+    }
+
+    // public function get_opening_detail()
+    // {
+    //     $sql = "SELECT b.item_code, b.depreciated_amt, b.purchase_date, b.book_value FROM `opening_master` a LEFT JOIN opening_detail b ON a.id = b.opening_master_id WHERE a.opening_code = 'OPE03062022-0001' AND b.item_code = 'IC19042022-0002';";
+    //     $query = $this->db->query($sql);
+    //     return $query->result();
+    // } 
 }

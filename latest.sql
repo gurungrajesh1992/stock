@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jun 03, 2022 at 12:08 PM
+-- Generation Time: Jun 05, 2022 at 11:57 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.4.22
 
@@ -330,6 +330,16 @@ CREATE TABLE `depreciation_para` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `depreciation_para`
+--
+
+INSERT INTO `depreciation_para` (`id`, `depreciation_rate`, `fiscal_year`, `from`, `to`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(3, '1', '2021/2022', '2021-03-01', '2021-05-31', 'first quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(4, '0.75', '2021/2022', '2021-06-01', '2021-08-30', 'Second Quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(5, '0.5', '2021/2022', '2021-09-01', '2021-11-30', 'Third Quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(6, '0.25', '2021/2022', '2021-12-01', '2022-02-28', 'Fourth Quarter', 3, '2022-06-05', 0, '0000-00-00', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -382,7 +392,8 @@ CREATE TABLE `fiscal_year_para` (
 --
 
 INSERT INTO `fiscal_year_para` (`id`, `fiscal_year`, `start_date`, `end_date`, `current_tag`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, '2022/2023', '2022-03-13', '2023-03-12', 'Y', 3, '2022-04-14', 3, '2022-06-03', '1');
+(1, '2022/2023', '2022-03-01', '2023-02-28', 'N', 3, '2022-04-14', 3, '2022-06-05', '1'),
+(2, '2021/2022', '2021-03-01', '2022-02-28', 'Y', 3, '2022-06-05', 0, '2022-06-05', '1');
 
 -- --------------------------------------------------------
 
@@ -472,16 +483,6 @@ CREATE TABLE `grn_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `grn_details`
---
-
-INSERT INTO `grn_details` (`id`, `grn_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `actual_total_price`, `total_price`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRN26052022-0001', 'IC19042022-0002', 9, '1000.00', '0.00', '0.00', '9000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(2, 'GRN26052022-0001', 'IC19042022-0001', 9, '2000.00', '0.00', '0.00', '18000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(5, 'GRN26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '0.00', '1000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1'),
-(6, 'GRN26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '0.00', '4000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -522,14 +523,6 @@ CREATE TABLE `grn_master` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `grn_master`
---
-
-INSERT INTO `grn_master` (`id`, `grn_no`, `type`, `grn_date`, `supplier_id`, `type_no`, `invoice_no`, `payment_type`, `bank_name`, `advance_paid`, `discount_per`, `discount_amt`, `total`, `sub_total`, `vat_percent`, `vat_amount`, `grand_total`, `total_charge`, `approved_on`, `approved_by`, `posted_on`, `posted_by`, `posted_tag`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRN26052022-0001', 'DR', '2022-05-26', 1, '', '', 'CQ', 'Global IME', '5000.00', '15.00', '4050.00', '27000.00', '22950.00', '13.00', '2983.500', '25933.50', '2000.00', '2022-05-26', '3', '2022-05-26', NULL, '1', '0', NULL, NULL, 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(3, 'GRN26052022-0002', 'DR', '2022-05-26', 2, '', '', 'CQ', 'Gbl', '5000.00', '0.00', '0.00', '5000.00', '5000.00', '13.00', '650.000', '5650.00', NULL, '2022-05-26', '3', '2022-05-26', NULL, '1', '0', NULL, NULL, 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -559,14 +552,6 @@ CREATE TABLE `grn_return` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `grn_return`
---
-
-INSERT INTO `grn_return` (`id`, `grn_return_no`, `grn_no`, `supplier_id`, `posted_on`, `posted_by`, `posted_tag`, `approved_on`, `approved_by`, `total_amt`, `return_date`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRR26052022-0001', 'GRN26052022-0001', 1, '2022-05-30', 3, '1', '2022-05-26', 3, '0.00', '2022-05-26', 'firta yeuta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:28:19', 0, '0000-00-00 00:00:00', '1'),
-(2, 'GRR26052022-0002', 'GRN26052022-0002', 2, '2022-05-27', 3, '1', '2022-05-26', 3, '0.00', '2022-05-26', 'sabai firta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:33:02', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -589,16 +574,6 @@ CREATE TABLE `grn_return_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `grn_return_details`
---
-
-INSERT INTO `grn_return_details` (`id`, `grn_return_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'GRR26052022-0001', 'IC19042022-0001', 1, '2000.00', '0.00', '2000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
-(2, 'GRR26052022-0001', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
-(3, 'GRR26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '4000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1'),
-(4, 'GRR26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -663,16 +638,6 @@ CREATE TABLE `issue_return_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `issue_return_details`
---
-
-INSERT INTO `issue_return_details` (`id`, `issue_return_no`, `item_code`, `issued_qty`, `returned_qty`, `location_id`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IR26052022-0001', 'IC19042022-0002', 1, 1, 2, 'ghd hhg', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(2, 'IR26052022-0001', 'IC19042022-0001', 1, 1, 2, 'hdgfdgf', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(3, 'IR30052022-0002', 'IC19042022-0001', 19, 9, 2, 'dasdasda sfsafssaas asdas', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(4, 'IR30052022-0002', 'IC19042022-0002', 19, 9, 2, ' sassaasdasas as wsdaa  s', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -704,14 +669,6 @@ CREATE TABLE `issue_return_master` (
   `status` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `issue_return_master`
---
-
-INSERT INTO `issue_return_master` (`id`, `issue_return_no`, `issue_no`, `return_date`, `department_id`, `staff_id`, `prepared_by`, `prepared_date`, `approved_on`, `approved_by`, `posted_on`, `posted_by`, `posted_tag`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IR26052022-0001', 'IS26052022-0001', '2022-05-26', 2, 2, 'rajesh dai', '2022-05-26', '2022-05-30', '3', '2022-05-30', 3, '1', 'ghfghhf', '0', NULL, NULL, '2022-05-26 18:38:01', 3, '0000-00-00 00:00:00', 0, '1'),
-(2, 'IR30052022-0002', 'IS26052022-0002', '2022-05-30', 2, 2, 'Rajesh Gurung Dai', '2022-05-30', '2022-05-30', '3', '2022-05-30', 3, '1', 'fsf sdfsdfsdf f fd ', '0', NULL, NULL, '2022-05-30 10:57:10', 3, '0000-00-00 00:00:00', 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -730,16 +687,6 @@ CREATE TABLE `issue_slip_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_slip_details`
---
-
-INSERT INTO `issue_slip_details` (`id`, `issue_slip_no`, `item_code`, `issued_qnty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IS26052022-0001', 'IC19042022-0001', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(2, 'IS26052022-0001', 'IC19042022-0002', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(3, 'IS26052022-0002', 'IC19042022-0002', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(4, 'IS26052022-0002', 'IC19042022-0001', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -772,14 +719,6 @@ CREATE TABLE `issue_slip_master` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_slip_master`
---
-
-INSERT INTO `issue_slip_master` (`id`, `issue_slip_no`, `requisition_no`, `issue_date`, `issue_type`, `department_id`, `staff_id`, `issued_by`, `issued_on`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `posted_by`, `posted_tag`, `posted_on`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'IS26052022-0001', 'RQ26052022-0001', '2022-05-26', 'RQ', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', 'issue handeko hai hai', 3, '2022-05-26 21:24:48', 0, '0000-00-00 00:00:00', '1'),
-(2, 'IS26052022-0002', NULL, '2022-05-26', 'DR', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', '98 ota remaining', 3, '2022-05-26 21:38:53', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1021,14 +960,6 @@ CREATE TABLE `location_transfer` (
   `approved_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `location_transfer`
---
-
-INSERT INTO `location_transfer` (`id`, `transfer_code`, `posted_tag`, `posted_on`, `posted_by`, `from_loc`, `to_loc`, `transfered_on`, `transfered_by`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_on`, `updated_by`, `status`, `approved_by`, `approved_on`) VALUES
-(1, 'TRAN31052022-0001', '1', '2022-05-31', 3, '1', '2', '2022-05-31', 3, 'half half garna aateko hai', '0', NULL, NULL, 3, '2022-05-31 00:00:00', '2022-05-31 00:00:00', 3, '1', '3', '2022-05-31'),
-(2, 'TRAN31052022-0002', '1', '2022-05-31', 3, '1', '2', '2022-05-31', 3, '30/70 1/2', '0', NULL, NULL, 3, '2022-05-31 00:00:00', '0000-00-00 00:00:00', 0, '1', '3', '2022-05-31');
-
 -- --------------------------------------------------------
 
 --
@@ -1049,14 +980,6 @@ CREATE TABLE `location_transfer_detail` (
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `location_transfer_detail`
---
-
-INSERT INTO `location_transfer_detail` (`id`, `transfer_code`, `item_code`, `unit_price`, `qty`, `actual_unit_price`, `total_price`, `actual_total_price`, `created_on`, `created_by`, `updated_on`, `updated_by`) VALUES
-(3, 'TRAN31052022-0001', 'IC30052022-0003', '50000.00', 60, '55000.00', '2500000.00', '2750000.00', '2022-05-31 00:00:00', 3, '0000-00-00 00:00:00', 0),
-(4, 'TRAN31052022-0002', 'IC30052022-0003', '50000.00', 10, '55000.00', '500000.00', '550000.00', '2022-05-31 00:00:00', 3, '0000-00-00 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -1134,15 +1057,6 @@ CREATE TABLE `opening_detail` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `opening_detail`
---
-
-INSERT INTO `opening_detail` (`id`, `opening_master_id`, `supplier_id`, `location_id`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `depreciated_amt`, `purchase_date`, `book_value`, `remarks`, `batch_no`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 1, 1, 1, 'IC19042022-0002', 1, '1000.00', '1050.00', '1000.00', '1050.00', '50.00', '2022-01-01', '1000.00', '', 'ABC123', 0, '2022-06-03 11:14:09', 0, '0000-00-00 00:00:00', '1'),
-(2, 1, 1, 1, 'IC19042022-0001', 1, '1000.00', '1050.00', '1000.00', '1050.00', '50.00', '2022-01-01', '1000.00', '', 'ABC123', 0, '2022-06-03 11:14:09', 0, '0000-00-00 00:00:00', '1'),
-(3, 2, 1, 1, 'IC30052022-0003', 100, '1000.00', '1050.00', '100000.00', '105000.00', '0.00', '0000-00-00', '0.00', '', 'ABCD123', 0, '2022-06-03 11:15:22', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1170,14 +1084,6 @@ CREATE TABLE `opening_master` (
   `updated_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `opening_master`
---
-
-INSERT INTO `opening_master` (`id`, `opening_code`, `type`, `fiscal_year`, `opening_date`, `approved_by`, `approved_on`, `posted_tag`, `posted_by`, `posted_on`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'OPE03062022-0001', 'Assets', '2022', '2022-01-01', 3, '2022-06-03', '1', '3', '2022-06-03', 'assets', '0', NULL, NULL, 3, '2022-06-03 07:29:09', 0, '2022-06-03 11:14:15', '1'),
-(2, 'OPE03062022-0002', 'Inventory', '2022', '2022-02-01', 3, '2022-06-03', '1', '3', '2022-06-03', 'inventory', '0', NULL, NULL, 3, '2022-06-03 07:30:22', 0, '2022-06-03 11:15:30', '1');
 
 -- --------------------------------------------------------
 
@@ -1301,18 +1207,6 @@ CREATE TABLE `requisition_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `requisition_details`
---
-
-INSERT INTO `requisition_details` (`id`, `requisition_no`, `item_code`, `quantity_requested`, `received_qnty`, `remaining_qnty`, `remark`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(2, 'RQ19042022-0001', 'IC19042022-0002', 1, 0, NULL, 'Dell Inspiron 3511 ', 0, '2022-04-19 12:02:32', 0, '0000-00-00 00:00:00', '1'),
-(3, 'RQ19042022-0002', 'IC19042022-0002', 2, 0, NULL, 'Dell Inspiron 3511-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
-(4, 'RQ19042022-0002', 'IC19042022-0001', 2, 0, NULL, 'Computer Wifi Core i5-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
-(5, 'RQ26052022-0001', 'IC19042022-0002', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1'),
-(6, 'RQ26052022-0001', 'IC19042022-0001', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1'),
-(7, 'RQ01062022-0002', 'IC30052022-0003', 1, 0, 1, 'yeuta naya staff lai chaiyo hai ta ...', 0, '2022-06-01 12:44:24', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1340,14 +1234,6 @@ CREATE TABLE `requisition_master` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `requisition_master`
---
-
-INSERT INTO `requisition_master` (`id`, `requisition_no`, `requisition_date`, `department_id`, `staff_id`, `remarks`, `requested_by`, `requested_date`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(3, 'RQ26052022-0001', '2022-05-26', 2, 2, 'duitai ma yeuta matra hai', 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, 3, '2022-05-26 17:36:34', 0, '0000-00-00 00:00:00', '1'),
-(4, 'RQ01062022-0002', '2022-06-01', 2, 2, 'dami dami hai', 'Rajesh Dai', '2022-06-02', '', '0000-00-00', '1', NULL, NULL, 3, '2022-06-01 08:59:24', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1369,14 +1255,6 @@ CREATE TABLE `sales_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `sales_details`
---
-
-INSERT INTO `sales_details` (`id`, `sale_no`, `item_code`, `qty`, `actual_unit_price`, `unit_price`, `grand_total`, `actual_total_price`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'SN30052022-0001', 'IC19042022-0002', 9, NULL, '100.00', '900.00', NULL, '2022-05-30 11:43:16', '3', '0000-00-00 00:00:00', 0, '1'),
-(2, 'SN30052022-0001', 'IC19042022-0001', 9, NULL, '100.00', '900.00', NULL, '2022-05-30 11:43:16', '3', '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1418,13 +1296,6 @@ CREATE TABLE `sales_master` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `sales_master`
---
-
-INSERT INTO `sales_master` (`id`, `sale_no`, `sales_code`, `sales_date`, `client_id`, `client_name`, `remarks`, `received_by`, `posted_tag`, `posted_on`, `posted_by`, `payment_type`, `bank_name`, `advance_amt`, `discount_amt`, `discount_per`, `vat_percent`, `vat_amount`, `total`, `remaining_amt`, `other_charges`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'SN30052022-0001', 'sales1234', '2022-05-30', 2, 'Client Two', 'dami bechideko yar', 'Rajesh Dai', '1', '2022-05-30', 3, 'CQ', 'Prabhu Bank', '800.00', '270', '15.00', '13.00', '198.90', '1800.00', '0.00', '100.00', '3', '2022-05-30', '0', NULL, NULL, '2022-05-30 11:43:16', 3, '0000-00-00 00:00:00', 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1452,13 +1323,6 @@ CREATE TABLE `sales_return` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `sales_return`
---
-
-INSERT INTO `sales_return` (`id`, `s_return_no`, `sale_no`, `sales_rtn_date`, `approved_by`, `approved_on`, `posted_tag`, `posted_on`, `posted_by`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'SR30052022-0001', 'SN30052022-0001', '2022-05-30', '3', '2022-05-30', '1', '2022-05-30', 3, 'sales return testing hai', '0', NULL, NULL, '3', '2022-05-30 13:26:16', '0000-00-00 00:00:00', 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1482,14 +1346,6 @@ CREATE TABLE `sales_return_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `sales_return_details`
---
-
-INSERT INTO `sales_return_details` (`id`, `s_return_no`, `item_code`, `qty_return`, `unit_price`, `actual_unit_price`, `actual_total_price`, `total_price`, `location_id`, `return_remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'SR30052022-0001', 'IC19042022-0001', 4, '100.00', '0.00', NULL, '400.00', 2, 'dami teting hai', '2022-05-30 13:26:16', '3', '0000-00-00 00:00:00', 0, '1'),
-(2, 'SR30052022-0001', 'IC19042022-0002', 4, '100.00', '0.00', NULL, '400.00', 1, 'dami teting hai hai', '2022-05-30 13:26:16', '3', '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1632,14 +1488,6 @@ CREATE TABLE `stock_ledger` (
   `status` enum('0','1','2') DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `stock_ledger`
---
-
-INSERT INTO `stock_ledger` (`id`, `ledger_code`, `item_code`, `transaction_date`, `transaction_type`, `in_qty`, `out_qty`, `rem_qty`, `in_unit_price`, `in_total_price`, `in_actual_unit_price`, `in_actual_total_price`, `out_unit_price`, `out_total_price`, `out_actual_unit_price`, `out_actual_total_price`, `location_id`, `batch_no`, `vendor_id`, `client_id`, `remarks`, `transactioncode`, `created_on`, `created_by`, `updated_on`, `updated_by`, `staff_id`, `status`) VALUES
-(1, 'LEDG03062022-0001', 'IC19042022-0001', '2022-01-01', 'OPN', 1, 0, 1, '1000.00', '1000.00', '1050.00', '1050.00', '0.00', '0.00', '0.00', '0.00', 1, 'ABC123', 1, 0, 'posted from opening', 'OPE03062022-0001', '2022-06-03', '3', '0000-00-00', 0, 0, '1'),
-(3, 'LEDG03062022-0003', 'IC30052022-0003', '2022-02-01', 'OPN', 100, 0, 100, '1000.00', '100000.00', '1050.00', '105000.00', '0.00', '0.00', '0.00', '0.00', 1, 'ABCD123', 1, 0, 'posted from opening', 'OPE03062022-0002', '2022-06-03', '3', '0000-00-00', 0, 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1730,7 +1578,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `user_name`, `password`, `auth_code`, `role_id`, `staff_id`, `designation_code`, `depart_id`, `appointed_date`, `full_name`, `profile_image`, `temp_address`, `permanent_address`, `country_code`, `contact`, `description`, `email`, `created_on`, `created_by`, `updated_on`, `updated_by`, `currently_working`, `status`) VALUES
 (1, 'nyatapol', 'c7098dd01fd11866dcb79e33d03ecfc5', '820682a7c8be57db72638233737fabf2', 1, NULL, 'HRM', 3, NULL, 'Nyatapol', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Babarmahal', '', 'nepa', '+977 1-4102299', '', 'nyatapol@gmail.com', '2022-01-19', 0, '2022-02-07', 1, 'Yes', '1'),
 (2, 'rajesh', 'c7098dd01fd11866dcb79e33d03ecfc5', 'b41f1ae8bc8aeb8b467612ba63ef34b0', 1, NULL, 'HRM', 3, NULL, 'Rajesh Gurung', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Tikathali', '', 'nepa', '98119561913', '<h1>dami hai sss</h1>\r\n', 'gurungrajesh1992@gmail.com', '2022-01-28', 1, '2022-02-07', 1, 'Yes', '1'),
-(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '6c91e7111d429dc780d047977077d6d2', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
+(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '366c2bc683d453340d867008a8e52a6e', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
 (6, 'chelina', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 1, 1, NULL, NULL, NULL, '', '', '', '', '', '', '', 'cheleena.maharjan.3@gmail.com', '2022-04-18', 3, '0000-00-00', 0, 'Yes', '1');
 
 -- --------------------------------------------------------
@@ -4922,7 +4770,154 @@ INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALU
 (3165, 'year_end', 'all', 3, '2022-06-03 09:32:14'),
 (3166, 'year_end', 'all', 3, '2022-06-03 09:42:52'),
 (3167, 'year_end', 'all', 3, '2022-06-03 09:43:36'),
-(3168, 'year_end', 'generate_year_end', 3, '2022-06-03 09:43:39');
+(3168, 'year_end', 'generate_year_end', 3, '2022-06-03 09:43:39'),
+(3169, 'year_end', 'all', 3, '2022-06-03 10:11:25'),
+(3170, 'year_end', 'generate_year_end', 3, '2022-06-03 10:11:34'),
+(3171, 'year_end', 'all', 3, '2022-06-03 10:11:40'),
+(3172, 'year_end', 'generate_year_end', 3, '2022-06-03 10:11:44'),
+(3173, 'year_end', 'all', 3, '2022-06-03 10:11:50'),
+(3174, 'year_end', 'generate_year_end', 3, '2022-06-03 10:12:09'),
+(3175, 'year_end', 'all', 3, '2022-06-03 10:12:16'),
+(3176, 'year_end', 'generate_year_end', 3, '2022-06-03 10:12:49'),
+(3177, 'year_end', 'all', 3, '2022-06-03 10:12:51'),
+(3178, 'year_end', 'generate_year_end', 3, '2022-06-03 10:14:22'),
+(3179, 'year_end', 'all', 3, '2022-06-03 10:15:05'),
+(3180, 'dashboard', NULL, 3, '2022-06-05 05:32:22'),
+(3181, 'supplier', 'all', 3, '2022-06-05 05:32:33'),
+(3182, 'year_end', 'all', 3, '2022-06-05 05:32:48'),
+(3183, 'year_end', 'all', 3, '2022-06-05 05:42:42'),
+(3184, 'year_end', 'all', 3, '2022-06-05 05:43:11'),
+(3185, 'year_end', 'generate_year_end', 3, '2022-06-05 05:43:15'),
+(3186, 'year_end', 'all', 3, '2022-06-05 05:48:10'),
+(3187, 'year_end', 'all', 3, '2022-06-05 05:48:20'),
+(3188, 'year_end', 'all', 3, '2022-06-05 05:48:52'),
+(3189, 'year_end', 'all', 3, '2022-06-05 05:51:22'),
+(3190, 'year_end', 'generate_year_end', 3, '2022-06-05 05:51:28'),
+(3191, 'grn', 'all', 3, '2022-06-05 05:58:48'),
+(3192, 'grn', 'direct_add', 3, '2022-06-05 05:59:03'),
+(3193, 'grn', 'getForm', 3, '2022-06-05 05:59:08'),
+(3194, 'opening_master', 'form', 3, '2022-06-05 06:09:45'),
+(3195, 'opening_master', 'getForm', 3, '2022-06-05 06:09:48'),
+(3196, 'year_end', 'all', 3, '2022-06-05 06:16:53'),
+(3197, 'year_end', 'all', 3, '2022-06-05 06:17:08'),
+(3198, 'year_end', 'all', 3, '2022-06-05 06:17:08'),
+(3199, 'year_end', 'all', 3, '2022-06-05 06:17:58'),
+(3200, 'year_end', 'all', 3, '2022-06-05 06:18:13'),
+(3201, 'year_end', 'all', 3, '2022-06-05 06:19:19'),
+(3202, 'year_end', 'all', 3, '2022-06-05 06:19:25'),
+(3203, 'year_end', 'all', 3, '2022-06-05 06:19:27'),
+(3204, 'year_end', 'all', 3, '2022-06-05 06:22:46'),
+(3205, 'year_end', 'generate_year_end', 3, '2022-06-05 06:23:05'),
+(3206, 'year_end', 'all', 3, '2022-06-05 06:35:04'),
+(3207, 'year_end', 'all', 3, '2022-06-05 06:37:55'),
+(3208, 'fiscal_year', 'all', 3, '2022-06-05 06:38:20'),
+(3209, 'fiscal_year', 'form', 3, '2022-06-05 06:38:23'),
+(3210, 'fiscal_year', 'form', 3, '2022-06-05 06:38:57'),
+(3211, 'fiscal_year', 'all', 3, '2022-06-05 06:38:57'),
+(3212, 'fiscal_year', 'form', 3, '2022-06-05 06:39:09'),
+(3213, 'fiscal_year', 'form', 3, '2022-06-05 06:40:36'),
+(3214, 'fiscal_year', 'form', 3, '2022-06-05 06:43:39'),
+(3215, 'fiscal_year', 'form', 3, '2022-06-05 06:43:47'),
+(3216, 'fiscal_year', 'all', 3, '2022-06-05 06:43:47'),
+(3217, 'depreciation_para', 'all', 3, '2022-06-05 06:58:36'),
+(3218, 'depreciation_para', 'form', 3, '2022-06-05 06:59:39'),
+(3219, 'depreciation_para', 'all', 3, '2022-06-05 07:12:23'),
+(3220, 'depreciation_para', 'form', 3, '2022-06-05 07:12:34'),
+(3221, 'depreciation_para', 'form', 3, '2022-06-05 08:40:24'),
+(3222, 'year_end', 'all', 3, '2022-06-05 08:52:43'),
+(3223, 'year_end', 'generate_year_end', 3, '2022-06-05 08:52:51'),
+(3224, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:02'),
+(3225, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:05'),
+(3226, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:17'),
+(3227, 'year_end', 'generate_year_end', 3, '2022-06-05 08:54:53'),
+(3228, 'year_end', 'generate_year_end', 3, '2022-06-05 08:54:55'),
+(3229, 'opening_master', 'all', 3, '2022-06-05 08:55:13'),
+(3230, 'opening_master', 'all', 3, '2022-06-05 08:58:27'),
+(3231, 'fiscal_year', 'all', 3, '2022-06-05 08:58:34'),
+(3232, 'client', 'all', 3, '2022-06-05 08:58:38'),
+(3233, 'supplier', 'all', 3, '2022-06-05 08:58:42'),
+(3234, 'depreciation_para', 'all', 3, '2022-06-05 08:58:59'),
+(3235, 'depreciation_para', 'form', 3, '2022-06-05 08:59:02'),
+(3236, 'fiscal_year', 'all', 3, '2022-06-05 08:59:43'),
+(3237, 'fiscal_year', 'form', 3, '2022-06-05 08:59:55'),
+(3238, 'fiscal_year', 'form', 3, '2022-06-05 09:00:23'),
+(3239, 'fiscal_year', 'all', 3, '2022-06-05 09:00:23'),
+(3240, 'fiscal_year', 'form', 3, '2022-06-05 09:00:27'),
+(3241, 'fiscal_year', 'form', 3, '2022-06-05 09:00:47'),
+(3242, 'fiscal_year', 'all', 3, '2022-06-05 09:00:47'),
+(3243, 'fiscal_year', 'form', 3, '2022-06-05 09:00:55'),
+(3244, 'fiscal_year', 'form', 3, '2022-06-05 09:01:00'),
+(3245, 'fiscal_year', 'all', 3, '2022-06-05 09:01:00'),
+(3246, 'depreciation_para', 'form', 3, '2022-06-05 09:02:17'),
+(3247, 'depreciation_para', 'all', 3, '2022-06-05 09:02:17'),
+(3248, 'depreciation_para', 'form', 3, '2022-06-05 09:02:20'),
+(3249, 'depreciation_para', 'form', 3, '2022-06-05 09:03:43'),
+(3250, 'depreciation_para', 'form', 3, '2022-06-05 09:03:55'),
+(3251, 'depreciation_para', 'all', 3, '2022-06-05 09:03:55'),
+(3252, 'depreciation_para', 'form', 3, '2022-06-05 09:03:58'),
+(3253, 'depreciation_para', 'all', 3, '2022-06-05 09:04:00'),
+(3254, 'depreciation_para', 'form', 3, '2022-06-05 09:04:05'),
+(3255, 'depreciation_para', 'form', 3, '2022-06-05 09:04:51'),
+(3256, 'depreciation_para', 'all', 3, '2022-06-05 09:04:51'),
+(3257, 'depreciation_para', 'form', 3, '2022-06-05 09:04:59'),
+(3258, 'depreciation_para', 'form', 3, '2022-06-05 09:05:25'),
+(3259, 'depreciation_para', 'form', 3, '2022-06-05 09:06:05'),
+(3260, 'depreciation_para', 'form', 3, '2022-06-05 09:06:15'),
+(3261, 'depreciation_para', 'all', 3, '2022-06-05 09:06:15'),
+(3262, 'requisition', 'all', 3, '2022-06-05 09:06:27'),
+(3263, 'requisition', 'all', 3, '2022-06-05 09:06:59'),
+(3264, 'issue', 'all', 3, '2022-06-05 09:07:21'),
+(3265, 'issue', 'all', 3, '2022-06-05 09:07:52'),
+(3266, 'issue_return', 'all', 3, '2022-06-05 09:07:57'),
+(3267, 'issue_return', 'all', 3, '2022-06-05 09:08:27'),
+(3268, 'mrn', 'all', 3, '2022-06-05 09:08:32'),
+(3269, 'purchase_request', 'all', 3, '2022-06-05 09:08:38'),
+(3270, 'purchase_order', 'all', 3, '2022-06-05 09:08:43'),
+(3271, 'invoice', 'all', 3, '2022-06-05 09:08:48'),
+(3272, 'charge_parameter', 'all', 3, '2022-06-05 09:08:54'),
+(3273, 'grn', 'all', 3, '2022-06-05 09:09:00'),
+(3274, 'grn', 'all', 3, '2022-06-05 09:09:29'),
+(3275, 'grn_return', 'all', 3, '2022-06-05 09:09:35'),
+(3276, 'grn_return', 'all', 3, '2022-06-05 09:10:01'),
+(3277, 'grn_return', 'all', 3, '2022-06-05 09:10:52'),
+(3278, 'sales', 'all', 3, '2022-06-05 09:28:27'),
+(3279, 'sales', 'all', 3, '2022-06-05 09:29:01'),
+(3280, 'sales_return', 'all', 3, '2022-06-05 09:29:06'),
+(3281, 'sales_return', 'all', 3, '2022-06-05 09:29:39'),
+(3282, 'location_transfer', 'all', 3, '2022-06-05 09:29:47'),
+(3283, 'location_transfer', 'all', 3, '2022-06-05 09:30:19'),
+(3284, 'scrap', 'all', 3, '2022-06-05 09:30:28'),
+(3285, 'year_end', 'all', 3, '2022-06-05 09:38:36'),
+(3286, 'year_end', 'all', 3, '2022-06-05 09:38:36'),
+(3287, 'year_end', 'generate_year_end', 3, '2022-06-05 09:38:47'),
+(3288, 'year_end', 'all', 3, '2022-06-05 09:51:47'),
+(3289, 'year_end', 'all', 3, '2022-06-05 09:51:47'),
+(3290, 'year_end', 'generate_year_end', 3, '2022-06-05 09:51:52'),
+(3291, 'year_end', 'all', 3, '2022-06-05 09:52:49'),
+(3292, 'year_end', 'all', 3, '2022-06-05 09:52:50'),
+(3293, 'year_end', 'generate_year_end', 3, '2022-06-05 09:52:56'),
+(3294, 'year_end', 'all', 3, '2022-06-05 09:53:11'),
+(3295, 'year_end', 'all', 3, '2022-06-05 09:53:11'),
+(3296, 'year_end', 'generate_year_end', 3, '2022-06-05 09:53:15'),
+(3297, 'year_end', 'all', 3, '2022-06-05 09:53:49'),
+(3298, 'year_end', 'all', 3, '2022-06-05 09:53:49'),
+(3299, 'year_end', 'generate_year_end', 3, '2022-06-05 09:53:55'),
+(3300, 'year_end', 'all', 3, '2022-06-05 09:54:39'),
+(3301, 'year_end', 'all', 3, '2022-06-05 09:54:40'),
+(3302, 'year_end', 'generate_year_end', 3, '2022-06-05 09:54:44'),
+(3303, 'year_end', 'all', 3, '2022-06-05 09:54:51'),
+(3304, 'year_end', 'all', 3, '2022-06-05 09:54:51'),
+(3305, 'year_end', 'generate_year_end', 3, '2022-06-05 09:54:57'),
+(3306, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3307, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3308, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3309, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3310, 'year_end', 'all', 3, '2022-06-05 09:55:18'),
+(3311, 'year_end', 'all', 3, '2022-06-05 09:55:18'),
+(3312, 'year_end', 'generate_year_end', 3, '2022-06-05 09:55:24'),
+(3313, 'year_end', 'all', 3, '2022-06-05 09:57:00'),
+(3314, 'year_end', 'all', 3, '2022-06-05 09:57:00'),
+(3315, 'year_end', 'generate_year_end', 3, '2022-06-05 09:57:06');
 
 -- --------------------------------------------------------
 
@@ -5479,7 +5474,7 @@ ALTER TABLE `department_para`
 -- AUTO_INCREMENT for table `depreciation_para`
 --
 ALTER TABLE `depreciation_para`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `designation_para`
@@ -5491,7 +5486,7 @@ ALTER TABLE `designation_para`
 -- AUTO_INCREMENT for table `fiscal_year_para`
 --
 ALTER TABLE `fiscal_year_para`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `gate_pass`
@@ -5509,25 +5504,25 @@ ALTER TABLE `gate_pass_details`
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_master`
 --
 ALTER TABLE `grn_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_return`
 --
 ALTER TABLE `grn_return`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_return_details`
 --
 ALTER TABLE `grn_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoice_details`
@@ -5545,25 +5540,25 @@ ALTER TABLE `invoice_master`
 -- AUTO_INCREMENT for table `issue_return_details`
 --
 ALTER TABLE `issue_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_return_master`
 --
 ALTER TABLE `issue_return_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_details`
 --
 ALTER TABLE `issue_slip_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_master`
 --
 ALTER TABLE `issue_slip_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `item_accessories`
@@ -5617,13 +5612,13 @@ ALTER TABLE `location_para`
 -- AUTO_INCREMENT for table `location_transfer`
 --
 ALTER TABLE `location_transfer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `location_transfer_detail`
 --
 ALTER TABLE `location_transfer_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `mrn_details`
@@ -5641,13 +5636,13 @@ ALTER TABLE `mrn_master`
 -- AUTO_INCREMENT for table `opening_detail`
 --
 ALTER TABLE `opening_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `opening_master`
 --
 ALTER TABLE `opening_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_order`
@@ -5677,37 +5672,37 @@ ALTER TABLE `purchase_request_details`
 -- AUTO_INCREMENT for table `requisition_details`
 --
 ALTER TABLE `requisition_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `requisition_master`
 --
 ALTER TABLE `requisition_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sales_details`
 --
 ALTER TABLE `sales_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sales_master`
 --
 ALTER TABLE `sales_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sales_return`
 --
 ALTER TABLE `sales_return`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sales_return_details`
 --
 ALTER TABLE `sales_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `site_settings`
@@ -5731,7 +5726,7 @@ ALTER TABLE `staff_infos`
 -- AUTO_INCREMENT for table `stock_ledger`
 --
 ALTER TABLE `stock_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `supplier_cat`
@@ -5755,7 +5750,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3169;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3316;
 
 --
 -- AUTO_INCREMENT for table `user_role`

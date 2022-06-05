@@ -17,7 +17,7 @@
                 <div class="form-group">
                   <select name="fiscal_year" class="form-control selct2" id="fiscal_year">
                     <?php foreach ($fiscal_years as $key => $value) { ?>
-                      <option value="<?php echo $value->fiscal_year; ?>"><?php echo $value->fiscal_year; ?></option>
+                      <option value="<?php echo $value->fiscal_year; ?>" <?php echo (isset($fiscal_year) && $fiscal_year == $value->fiscal_year) ? 'selected' : ''; ?>><?php echo $value->fiscal_year; ?></option>
                     <?php } ?>
                   </select>
                 </div>
