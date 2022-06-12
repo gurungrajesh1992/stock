@@ -14,6 +14,77 @@ class Admin extends Auth_controller
 		$this->redirect = 'sales_return';
 	}
 
+	public function search($page = '')
+	{
+		
+		$date_from = $this->input->post('date_from');
+		$date_to = $this->input->post('date_to');
+		$sale_no = $this->input->post('sale_no');
+		$s_return_no= $this->input->post('s_return_no');
+		$approved = $this->input->post('approved');
+		$cancelled = $this->input->post('cancelled');
+
+		$data_filter = array(
+			'created_on >=' => $date_from,
+			'created_on <=' => $date_to,
+			'sale_no' => $sale_no,
+			's_return_no'=>$s_return_no,	
+			'approved_by' => $approved,
+			'cancel_tag' => $cancelled,
+		);
+		// echo "<pre>";
+		// var_dump($data_filter);
+		// exit;
+		// $all_data = $this->crud_model->count_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled);
+		$all_data = $this->crud_model->count_all_data('sales_return', $data_filter);
+		// var_dump($all_data);
+		// exit;
+		$config['base_url'] = base_url($this->redirect . '/admin/search');
+		$config['total_rows'] = $all_data->total;
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 10;
+
+		$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
+
+		//go to first link customize
+		$config['first_link'] = 'First';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+
+		//for all list outside of the a tag that is <li></li>
+		$config['num_tag_open'] = '<li class="page-item">';
+		//to add class to attribute
+		$config['attributes'] = array('class' => 'page-link');
+		$config['num_tag_close'] = '</li>';
+
+		//customize current page
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['last_link'] = 'Last';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['full_tag_close'] = '</ul>';
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		// $items = $this->crud_model->get_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled, $config['per_page'], $page);
+		$items = $this->crud_model->get_all_data('sales_return', $data_filter, $config['per_page'], $page);
+		
+		$data = array(
+			'title' => $this->title . ' List',
+			'page' => 'list',
+			'items' => $items,
+			'redirect' => $this->redirect,
+			'pagination' =>  $this->pagination->create_links()
+		);
+		// var_dump($data);
+		// exit;
+		$this->load->view('layouts/admin/index', $data);
+	}
+
 	public function all($page = '')
 	{
 		$config['base_url'] = base_url($this->redirect . '/admin/all');
