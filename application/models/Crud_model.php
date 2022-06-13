@@ -7,6 +7,20 @@ class Crud_model extends CI_Model
         parent::__construct();
     }
 
+    public function get_module_function($module_name, $function_name)
+    {
+        $where = array(
+            'a.module_name' => $module_name,
+            'a.status' => '1',
+            'b.function_name' => $function_name,
+        );
+        $this->db->select("a.module_name, b.function_name, b.id as module_function_id", False);
+        $this->db->from('module a');
+        $this->db->join('module_function b', "b.module_id = a.id");
+        $this->db->where($where);
+        return $this->db->get('')->row();
+    }
+
     public function count_all_data($table, $data)
     {
         $this->db->select('count(id) as total')->from($table);
@@ -305,6 +319,36 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function get_total_item_stock_group_by_item_join_item($table, $where)
+    {
+        $this->db->select('sum(stock_ledger.in_qty) as totalIn, sum(stock_ledger.out_qty) as totalOut, stock_ledger.item_code, stock_ledger.in_unit_price as unit_price, stock_ledger.location_id, item_infos.item_name, stock_ledger.transaction_type, stock_ledger.ledger_code', false);
+        $this->db->from($table);
+        $this->db->join('item_infos', 'stock_ledger.item_code = item_infos.item_code');
+        $this->db->where($where);
+        $this->db->group_by('stock_ledger.item_code');
+        $this->db->order_by('stock_ledger.id', 'asc');
+        $result = $this->db->get('')->result();
+        // echo "<pre>";
+        // var_dump($result);
+        // exit;
+        if ($result) {
+            $items = array();
+            foreach ($result as $key => $value) {
+                $stock = ($value->totalIn - $value->totalOut);
+                if ($stock > 0) {
+                    $items[] = $value;
+                }
+            }
+            // var_dump($items);
+            // exit;
+            return $items;
+        } else {
+            // echo "down";
+            // exit;
+            return array();
+        }
+    }
+
     public function get_all_total_stock($table, $where, $group_by)
     {
         $this->db->select('sum(in_qty) as totalIn, sum(out_qty) as totalOut, item_code', false);
@@ -344,13 +388,20 @@ class Crud_model extends CI_Model
         return $result;
     }
 
+    // public function get_new_items_for_year_end($start_date, $end_date)
+    // {
+    //     $sql = "SELECT DISTINCT a.item_code, a.depreciation_rate, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date, b.transaction_type 
+    //             FROM item_infos a 
+    //             LEFT JOIN stock_ledger b on a.item_code = b.item_code 
+    //             LEFT JOIN year_end c on a.item_code = c.item_code 
+    //             WHERE b.in_qty > 0 AND b.transaction_date = ( SELECT MAX(transaction_date) FROM stock_ledger WHERE item_code = a.item_code) AND b.transaction_date >= '$start_date' AND b.transaction_date <= '$end_date' AND a.item_type = 'A' AND c.id is null;";
+    //     $query = $this->db->query($sql);
+    //     return $query->result();
+    // }
+
     public function get_new_items_for_year_end($start_date, $end_date)
     {
-        $sql = "SELECT DISTINCT a.item_code, a.depreciation_rate, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date, b.transaction_type 
-                FROM item_infos a 
-                LEFT JOIN stock_ledger b on a.item_code = b.item_code 
-                LEFT JOIN year_end c on a.item_code = c.item_code 
-                WHERE b.in_qty > 0 AND b.transaction_date = ( SELECT MAX(transaction_date) FROM stock_ledger WHERE item_code = a.item_code) AND b.transaction_date <= $start_date AND b.transaction_date >= $end_date AND a.item_type = 'A' AND c.id is null;";
+        $sql = "SELECT DISTINCT a.item_code, a.depreciation_rate, a.item_type, b.in_qty, b.out_qty, b.rem_qty, b.in_unit_price, b.transactioncode, b.transaction_date, b.transaction_type FROM item_infos a LEFT JOIN stock_ledger b on a.item_code = b.item_code WHERE b.transaction_date <= '$end_date' AND b.transaction_type IN ('OPN','GRN','ISR','LCI','LCO','SAR') AND b.id = ( SELECT MAX(b.id) FROM stock_ledger b WHERE b.item_code = a.item_code  AND b.transaction_date <= '$end_date') AND a.item_type = 'A';";
         $query = $this->db->query($sql);
         return $query->result();
     }

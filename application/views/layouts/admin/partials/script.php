@@ -58,6 +58,53 @@
 <script>
   $(document).ready(function() {
 
+    // on change role get permissions form
+    $(document).off('change', '#role_id').on('change', '#role_id', function(e) {
+      e.preventDefault();
+      var role_id = $(this).val();
+
+      $.ajax({
+
+        url: '<?php echo base_url('module/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "role_id": role_id,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#append_persmission').html(resp.data);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //get form for functions for role
+    $(document).off('click', '#add_function').on('click', '#add_function', function(e) {
+      e.preventDefault();
+
+      $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class = "form-group"> <label> Function Name <span class = "req" > * </span></label> <span class = "rmv_btn_mdl rmv" > X </span> <input type = "text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = "" > </div> </div > ');
+
+    });
+
     //generate year_end
     $(document).off('click', '#generate_year_end').on('click', '#generate_year_end', function() {
       $('#loader_year_end').css('display', 'block');
@@ -86,6 +133,7 @@
 
             }).showToast();
             $('#loader_year_end').css('display', 'none');
+            location.reload();
           } else {
             Toastify({
 
@@ -474,6 +522,8 @@
       var splited = selected_val.split(",");
       var val = splited[0];
       var unit_price = splited[1];
+      var ledger_code = splited[2];
+      var item_type = $('#item_type_scrap').val();
       // alert(unit_price);
       // return false;
       var already_items = $('input[name^=item_code]').map(function(idx, elem) {
@@ -506,6 +556,8 @@
           "val": val,
           "unit_price": unit_price,
           "total": already_items.length,
+          "item_type": item_type,
+          "ledger_code": ledger_code
         },
         success: function(resp) {
           // console.log(resp.data);return false;
@@ -530,6 +582,7 @@
         }
       });
     });
+
     //issue items
     $(document).off('change', '#item_goods_return').on('change', '#item_goods_return', function(e) {
       e.preventDefault();
@@ -1563,5 +1616,119 @@
       });
     });
 
+    // onchange item type get items and heading a/c to type in scrap
+
+    $(document).off('change', '#item_type_scrap').on('change', '#item_type_scrap', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);
+      // return false;
+      // alert(val);return false; 
+      $.ajax({
+        url: '<?php echo base_url('scrap/admin/getItemsAndHeadings'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').html(resp.html);
+            $('#item_scrap').html(resp.option);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+          }
+        }
+      });
+    });
+
+    //Scrap post
+    $(document).off('click', '#post_scrap').on('click', '#post_scrap', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      var list = $('.scrap_item .out_of_stock').map(function() {
+        return 'out of stock';
+      }).get();
+      // console.log(list.length);
+      // return false;
+      if (list.length > 0) {
+        Toastify({
+
+          text: 'Some Product Out of stock !!!',
+
+          duration: 1000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          },
+
+        }).showToast();
+        return false;
+      }
+      $.ajax({
+
+        url: '<?php echo base_url('scrap/admin/scrap_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+
+            $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
+          }
+        }
+      });
+
+    });
   })
 </script>
