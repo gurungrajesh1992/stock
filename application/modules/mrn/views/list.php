@@ -1,3 +1,4 @@
+<?php include ('search.php');?>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
