@@ -8,15 +8,12 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table class="table table-bordered table-responsive">
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Fiscal Year</th>
-                  <th>Rate</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Remarks</th>
+                  <th>Module Name</th>
+                  <th>Functions</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -31,23 +28,26 @@
                     } else {
                       $status = 'Inactive';
                     }
-
+                    $childs = $this->crud_model->get_where('module_function', array('module_id' => $value->id));
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->fiscal_year; ?></td>
-                      <td><?php echo $value->depreciation_rate; ?></td>
-                      <td><?php echo $value->from; ?></td>
-                      <td><?php echo $value->to; ?></td>
-                      <td><?php echo $value->remarks; ?></td>
+                      <td><?php echo $value->module_name; ?></td>
+                      <td>
+                        <?php if (isset($childs)) {
+                          foreach ($childs as $key_c => $val_c) {
+                            echo $val_c->function_name . '<br>';
+                          }
+                        } ?>
+                      </td>
                       <td><?php echo $status; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" STYLE="margin: 5px;">Edit</a>'; ?><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" STYLE="margin: 5px;">Delete</a>'; ?>
+                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a></td>
                     </tr>
                   <?php }
                 } else { ?>
 
                   <tr>
-                    <td colspan="9" style="text-align:center;">No Records Found</td>
+                    <td colspan="3" style="text-align:center;">No Records Found</td>
                   </tr>
                 <?php } ?>
               </tbody>

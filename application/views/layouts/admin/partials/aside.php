@@ -740,7 +740,7 @@ $current_user = $this->session->userdata('current_user');
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?php echo base_url('year_end/admin/form'); ?>" class="nav-link">
+              <a href="<?php echo base_url('year_end/admin/view'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>View Current Value</p>
               </a>
@@ -767,6 +767,35 @@ $current_user = $this->session->userdata('current_user');
               <a href="<?php echo base_url('user_role/admin/form'); ?>" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Add New</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link ">
+            <i class="nav-icon fas fa-lock"></i>
+            <p>
+              Permission
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo base_url('module/admin/all'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Modules</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('module/admin/form'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Module</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url('module/admin/role_function'); ?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Role Permission</p>
               </a>
             </li>
           </ul>
