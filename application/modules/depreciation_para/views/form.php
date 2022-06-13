@@ -32,7 +32,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Rate<span class="req">*</span></label>
-                <input type="number" name="depreciation_rate" step="0.01" class="form-control" id="depreciation_rate" placeholder="Opening Date" value="<?php echo set_value('depreciation_rate', (((isset($detail->depreciation_rate)) && $detail->depreciation_rate != '') ? $detail->depreciation_rate : '')); ?>">
+                <input type="number" name="depreciation_rate" step="0.01" class="form-control" id="depreciation_rate" placeholder="Rate" value="<?php echo set_value('depreciation_rate', (((isset($detail->depreciation_rate)) && $detail->depreciation_rate != '') ? $detail->depreciation_rate : '')); ?>">
                 <?php echo form_error('depreciation_rate', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>

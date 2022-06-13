@@ -6,9 +6,9 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <a class="btn btn-sm btn-info" id="approve_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
                         <a class="btn btn-sm btn-success" id="post_issue" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_by) && $master_detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <a class="btn btn-sm btn-danger" id="cancel_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
                 <div class="card-body" id="printableArea">
