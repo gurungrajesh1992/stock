@@ -5,8 +5,8 @@
         <div class="card-header">
           <h3 class="card-title"><?php echo $title ?></h3>
           <div class="card-tools">
-            <a class="btn btn-sm btn-info" id="approve" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-            <a class="btn btn-sm btn-danger" id="cancel" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+            <a class="btn btn-sm btn-info" id="approve_mrn" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+            <a class="btn btn-sm btn-danger" id="cancel_mrn" table_id="mrn_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
           </div>
         </div>
         <div class="card-body">

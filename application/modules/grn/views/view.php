@@ -11,9 +11,9 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve" table_id="grn_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <a class="btn btn-sm btn-info" id="approve_grn" table_id="grn_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
                         <a class="btn btn-sm btn-success" id="post_grn" table_id="grn_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel" table_id="grn_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <a class="btn btn-sm btn-danger" id="cancel_grn" table_id="grn_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
                     </div>
                 </div>
                 <div class="card-body">

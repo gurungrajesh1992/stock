@@ -445,7 +445,7 @@ class Admin extends Auth_controller
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
-
+	//approve opening
 	public function change_status()
 	{
 		try {
@@ -502,6 +502,63 @@ class Admin extends Auth_controller
 		echo json_encode($response);
 	}
 
+	//cancell opening
+	public function cancel_row()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be cancelled, already approved !!!',
+						);
+					} else {
+						$data['cancel_tag'] = '1';
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Cancelled !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to cancel',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	//post opening 
 	public function opening_post()
 	{
 		try {
@@ -615,7 +672,6 @@ class Admin extends Auth_controller
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
-
 	public function getItemsAndHeadings()
 	{
 		try {

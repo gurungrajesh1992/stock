@@ -16,12 +16,12 @@ class Admin extends Auth_controller
 
 	public function search($page = '')
 	{
-		
+
 		$date_from = $this->input->post('date_from');
 		$date_to = $this->input->post('date_to');
 		$sale_no = $this->input->post('sale_no');
-		$payment_type= $this->input->post('payment_type');
-		$sales_code= $this->input->post('sales_code');
+		$payment_type = $this->input->post('payment_type');
+		$sales_code = $this->input->post('sales_code');
 		$supplier_id = $this->input->post('supplier_id');
 		$approved = $this->input->post('approved');
 		$cancelled = $this->input->post('cancelled');
@@ -30,8 +30,8 @@ class Admin extends Auth_controller
 			'created_on >=' => $date_from,
 			'created_on <=' => $date_to,
 			'sale_no' => $sale_no,
-			'sales_code'=>$sales_code,
-			'payment_type' => $payment_type,		
+			'sales_code' => $sales_code,
+			'payment_type' => $payment_type,
 			'approved_by' => $approved,
 			'cancel_tag' => $cancelled,
 		);
@@ -75,7 +75,7 @@ class Admin extends Auth_controller
 		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 		// $items = $this->crud_model->get_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled, $config['per_page'], $page);
 		$items = $this->crud_model->get_all_data('sales_master', $data_filter, $config['per_page'], $page);
-		
+
 		$data = array(
 			'title' => $this->title . ' List',
 			'page' => 'list',
@@ -87,7 +87,7 @@ class Admin extends Auth_controller
 		// exit;
 		$this->load->view('layouts/admin/index', $data);
 	}
-	
+
 
 	public function all($page = '')
 	{
@@ -1015,6 +1015,119 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'table and row invalid !!!',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	// cancell issue
+	public function cancel_row()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be cancelled, already approved !!!',
+						);
+					} else {
+						$data['cancel_tag'] = '1';
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Cancelled !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to cancel',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	//approve issue
+	public function change_status()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->cancel_tag) && $detail->cancel_tag == '1') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be approved, already cancelled !!!',
+						);
+					} else {
+						$data['approved_by'] = $this->current_user->id;
+						$data['approved_on'] = date('Y-m-d');
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Approved !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to approve',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
 					);
 				}
 			}
