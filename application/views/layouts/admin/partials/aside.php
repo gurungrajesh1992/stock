@@ -55,29 +55,44 @@ $current_user = $this->session->userdata('current_user');
             </p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link ">
-            <i class="nav-icon fas fa-user"></i>
-            <p>
-              Supplier
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo base_url('supplier/admin/all'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>List</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo base_url('supplier/admin/form'); ?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Add New</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+        <?php
+        $check_supplier = $this->crud_model->get_module_for_role('supplier');
+        if ($check_supplier == true) {
+        ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Supplier
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <?php
+              $check_supplier_all = $this->crud_model->get_module_function_for_role('supplier', 'all');
+              if ($check_supplier_all == true) {
+              ?>
+                <li class="nav-item">
+                  <a href="<?php echo base_url('supplier/admin/all'); ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>List</p>
+                  </a>
+                </li>
+              <?php } ?>
+              <?php
+              $check_supplier_form = $this->crud_model->get_module_function_for_role('supplier', 'form');
+              if ($check_supplier_form == true) {
+              ?>
+                <li class="nav-item">
+                  <a href="<?php echo base_url('supplier/admin/form'); ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Add New</p>
+                  </a>
+                </li>
+              <?php } ?>
+            </ul>
+          </li>
+        <?php } ?>
         <li class="nav-item">
           <a href="#" class="nav-link ">
             <i class="nav-icon fas fa-user"></i>

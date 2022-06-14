@@ -21,6 +21,46 @@ class Crud_model extends CI_Model
         return $this->db->get('')->row();
     }
 
+    public function get_module_function_for_role($module_name, $function_name)
+    {
+        $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
+        if ($check_module_dissable->status == '1') {
+            $current_user = $this->auth->current_user();
+            // var_dump($current_user->role_id);
+            // exit;
+            $sql = "SELECT a.* FROM module_function_role a LEFT JOIN module_function b ON a.module_function_id = b.id LEFT JOIN module c on c.id=b.module_id WHERE c.module_name = '$module_name' AND b.function_name = '$function_name' AND role_id = $current_user->role_id ";
+            $query = $this->db->query($sql);
+            $data = $query->row();
+            if ($data) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public function get_module_for_role($module_name)
+    {
+        $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
+        if ($check_module_dissable->status == '1') {
+            $current_user = $this->auth->current_user();
+            // var_dump($current_user->role_id);
+            // exit;
+            $sql = "SELECT a.* FROM module_function_role a LEFT JOIN module_function b ON a.module_function_id = b.id LEFT JOIN module c on c.id=b.module_id WHERE c.module_name = '$module_name' AND role_id = $current_user->role_id ";
+            $query = $this->db->query($sql);
+            $data = $query->row();
+            if ($data) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     public function count_all_data($table, $data)
     {
         $this->db->select('count(id) as total')->from($table);
