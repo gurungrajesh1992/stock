@@ -6,9 +6,24 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-success" id="post_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php
+                        $check_grn_return_change_status = $this->crud_model->get_module_function_for_role('grn_return', 'change_status');
+                        if ($check_grn_return_change_status == true) {
+                        ?>
+                            <a class="btn btn-sm btn-info" id="approve_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_grn_return_grn_return_post = $this->crud_model->get_module_function_for_role('grn_return', 'grn_return_post');
+                        if ($check_grn_return_grn_return_post == true) {
+                        ?>
+                            <a class="btn btn-sm btn-success" id="post_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_grn_return_cancel_row = $this->crud_model->get_module_function_for_role('grn_return', 'cancel_row');
+                        if ($check_grn_return_cancel_row == true) {
+                        ?>
+                            <a class="btn btn-sm btn-danger" id="cancel_grn_return" table_id="grn_return-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="card-body">

@@ -212,7 +212,7 @@ $current_user = $this->session->userdata('current_user');
                 </li>
               <?php } ?>
               <?php
-              $check_depreciation_para_form = $this->crud_model->get_module_function_for_role('depreciation_para', 'fprm');
+              $check_depreciation_para_form = $this->crud_model->get_module_function_for_role('depreciation_para', 'form');
               if ($check_depreciation_para_form == true) {
               ?>
                 <li class="nav-item">

@@ -4,7 +4,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+            <h3 class="card-title">
+              <?php
+              $check_fiscal_year_form = $this->crud_model->get_module_function_for_role('fiscal_year', 'form');
+              if ($check_fiscal_year_form == true) {
+              ?>
+                <a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a>
+              <?php } ?>
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -36,7 +43,19 @@
                       <td><?php echo $value->end_date; ?></td>
                       <td><?php echo $value->current_tag; ?></td>
                       <td><?php echo $status; ?></td>
-                      <td><a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a><a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a></td>
+                      <td>
+                        <?php
+                        if ($check_fiscal_year_form == true) {
+                        ?>
+                          <a href="<?php echo base_url($redirect . '/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>
+                        <?php } ?>
+                        <?php
+                        $check_fiscal_year_soft_delete = $this->crud_model->get_module_function_for_role('fiscal_year', 'soft_delete');
+                        if ($check_fiscal_year_soft_delete == true) {
+                        ?>
+                          <a href="<?php echo base_url($redirect . '/admin/soft_delete/' . $value->id); ?>" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>
+                        <?php } ?>
+                      </td>
                     </tr>
                   <?php }
                 } else { ?>

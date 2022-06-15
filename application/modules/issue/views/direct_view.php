@@ -6,9 +6,24 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-success" id="post_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->posted_by) && $detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php
+                        $check_issue_change_status = $this->crud_model->get_module_function_for_role('issue', 'change_status');
+                        if ($check_issue_change_status == true) {
+                        ?>
+                            <a class="btn btn-sm btn-info" id="approve_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->approved_by) && $detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_issue_issue_post = $this->crud_model->get_module_function_for_role('issue', 'issue_post');
+                        if ($check_issue_issue_post == true) {
+                        ?>
+                            <a class="btn btn-sm btn-success" id="post_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->posted_by) && $detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_issue_cancel_row = $this->crud_model->get_module_function_for_role('issue', 'cancel_row');
+                        if ($check_issue_cancel_row == true) {
+                        ?>
+                            <a class="btn btn-sm btn-danger" id="cancel_issue" table_id="issue_slip_master-<?php echo $detail->id; ?>"><?php echo (isset($detail->cancel_tag) && $detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="card-body">

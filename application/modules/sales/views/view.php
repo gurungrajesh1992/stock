@@ -6,9 +6,24 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-success" id="post_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php
+                        $check_sales_change_status = $this->crud_model->get_module_function_for_role('sales', 'change_status');
+                        if ($check_sales_change_status == true) {
+                        ?>
+                            <a class="btn btn-sm btn-info" id="approve_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_sales_sales_post = $this->crud_model->get_module_function_for_role('sales', 'sales_post');
+                        if ($check_sales_sales_post == true) {
+                        ?>
+                            <a class="btn btn-sm btn-success" id="post_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_tag) && $master_detail->posted_tag == '1') ? 'Posted' : 'Post' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_sales_cancel_row = $this->crud_model->get_module_function_for_role('sales', 'cancel_row');
+                        if ($check_sales_cancel_row == true) {
+                        ?>
+                            <a class="btn btn-sm btn-danger" id="cancel_sales" table_id="sales_master-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="card-body">
