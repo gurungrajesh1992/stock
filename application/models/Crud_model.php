@@ -24,7 +24,7 @@ class Crud_model extends CI_Model
     public function get_module_function_for_role($module_name, $function_name)
     {
         $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
-        if ($check_module_dissable->status == '1') {
+        if (isset($check_module_dissable->status) && $check_module_dissable->status == '1') {
             $current_user = $this->auth->current_user();
             // var_dump($current_user->role_id);
             // exit;
@@ -44,7 +44,7 @@ class Crud_model extends CI_Model
     public function get_module_for_role($module_name)
     {
         $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
-        if ($check_module_dissable->status == '1') {
+        if (isset($check_module_dissable->status) && $check_module_dissable->status == '1') {
             $current_user = $this->auth->current_user();
             // var_dump($current_user->role_id);
             // exit;
