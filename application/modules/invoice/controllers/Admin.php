@@ -274,6 +274,9 @@ class Admin extends Auth_controller
 	public function view($id = '')
 	{
 		$master_detail = $this->crud_model->get_where_single('invoice_master', array('id' => $id));
+
+		$setting_details = $this->crud_model->get_where_single('site_settings', array('status', '1'));
+
 		if (!$master_detail) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
@@ -283,13 +286,14 @@ class Admin extends Auth_controller
 		}
 
 		// echo "<pre>";
-		// var_dump($detail);
+		// var_dump($setting_details);
 		// exit;
 		if (!$invoice_details) {
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
 		$data['master_detail'] = $master_detail;
+		$data['setting_details'] = $setting_details;
 		$data['invoice_details'] = $invoice_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
