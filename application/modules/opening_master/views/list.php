@@ -4,7 +4,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+            <h3 class="card-title">
+              <?php
+              $check_opening_master_form = $this->crud_model->get_module_function_for_role('opening_master', 'form');
+              if ($check_opening_master_form == true) {
+              ?>
+                <a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a>
+              <?php } ?>
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -53,7 +60,24 @@
                       <td><?php echo $cancel_tag; ?></td>
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No' ?></td>
                       <td><?php echo $posted_tag; ?></td>
-                      <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" STYLE="margin: 5px;">Edit</a>'; ?><a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a><?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" STYLE="margin: 5px;">Delete</a>'; ?>
+                      <td>
+                        <?php
+                        if ($check_opening_master_form == true) {
+                        ?>
+                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/form/' . $value->id) . '" class="btn btn-sm btn-primary" STYLE="margin: 5px;">Edit</a>'; ?>
+                        <?php } ?>
+                        <?php
+                        $check_opening_master_view = $this->crud_model->get_module_function_for_role('opening_master', 'view');
+                        if ($check_opening_master_view == true) {
+                        ?>
+                          <a href="<?php echo base_url($redirect . '/admin/view/' . $value->id); ?>" class="btn btn-sm btn-info" style="margin: 5px;">View</a>
+                        <?php } ?>
+                        <?php
+                        $check_opening_master_soft_delete = $this->crud_model->get_module_function_for_role('opening_master', 'soft_delete');
+                        if ($check_opening_master_soft_delete == true) {
+                        ?>
+                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" STYLE="margin: 5px;">Delete</a>'; ?>
+                        <?php } ?>
                     </tr>
                   <?php }
                 } else { ?>

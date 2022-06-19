@@ -14,6 +14,81 @@ class Admin extends Auth_controller
 		$this->redirect = 'grn';
 	}
 
+	public function search($page = '')
+	{
+
+		$date_from = $this->input->post('date_from');
+		$date_to = $this->input->post('date_to');
+		$grn_no = $this->input->post('grn_no');
+		$payment_type = $this->input->post('payment_type');
+		$type = $this->input->post('type');
+		$supplier_id = $this->input->post('supplier_id');
+		$approved = $this->input->post('approved');
+		$cancelled = $this->input->post('cancelled');
+
+		$data_filter = array(
+			'created_on >=' => $date_from,
+			'created_on <=' => $date_to,
+			'grn_no' => $grn_no,
+			'supplier_id' => $supplier_id,
+			'payment_type' => $payment_type,
+			'type' => $type,
+			'approved_by' => $approved,
+			'cancel_tag' => $cancelled,
+		);
+		// echo "<pre>";
+		// var_dump($data_filter);
+		// exit;
+		// $all_data = $this->crud_model->count_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled);
+		$all_data = $this->crud_model->count_all_data('grn_master', $data_filter);
+		// var_dump($all_data);
+		// exit;
+		$config['base_url'] = base_url($this->redirect . '/admin/search');
+		$config['total_rows'] = $all_data->total;
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 10;
+
+		$config['full_tag_open'] = '<ul class="pagination pagination-sm m-0 float-right">';
+
+		//go to first link customize
+		$config['first_link'] = 'First';
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+
+		//for all list outside of the a tag that is <li></li>
+		$config['num_tag_open'] = '<li class="page-item">';
+		//to add class to attribute
+		$config['attributes'] = array('class' => 'page-link');
+		$config['num_tag_close'] = '</li>';
+
+		//customize current page
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link">';
+		$config['cur_tag_close'] = '</a></li>';
+
+		$config['last_link'] = 'Last';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+
+		$config['full_tag_close'] = '</ul>';
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		// $items = $this->crud_model->get_all_data($staff_id, $department_id, $requisition_date_from, $requisition_date_to, $requisition_no, $approved, $cancelled, $config['per_page'], $page);
+		$items = $this->crud_model->get_all_data('grn_master', $data_filter, $config['per_page'], $page);
+
+		$data = array(
+			'title' => $this->title . ' List',
+			'page' => 'list',
+			'items' => $items,
+			'redirect' => $this->redirect,
+			'pagination' =>  $this->pagination->create_links()
+		);
+		// var_dump($data);
+		// exit;
+		$this->load->view('layouts/admin/index', $data);
+	}
+
 	public function all($page = '')
 	{
 		$config['base_url'] = base_url($this->redirect . '/admin/all');
@@ -994,14 +1069,14 @@ class Admin extends Auth_controller
 										'rem_qty' => $value->qty,
 										'in_unit_price' => $value->unit_price,
 										'in_total_price' => ($value->qty * $value->unit_price),
-										'in_actual_unit_price' => $in_actual_unit_price,
-										'in_actual_total_price' => $in_actual_total_price,
+										'in_actual_unit_price' => ($value->unit_price + $in_actual_unit_price),
+										'in_actual_total_price' => ($value->qty * $value->unit_price) + $in_actual_total_price,
 										'out_unit_price' => 0,
 										'out_total_price' => 0,
 										'out_actual_unit_price' => 0,
 										'out_actual_total_price' => 0,
-										// 'location_id' => $value->location_id,
-										// 'batch_no' => $value->batch_no,
+										'location_id' => $value->location_id,
+										'batch_no' => $value->batch_no,
 										'vendor_id' => $detail->supplier_id,
 										// 'client_id' => '???',
 										'remarks' => 'posted from GRN',
@@ -1029,7 +1104,7 @@ class Admin extends Auth_controller
 								}
 
 								$update['posted_tag'] = '1';
-								// $update['posted_by'] = $this->current_user->id;
+								$update['posted_by'] = $this->current_user->id;
 								$update['posted_on'] = date('Y-m-d');
 
 								$this->crud_model->update('grn_master', $update, array('id' => $detail->id));
@@ -1059,6 +1134,119 @@ class Admin extends Auth_controller
 						'status' => 'error',
 						'status_code' => 300,
 						'status_message' => 'table and row invalid !!!',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	// cancell issue
+	public function cancel_row()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->approved_by) && $detail->approved_by != '') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be cancelled, already approved !!!',
+						);
+					} else {
+						$data['cancel_tag'] = '1';
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Cancelled !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to cancel',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
+					);
+				}
+			}
+		} catch (Exception $e) {
+			$response = array(
+				'status' => 'error',
+				'status_message' => $e->getMessage()
+			);
+		}
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+
+	//approve issue
+	public function change_status()
+	{
+		try {
+			if (!$this->input->is_ajax_request()) {
+				exit('No direct script access allowed');
+			} else {
+				$table = $this->input->post('table');
+				$row_id = $this->input->post('row_id');
+				// var_dump($table, $row_id);
+				// exit;
+				if ($table || $row_id) {
+
+					$detail = $this->crud_model->get_where_single($table, array('id' => $row_id));
+
+					if (isset($detail->cancel_tag) && $detail->cancel_tag == '1') {
+						$response = array(
+							'status' => 'error',
+							'status_code' => 300,
+							'status_message' => 'Can not be approved, already cancelled !!!',
+						);
+					} else {
+						$data['approved_by'] = $this->current_user->id;
+						$data['approved_on'] = date('Y-m-d');
+						$update = $this->crud_model->update($table, $data, array('id' => $row_id));
+						if ($update) {
+							$response = array(
+								'status' => 'success',
+								'status_code' => 300,
+								'status_message' => 'Successfully Approved !!!',
+							);
+						} else {
+							$response = array(
+								'status' => 'error',
+								'status_code' => 300,
+								'status_message' => 'Unable to approve',
+							);
+						}
+					}
+				} else {
+					$response = array(
+						'status' => 'error',
+						'status_code' => 300,
+						'status_message' => 'table and row invalid',
 					);
 				}
 			}

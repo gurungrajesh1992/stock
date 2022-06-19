@@ -4,7 +4,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><a href="<?php echo base_url('user/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+            <h3 class="card-title">
+              <?php
+              $check_user_form = $this->crud_model->get_module_function_for_role('user', 'form');
+              if ($check_user_form == true) {
+              ?>
+                <a href="<?php echo base_url('user/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a>
+              <?php } ?>
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -79,41 +86,62 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1 ?></td>
-                      <td><?php if(isset($staff_detail->full_name )){ echo $staff_detail->full_name; }?></td>
+                      <td><?php if (isset($staff_detail->full_name)) {
+                            echo $staff_detail->full_name;
+                          } ?></td>
                       <td><?php echo $role ?></td>
-                      <td><?php if(isset($staff_detail->permanent_address )){echo $staff_detail->permanent_address; } ?></td>
-                      <td><?php if(isset($staff_detail->temp_address )){ echo $staff_detail->temp_address; } ?></td>
-                      <td><?php if(isset($staff_detail->contact )){ echo $staff_detail->contact; } ?></td>
-                      <td><?php if(isset($staff_detail->email )){ echo $staff_detail->email; } ?></td>
+                      <td><?php if (isset($staff_detail->permanent_address)) {
+                            echo $staff_detail->permanent_address;
+                          } ?></td>
+                      <td><?php if (isset($staff_detail->temp_address)) {
+                            echo $staff_detail->temp_address;
+                          } ?></td>
+                      <td><?php if (isset($staff_detail->contact)) {
+                            echo $staff_detail->contact;
+                          } ?></td>
+                      <td><?php if (isset($staff_detail->email)) {
+                            echo $staff_detail->email;
+                          } ?></td>
                       <!-- <td><?php echo $nationality ?></td> -->
                       <td><?php echo $desig; ?></td>
                       <td><?php echo $depart; ?></td>
-                      <td><?php if(isset($staff_detail->appointed_date )){ echo $staff_detail->appointed_date;  } ?></td>
+                      <td><?php if (isset($staff_detail->appointed_date)) {
+                            echo $staff_detail->appointed_date;
+                          } ?></td>
                       <td><?php echo $status; ?></td>
                       <td>
-                        <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
-                        <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
-                        <a class="btn btn-sm btn-primary">Password</a>
+                        <?php
+                        if ($check_user_form == true) {
+                        ?>
+                          <a href="<?php echo base_url('user/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
+                        <?php } ?>
+                        <?php
+                        $check_user_form = $this->crud_model->get_module_function_for_role('user', 'form');
+                        if ($check_user_form == true) {
+                        ?>
+                          <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
 
-                        <div class="modal fade" id="exampleModal<?php echo $value->id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                Are You Sure To Delete?
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <a href="<?php echo base_url('user/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
+                          <div class="modal fade" id="exampleModal<?php echo $value->id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  Are You Sure To Delete?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                  <a href="<?php echo base_url('user/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        <?php } ?>
+                        <a class="btn btn-sm btn-primary">Password</a>
                       </td>
                     </tr>
                   <?php } ?>

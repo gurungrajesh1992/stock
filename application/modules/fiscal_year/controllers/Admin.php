@@ -85,7 +85,7 @@ class Admin extends Auth_controller
 					'fiscal_year' => $this->input->post('fiscal_year'),
 					'start_date' => $this->input->post('start_date'),
 					'end_date' => $this->input->post('end_date'),
-					// 'current_tag' => $this->input->post('current_tag'),
+					'current_tag' => $this->input->post('current_tag'),
 
 				);
 
@@ -107,6 +107,10 @@ class Admin extends Auth_controller
 					}
 				} else {
 					$data['updated_on'] = date('Y-m-d');
+
+					$update['current_tag'] = 'N';
+					$this->crud_model->update('fiscal_year_para', $update, array());
+
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');

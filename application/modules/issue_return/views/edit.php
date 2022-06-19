@@ -78,7 +78,10 @@
                                             <div class="col-md-1">
                                                 <label>Issued Quantity</label>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-2">
+                                                <label>Location</label>
+                                            </div>
+                                            <div class="col-md-6">
                                                 <label>Remarks</label>
                                             </div>
 
@@ -114,7 +117,15 @@
                                                         <div class="col-md-1">
                                                             <input type="number" name="issued_qty[]" class="form-control" placeholder="Requested Quantity" value="<?php echo $requested_qty; ?>" readonly>
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-2">
+                                                            <select name="location_id[]" class="form-control" id="location_id" required>
+                                                                <option value>Select Location</option>
+                                                                <?php foreach ($locations as $key_l => $value_l) { ?>
+                                                                    <option value="<?php echo $value_l->id; ?>" <?php echo (isset($value->location_id) && $value->location_id == $value_l->id) ? 'selected' : ''; ?>><?php echo $value_l->store_name; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             <textarea name="detail_remarks[]" class="form-control" rows="1" cols="80" autocomplete="off" placeholder="Issued Remarks"><?php echo $value->remarks; ?></textarea>
                                                         </div>
                                                     </div>

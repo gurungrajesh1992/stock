@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: May 27, 2022 at 05:27 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.3.23
+-- Generation Time: Jun 05, 2022 at 11:57 AM
+-- Server version: 10.4.20-MariaDB
+-- PHP Version: 7.4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `inventory`
+-- Database: `inventory_db`
 --
 
 -- --------------------------------------------------------
@@ -199,6 +199,14 @@ CREATE TABLE `client_infos` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `client_infos`
+--
+
+INSERT INTO `client_infos` (`id`, `client_name`, `remarks`, `address`, `country_code`, `email`, `telephone`, `contact_person`, `cp_mobile`, `DocPath`, `meta_keyword`, `meta_desc`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(1, 'Client one', '<p>d asdsadas das bvsdfdsfdsafsdf</p>\r\n', 'Kaushaltar', 'nepa', 'clientone@gmail.com', '9898989898', 'asd sada fas', '63463464366', 'http://localhost:7777/stock/uploads/download.png', 'dasdsa dsad', 'as dasd asdasd', 3, '2022-05-30', 0, '0000-00-00 00:00:00', '1'),
+(2, 'Client Two', '<p>d sadsa dsa sdag feadgds fsd</p>\r\n', 'Tikathali', 'nepa', 'clienttwo@gmail.com', '9898989898', 'dasdsadsadsa', '5764545645645', 'http://localhost:7777/stock/uploads/download.png', 'dasdsadsadsa', 'asdsadsadsadas', 3, '2022-05-30', 0, '0000-00-00 00:00:00', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -322,6 +330,16 @@ CREATE TABLE `depreciation_para` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `depreciation_para`
+--
+
+INSERT INTO `depreciation_para` (`id`, `depreciation_rate`, `fiscal_year`, `from`, `to`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
+(3, '1', '2021/2022', '2021-03-01', '2021-05-31', 'first quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(4, '0.75', '2021/2022', '2021-06-01', '2021-08-30', 'Second Quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(5, '0.5', '2021/2022', '2021-09-01', '2021-11-30', 'Third Quarter', 3, '2022-06-05', 0, '0000-00-00', '1'),
+(6, '0.25', '2021/2022', '2021-12-01', '2022-02-28', 'Fourth Quarter', 3, '2022-06-05', 0, '0000-00-00', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -374,7 +392,8 @@ CREATE TABLE `fiscal_year_para` (
 --
 
 INSERT INTO `fiscal_year_para` (`id`, `fiscal_year`, `start_date`, `end_date`, `current_tag`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, '2022', '2022-03-13', '2023-03-12', 'Y', 3, '2022-04-14', 3, '2022-04-14', '1');
+(1, '2022/2023', '2022-03-01', '2023-02-28', 'N', 3, '2022-04-14', 3, '2022-06-05', '1'),
+(2, '2021/2022', '2021-03-01', '2022-02-28', 'Y', 3, '2022-06-05', 0, '2022-06-05', '1');
 
 -- --------------------------------------------------------
 
@@ -464,16 +483,6 @@ CREATE TABLE `grn_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `grn_details`
---
-
-INSERT INTO `grn_details` (`id`, `grn_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `actual_total_price`, `total_price`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRN26052022-0001', 'IC19042022-0002', 9, '1000.00', '0.00', '0.00', '9000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(2, 'GRN26052022-0001', 'IC19042022-0001', 9, '2000.00', '0.00', '0.00', '18000.00', 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(5, 'GRN26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '0.00', '1000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1'),
-(6, 'GRN26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '0.00', '4000.00', 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -502,6 +511,7 @@ CREATE TABLE `grn_master` (
   `approved_on` date NOT NULL,
   `approved_by` varchar(25) NOT NULL,
   `posted_on` date DEFAULT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL,
   `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
   `canceled_by` int(11) DEFAULT NULL,
@@ -512,14 +522,6 @@ CREATE TABLE `grn_master` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `grn_master`
---
-
-INSERT INTO `grn_master` (`id`, `grn_no`, `type`, `grn_date`, `supplier_id`, `type_no`, `invoice_no`, `payment_type`, `bank_name`, `advance_paid`, `discount_per`, `discount_amt`, `total`, `sub_total`, `vat_percent`, `vat_amount`, `grand_total`, `total_charge`, `approved_on`, `approved_by`, `posted_on`, `posted_tag`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRN26052022-0001', 'DR', '2022-05-26', 1, '', '', 'CQ', 'Global IME', '5000.00', '15.00', '4050.00', '27000.00', '22950.00', '13.00', '2983.500', '25933.50', '2000.00', '2022-05-26', '3', '2022-05-26', '1', '0', NULL, NULL, 3, '2022-05-26 20:55:07', 0, '0000-00-00 00:00:00', '1'),
-(3, 'GRN26052022-0002', 'DR', '2022-05-26', 2, '', '', 'CQ', 'Gbl', '5000.00', '0.00', '0.00', '5000.00', '5000.00', '13.00', '650.000', '5650.00', NULL, '2022-05-26', '3', '2022-05-26', '1', '0', NULL, NULL, 3, '2022-05-26 22:19:57', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -533,6 +535,7 @@ CREATE TABLE `grn_return` (
   `grn_no` varchar(25) NOT NULL,
   `supplier_id` int(11) NOT NULL,
   `posted_on` date DEFAULT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL DEFAULT '0',
   `approved_on` date NOT NULL,
   `approved_by` int(11) DEFAULT NULL,
@@ -548,14 +551,6 @@ CREATE TABLE `grn_return` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `grn_return`
---
-
-INSERT INTO `grn_return` (`id`, `grn_return_no`, `grn_no`, `supplier_id`, `posted_on`, `posted_tag`, `approved_on`, `approved_by`, `total_amt`, `return_date`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'GRR26052022-0001', 'GRN26052022-0001', 1, NULL, '0', '2022-05-26', 3, '0.00', '2022-05-26', 'firta yeuta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:28:19', 0, '0000-00-00 00:00:00', '1'),
-(2, 'GRR26052022-0002', 'GRN26052022-0002', 2, '2022-05-27', '1', '2022-05-26', 3, '0.00', '2022-05-26', 'sabai firta gareko hai', '0', NULL, NULL, 3, '2022-05-26 22:33:02', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -579,16 +574,6 @@ CREATE TABLE `grn_return_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `grn_return_details`
---
-
-INSERT INTO `grn_return_details` (`id`, `grn_return_no`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'GRR26052022-0001', 'IC19042022-0001', 1, '2000.00', '0.00', '2000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
-(2, 'GRR26052022-0001', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'firta yeuta gareko hai', '2022-05-26 22:28:19', 3, '0000-00-00 00:00:00', 0, '1'),
-(3, 'GRR26052022-0002', 'IC19042022-0001', 2, '2000.00', '0.00', '4000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1'),
-(4, 'GRR26052022-0002', 'IC19042022-0002', 1, '1000.00', '0.00', '1000.00', NULL, 'sabai firta gareko hai', '2022-05-26 22:33:02', 3, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -644,6 +629,7 @@ CREATE TABLE `issue_return_details` (
   `item_code` varchar(25) NOT NULL,
   `issued_qty` int(11) NOT NULL,
   `returned_qty` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
   `remarks` varchar(25) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
@@ -651,14 +637,6 @@ CREATE TABLE `issue_return_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_return_details`
---
-
-INSERT INTO `issue_return_details` (`id`, `issue_return_no`, `item_code`, `issued_qty`, `returned_qty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IR26052022-0001', 'IC19042022-0002', 1, 1, 'ghd hhg', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(2, 'IR26052022-0001', 'IC19042022-0001', 1, 1, 'hdgfdgf', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -678,6 +656,7 @@ CREATE TABLE `issue_return_master` (
   `approved_on` date NOT NULL,
   `approved_by` varchar(25) DEFAULT NULL,
   `posted_on` date NOT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL,
   `remarks` varchar(255) DEFAULT NULL,
   `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
@@ -689,13 +668,6 @@ CREATE TABLE `issue_return_master` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_return_master`
---
-
-INSERT INTO `issue_return_master` (`id`, `issue_return_no`, `issue_no`, `return_date`, `department_id`, `staff_id`, `prepared_by`, `prepared_date`, `approved_on`, `approved_by`, `posted_on`, `posted_tag`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IR26052022-0001', 'IS26052022-0001', '2022-05-26', 2, 2, 'rajesh dai', '2022-05-26', '2022-05-26', '3', '2022-05-26', '1', 'ghfghhf', '0', NULL, NULL, '2022-05-26 18:38:01', 3, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -715,16 +687,6 @@ CREATE TABLE `issue_slip_details` (
   `updated_by` int(11) NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_slip_details`
---
-
-INSERT INTO `issue_slip_details` (`id`, `issue_slip_no`, `item_code`, `issued_qnty`, `remarks`, `created_on`, `created_by`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'IS26052022-0001', 'IC19042022-0001', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(2, 'IS26052022-0001', 'IC19042022-0002', 1, 'issue handeko', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(3, 'IS26052022-0002', 'IC19042022-0002', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1'),
-(4, 'IS26052022-0002', 'IC19042022-0001', 19, '98 ota remaining', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -757,14 +719,6 @@ CREATE TABLE `issue_slip_master` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `issue_slip_master`
---
-
-INSERT INTO `issue_slip_master` (`id`, `issue_slip_no`, `requisition_no`, `issue_date`, `issue_type`, `department_id`, `staff_id`, `issued_by`, `issued_on`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `posted_by`, `posted_tag`, `posted_on`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'IS26052022-0001', 'RQ26052022-0001', '2022-05-26', 'RQ', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', 'issue handeko hai hai', 3, '2022-05-26 21:24:48', 0, '0000-00-00 00:00:00', '1'),
-(2, 'IS26052022-0002', NULL, '2022-05-26', 'DR', 2, 2, 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, '3', '1', '2022-05-26', '98 ota remaining', 3, '2022-05-26 21:38:53', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -851,7 +805,8 @@ CREATE TABLE `item_infos` (
 
 INSERT INTO `item_infos` (`id`, `category_id`, `location_id`, `item_code`, `item_name`, `item_type`, `specification`, `model_no`, `max_qty`, `min_qty`, `reorder_level`, `shelf_life_no`, `shelf_life_ym`, `purchases_date`, `depreciation_rate`, `item_image`, `remarks`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
 (6, 3, 2, 'IC19042022-0001', 'Computer Wifi Core i5', 'A', '', 'IC19042022-0001', 50, 3, 10, 4, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '0000-00-00 00:00:00', '1'),
-(7, 6, 2, 'IC19042022-0002', 'Dell Inspiron 3511', 'A', '', 'IC19042022-0002', 50, 5, 10, 2, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '2022-04-19 00:00:00', '1');
+(7, 6, 2, 'IC19042022-0002', 'Dell Inspiron 3511', 'A', '', 'IC19042022-0002', 50, 5, 10, 2, 'Y', NULL, 10, '', NULL, 1, '2022-04-19 00:00:00', 0, '2022-04-19 00:00:00', '1'),
+(8, 6, 1, 'IC30052022-0003', 'Tablet', 'I', 'dasd asdas sadsadsadasdas', 'bex068', 1000, 10, 25, 4, 'Y', NULL, 10, 'http://localhost:7777/stock/uploads/tablet.jpg', NULL, 3, '2022-05-30 00:00:00', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -985,9 +940,9 @@ INSERT INTO `location_para` (`id`, `parent_id`, `store_name`, `address`, `create
 CREATE TABLE `location_transfer` (
   `id` int(11) NOT NULL,
   `transfer_code` varchar(50) NOT NULL,
-  `date` date NOT NULL,
   `posted_tag` enum('0','1') DEFAULT '0',
   `posted_on` date DEFAULT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `from_loc` varchar(255) NOT NULL,
   `to_loc` varchar(255) NOT NULL,
   `transfered_on` date NOT NULL,
@@ -1000,7 +955,9 @@ CREATE TABLE `location_transfer` (
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime NOT NULL,
   `updated_by` int(11) NOT NULL,
-  `status` enum('0','1','2') DEFAULT '1'
+  `status` enum('0','1','2') DEFAULT '1',
+  `approved_by` varchar(25) DEFAULT NULL,
+  `approved_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1100,16 +1057,6 @@ CREATE TABLE `opening_detail` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `opening_detail`
---
-
-INSERT INTO `opening_detail` (`id`, `opening_master_id`, `supplier_id`, `location_id`, `item_code`, `qty`, `unit_price`, `actual_unit_price`, `total_price`, `actual_total_price`, `depreciated_amt`, `purchase_date`, `book_value`, `remarks`, `batch_no`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 1, 1, 1, 'IC19042022-0002', 10, '1000.00', '1050.00', '10000.00', '10500.00', '50.00', '2022-01-01', '1000.00', '', 'abc123', 0, '2022-05-26 21:02:38', 0, '0000-00-00 00:00:00', '1'),
-(2, 1, 1, 1, 'IC19042022-0001', 10, '2000.00', '2100.00', '20000.00', '21000.00', '100.00', '2022-01-01', '1000.00', '', 'abc123', 0, '2022-05-26 21:02:38', 0, '0000-00-00 00:00:00', '1'),
-(3, 2, 2, 2, 'IC19042022-0002', 100, '1000.00', '1050.00', '100000.00', '105000.00', '50.00', '2022-02-01', '1000.00', '', 'cba321', 0, '2022-05-26 21:18:08', 0, '0000-00-00 00:00:00', '1'),
-(4, 2, 2, 2, 'IC19042022-0001', 100, '2000.00', '2100.00', '200000.00', '210000.00', '100.00', '2022-02-01', '2000.00', '', 'cba321', 0, '2022-05-26 21:18:08', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1119,6 +1066,7 @@ INSERT INTO `opening_detail` (`id`, `opening_master_id`, `supplier_id`, `locatio
 CREATE TABLE `opening_master` (
   `id` int(11) NOT NULL,
   `opening_code` varchar(55) NOT NULL,
+  `type` enum('Assets','Inventory') NOT NULL,
   `fiscal_year` varchar(10) NOT NULL,
   `opening_date` date NOT NULL,
   `approved_by` int(11) DEFAULT NULL,
@@ -1136,14 +1084,6 @@ CREATE TABLE `opening_master` (
   `updated_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `opening_master`
---
-
-INSERT INTO `opening_master` (`id`, `opening_code`, `fiscal_year`, `opening_date`, `approved_by`, `approved_on`, `posted_tag`, `posted_by`, `posted_on`, `remarks`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(1, 'OPE26052022-0001', '2022', '2022-01-01', 3, '2022-05-26', '1', '3', '2022-05-26', 'first shot', '0', NULL, NULL, 3, '2022-05-26 17:17:38', 0, '2022-05-26 21:03:00', '1'),
-(2, 'OPE26052022-0002', '2022', '2022-02-01', 3, '2022-05-26', '1', '3', '2022-05-26', 'february ma leko', '0', NULL, NULL, 3, '2022-05-26 17:33:08', 0, '2022-05-26 21:19:15', '1');
 
 -- --------------------------------------------------------
 
@@ -1267,17 +1207,6 @@ CREATE TABLE `requisition_details` (
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `requisition_details`
---
-
-INSERT INTO `requisition_details` (`id`, `requisition_no`, `item_code`, `quantity_requested`, `received_qnty`, `remaining_qnty`, `remark`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(2, 'RQ19042022-0001', 'IC19042022-0002', 1, 0, NULL, 'Dell Inspiron 3511 ', 0, '2022-04-19 12:02:32', 0, '0000-00-00 00:00:00', '1'),
-(3, 'RQ19042022-0002', 'IC19042022-0002', 2, 0, NULL, 'Dell Inspiron 3511-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
-(4, 'RQ19042022-0002', 'IC19042022-0001', 2, 0, NULL, 'Computer Wifi Core i5-2qty', 0, '2022-04-19 12:04:00', 0, '0000-00-00 00:00:00', '1'),
-(5, 'RQ26052022-0001', 'IC19042022-0002', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1'),
-(6, 'RQ26052022-0001', 'IC19042022-0001', 1, 1, 0, 'yeuta matra', 0, '2022-05-26 21:21:35', 0, '0000-00-00 00:00:00', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1304,13 +1233,6 @@ CREATE TABLE `requisition_master` (
   `updated_on` datetime NOT NULL,
   `status` enum('0','1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `requisition_master`
---
-
-INSERT INTO `requisition_master` (`id`, `requisition_no`, `requisition_date`, `department_id`, `staff_id`, `remarks`, `requested_by`, `requested_date`, `approved_by`, `approved_on`, `cancel_tag`, `canceled_by`, `canceled_on`, `created_by`, `created_on`, `updated_by`, `updated_on`, `status`) VALUES
-(3, 'RQ26052022-0001', '2022-05-26', 2, 2, 'duitai ma yeuta matra hai', 'Rajesh Dai', '2022-05-26', '3', '2022-05-26', '0', NULL, NULL, 3, '2022-05-26 17:36:34', 0, '0000-00-00 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -1351,6 +1273,7 @@ CREATE TABLE `sales_master` (
   `received_by` varchar(25) DEFAULT NULL,
   `posted_tag` enum('0','1') NOT NULL DEFAULT '0',
   `posted_on` date DEFAULT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `payment_type` enum('CH','CQ','CR') NOT NULL,
   `bank_name` varchar(55) NOT NULL,
   `advance_amt` decimal(11,2) DEFAULT NULL,
@@ -1388,6 +1311,7 @@ CREATE TABLE `sales_return` (
   `approved_on` date DEFAULT NULL,
   `posted_tag` enum('0','1') DEFAULT '0',
   `posted_on` date DEFAULT NULL,
+  `posted_by` int(11) DEFAULT NULL,
   `remarks` varchar(150) NOT NULL,
   `cancel_tag` enum('0','1') NOT NULL DEFAULT '0',
   `canceled_by` int(11) DEFAULT NULL,
@@ -1414,6 +1338,7 @@ CREATE TABLE `sales_return_details` (
   `actual_unit_price` decimal(11,2) NOT NULL,
   `actual_total_price` decimal(11,2) DEFAULT NULL,
   `total_price` decimal(11,2) DEFAULT NULL,
+  `location_id` int(11) DEFAULT NULL,
   `return_remarks` varchar(150) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by` varchar(25) NOT NULL,
@@ -1463,7 +1388,7 @@ CREATE TABLE `site_settings` (
 --
 
 INSERT INTO `site_settings` (`id`, `site_name`, `site_slogan`, `web_url`, `address`, `mobile`, `telephone`, `map_location`, `contact_detail`, `email`, `facebook`, `whatsapp`, `skype`, `twitter`, `instagram`, `youtube`, `googleplus`, `linked_in`, `logo`, `fav`, `default_img`, `meta_title`, `meta_description`, `meta_key_words`, `updated_on`, `updated_by`, `status`) VALUES
-(1, 'Inventory', 'Inventory Management', 'http://localhost:7777/stock', 'Prasuti Marga -509, Kathmandu, Nepal', '+977-1-4102299, 4102213 ,4102239', '+977-1-4102299, 4102213 ,4102239', '<p>&nbsp;</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', '<p>Prasuti Marga -509,</p>\r\n\r\n<p>Kathmandu, Nepal</p>\r\n\r\n<p><strong>Fax:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Phone:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Email:</strong>&nbsp;info@nyatapol.com</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !important;}.ws_toolbar {z-index:100000} .ws_toolbar .ws_tb_btn {cursor:pointer;border:1px solid #555;padding:3px}   .tb_highlight{background-color:yellow} .tb_hide {visibility:hidden} .ws_toolbar img {padding:2px;margin:0px}\r\n</style>\r\n', 'info@nyatapol.com', 'https://www.facebook.com/', 'whatsup.com', 'skype.com', 'twitter.com', 'instagram.com', 'youtube.com', 'google.com', 'linked_in.com', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'Stock Management (Inventory)', '<p>Best Stock Management</p>\r\n<style type=\"text/css\">.tb_button {padding:1px;cursor:pointer;border-right: 1px solid #8b8b8b;border-left: 1px solid #FFF;border-bottom: 1px solid #fff;}.tb_button.hover {borer:2px outset #def; background-color: #f8f8f8 !impo', 'stock, stock management, inventory', '2022-05-26', 3, '1');
+(1, 'Inventory', 'Inventory Management', 'http://localhost:7777/stock', 'Prasuti Marga -509, Kathmandu, Nepal', '+977-1-4102299, 4102213 ,4102239', '+977-1-4102299, 4102213 ,4102239', '', '<p>Prasuti Marga -509,</p>\r\n\r\n<p>Kathmandu, Nepal</p>\r\n\r\n<p><strong>Fax:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Phone:&nbsp;</strong>+977-1-4102299<br />\r\n<strong>Email:</strong>&nbsp;info@nyatapol.com</p>\r\n', 'info@nyatapol.com', 'https://www.facebook.com/', 'whatsup.com', 'skype.com', 'twitter.com', 'instagram.com', 'youtube.com', 'google.com', 'linked_in.com', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/logo/inventory_logo.png', 'http://localhost:7777/stock/uploads/svg/barLoading.svg', 'Stock Management (Inventory)', '<p>Best Stock Management</p>', 'stock, stock management, inventory', '2022-06-03', 3, '1');
 
 -- --------------------------------------------------------
 
@@ -1563,28 +1488,6 @@ CREATE TABLE `stock_ledger` (
   `status` enum('0','1','2') DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `stock_ledger`
---
-
-INSERT INTO `stock_ledger` (`id`, `ledger_code`, `item_code`, `transaction_date`, `transaction_type`, `in_qty`, `out_qty`, `rem_qty`, `in_unit_price`, `in_total_price`, `in_actual_unit_price`, `in_actual_total_price`, `out_unit_price`, `out_total_price`, `out_actual_unit_price`, `out_actual_total_price`, `location_id`, `batch_no`, `vendor_id`, `client_id`, `remarks`, `transactioncode`, `created_on`, `created_by`, `updated_on`, `updated_by`, `staff_id`, `status`) VALUES
-(1, 'LEDG26052022-0001', 'IC19042022-0001', '2022-01-01', 'OPN', 10, 0, 0, '2000.00', '20000.00', '2100.00', '21000.00', '0.00', '0.00', '0.00', '0.00', 1, 'abc123', 1, 0, 'posted from opening', 'OPE26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(2, 'LEDG26052022-0002', 'IC19042022-0002', '2022-01-01', 'OPN', 10, 0, 0, '1000.00', '10000.00', '1050.00', '10500.00', '0.00', '0.00', '0.00', '0.00', 1, 'abc123', 1, 0, 'posted from opening', 'OPE26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(3, 'LEDG26052022-0003', 'IC19042022-0001', '2022-02-01', 'OPN', 100, 0, 90, '2000.00', '200000.00', '2100.00', '210000.00', '0.00', '0.00', '0.00', '0.00', 2, 'cba321', 2, 0, 'posted from opening', 'OPE26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(4, 'LEDG26052022-0004', 'IC19042022-0002', '2022-02-01', 'OPN', 100, 0, 90, '1000.00', '100000.00', '1050.00', '105000.00', '0.00', '0.00', '0.00', '0.00', 2, 'cba321', 2, 0, 'posted from opening', 'OPE26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(5, 'LEDG26052022-0005', 'IC19042022-0002', '2022-05-26', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', '1050.00', '1050.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(6, 'LEDG26052022-0006', 'IC19042022-0001', '2022-05-26', 'ISS', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '2000.00', '2100.00', '2100.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(7, 'LEDG26052022-0007', 'IC19042022-0001', '2022-05-26', 'ISS', 0, 19, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '38000.00', '2100.00', '39900.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(8, 'LEDG26052022-0008', 'IC19042022-0002', '2022-05-26', 'ISS', 0, 19, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '19000.00', '1050.00', '19950.00', 0, '', 0, 0, 'posted from issue', 'IS26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(9, 'LEDG26052022-0009', 'IC19042022-0001', '2022-05-26', 'ISR', 1, 0, 1, '2000.00', '2000.00', '2100.00', '2100.00', '0.00', '0.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue return', 'IR26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(10, 'LEDG26052022-0010', 'IC19042022-0002', '2022-05-26', 'ISR', 1, 0, 1, '1000.00', '1000.00', '1050.00', '1050.00', '0.00', '0.00', '0.00', '0.00', 0, '', 0, 0, 'posted from issue return', 'IR26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(19, 'LEDG26052022-0015', 'IC19042022-0001', '2022-05-26', 'GRN', 2, 0, 2, '2000.00', '4000.00', '260.00', '520.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(20, 'LEDG26052022-0016', 'IC19042022-0002', '2022-05-26', 'GRN', 1, 0, 1, '1000.00', '1000.00', '130.00', '130.00', '0.00', '0.00', '0.00', '0.00', 0, '', 2, 0, 'posted from GRN', 'GRN26052022-0002', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(21, 'LEDG26052022-0017', 'IC19042022-0001', '2022-05-26', 'GRN', 9, 0, 9, '2000.00', '18000.00', '369.15', '3322.33', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(22, 'LEDG26052022-0018', 'IC19042022-0002', '2022-05-26', 'GRN', 9, 0, 9, '1000.00', '9000.00', '184.57', '1661.17', '0.00', '0.00', '0.00', '0.00', 0, '', 1, 0, 'posted from GRN', 'GRN26052022-0001', '2022-05-26', '3', '0000-00-00', 0, 0, '1'),
-(23, 'LEDG27052022-0019', 'IC19042022-0002', '2022-05-26', 'GRR', 0, 1, 0, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', '130.00', '130.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1'),
-(24, 'LEDG27052022-0020', 'IC19042022-0001', '2022-05-26', 'GRR', 0, 2, 0, '0.00', '0.00', '0.00', '0.00', '2000.00', '4000.00', '260.00', '520.00', 0, '', 2, 0, 'posted from goods return', 'GRR26052022-0002', '2022-05-27', '3', '0000-00-00', 0, 0, '1');
-
 -- --------------------------------------------------------
 
 --
@@ -1675,7 +1578,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `user_name`, `password`, `auth_code`, `role_id`, `staff_id`, `designation_code`, `depart_id`, `appointed_date`, `full_name`, `profile_image`, `temp_address`, `permanent_address`, `country_code`, `contact`, `description`, `email`, `created_on`, `created_by`, `updated_on`, `updated_by`, `currently_working`, `status`) VALUES
 (1, 'nyatapol', 'c7098dd01fd11866dcb79e33d03ecfc5', '820682a7c8be57db72638233737fabf2', 1, NULL, 'HRM', 3, NULL, 'Nyatapol', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Babarmahal', '', 'nepa', '+977 1-4102299', '', 'nyatapol@gmail.com', '2022-01-19', 0, '2022-02-07', 1, 'Yes', '1'),
 (2, 'rajesh', 'c7098dd01fd11866dcb79e33d03ecfc5', 'b41f1ae8bc8aeb8b467612ba63ef34b0', 1, NULL, 'HRM', 3, NULL, 'Rajesh Gurung', 'https://nyatapol.biz/shine/uploads/logo/download.png', 'Tikathali', '', 'nepa', '98119561913', '<h1>dami hai sss</h1>\r\n', 'gurungrajesh1992@gmail.com', '2022-01-28', 1, '2022-02-07', 1, 'Yes', '1'),
-(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '0ddc67329ca83f5a1f94361488af020f', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
+(3, 'admin', '482c811da5d5b4bc6d497ffa98491e38', '366c2bc683d453340d867008a8e52a6e', 1, NULL, 'HRM', 3, '2022-03-01', 'admin', 'http://localhost:7777/stock/uploads/logo/admin.jpg', 'babarmahal', 'nawalparasi', 'nepa', '9856767678978', '<p>dashdga hagsdhgas jdhgas hdas</p>\r\n', 'admin@gmail.com', '2022-02-24', 1, '2022-03-28', 3, 'Yes', '1'),
 (6, 'chelina', '5f4dcc3b5aa765d61d8327deb882cf99', NULL, 1, 1, NULL, NULL, NULL, '', '', '', '', '', '', '', 'cheleena.maharjan.3@gmail.com', '2022-04-18', 3, '0000-00-00', 0, 'Yes', '1');
 
 -- --------------------------------------------------------
@@ -4174,7 +4077,847 @@ INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALU
 (2473, 'grn_return', 'view', 3, '2022-05-27 03:23:17'),
 (2474, 'grn_return', 'view', 3, '2022-05-27 03:24:23'),
 (2475, 'requisition', 'cancel_row', 3, '2022-05-27 03:26:17'),
-(2476, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:26:19');
+(2476, 'grn_return', 'grn_return_post', 3, '2022-05-27 03:26:19'),
+(2477, 'dashboard', NULL, 3, '2022-05-27 05:39:45'),
+(2478, 'opening_master', 'all', 3, '2022-05-27 05:40:41'),
+(2479, 'opening_master', 'view', 3, '2022-05-27 05:40:44'),
+(2480, 'opening_master', 'all', 3, '2022-05-27 05:40:47'),
+(2481, 'opening_master', 'view', 3, '2022-05-27 05:40:50'),
+(2482, 'opening_master', 'view', 3, '2022-05-27 05:40:51'),
+(2483, 'opening_master', 'form', 3, '2022-05-27 05:42:50'),
+(2484, 'opening_master', 'all', 3, '2022-05-27 05:42:55'),
+(2485, 'opening_master', 'form', 3, '2022-05-27 05:43:17'),
+(2486, 'opening_master', 'all', 3, '2022-05-27 05:43:24'),
+(2487, 'opening_master', 'form', 3, '2022-05-27 05:46:23'),
+(2488, 'opening_master', 'all', 3, '2022-05-27 05:46:28'),
+(2489, 'opening_master', 'form', 3, '2022-05-27 05:51:06'),
+(2490, 'items', 'all', 3, '2022-05-27 06:02:48'),
+(2491, 'items', 'form', 3, '2022-05-27 06:02:51'),
+(2492, 'items', 'form', 3, '2022-05-27 06:02:51'),
+(2493, 'issue', 'all', 3, '2022-05-27 06:06:27'),
+(2494, 'issue', 'view', 3, '2022-05-27 06:06:34'),
+(2495, 'issue', 'direct_view', 3, '2022-05-27 06:06:36'),
+(2496, 'issue_return', 'all', 3, '2022-05-27 06:08:33'),
+(2497, 'issue_return', 'view', 3, '2022-05-27 06:08:36'),
+(2498, 'grn', 'all', 3, '2022-05-27 06:13:53'),
+(2499, 'grn', 'view', 3, '2022-05-27 06:14:02'),
+(2500, 'grn', 'view', 3, '2022-05-27 06:14:03'),
+(2501, 'grn', 'direct_add', 3, '2022-05-27 06:14:06'),
+(2502, 'grn', 'all', 3, '2022-05-27 06:14:35'),
+(2503, 'opening_master', 'all', 3, '2022-05-27 06:49:20'),
+(2504, 'opening_master', 'view', 3, '2022-05-27 06:49:26'),
+(2505, 'opening_master', 'form', 3, '2022-05-27 06:49:32'),
+(2506, 'dashboard', NULL, 3, '2022-05-30 08:41:36'),
+(2507, 'issue_return', 'all', 3, '2022-05-30 08:41:42'),
+(2508, 'issue_return', 'view', 3, '2022-05-30 08:41:46'),
+(2509, 'issue_return', 'form', 3, '2022-05-30 08:42:47'),
+(2510, 'issue_return', 'form', 3, '2022-05-30 08:43:03'),
+(2511, 'issue_return', 'add', 3, '2022-05-30 08:43:03'),
+(2512, 'grn', 'direct_add', 3, '2022-05-30 08:43:51'),
+(2513, 'grn', 'form', 3, '2022-05-30 08:43:55'),
+(2514, 'grn', 'direct_add', 3, '2022-05-30 08:43:55'),
+(2515, 'grn', 'getForm', 3, '2022-05-30 08:43:59'),
+(2516, 'grn', 'direct_add', 3, '2022-05-30 08:44:08'),
+(2517, 'grn', 'direct_add', 3, '2022-05-30 08:44:11'),
+(2518, 'grn', 'form', 3, '2022-05-30 08:44:24'),
+(2519, 'grn', 'direct_add', 3, '2022-05-30 08:44:24'),
+(2520, 'grn', 'getForm', 3, '2022-05-30 08:44:29'),
+(2521, 'issue_return', 'add', 3, '2022-05-30 08:46:46'),
+(2522, 'issue_return', 'all', 3, '2022-05-30 08:47:00'),
+(2523, 'issue_return', 'view', 3, '2022-05-30 08:47:04'),
+(2524, 'issue_return', 'edit', 3, '2022-05-30 08:47:06'),
+(2525, 'issue_return', 'edit', 3, '2022-05-30 08:50:43'),
+(2526, 'issue_return', 'edit', 3, '2022-05-30 08:51:45'),
+(2527, 'issue_return', 'edit', 3, '2022-05-30 08:52:16'),
+(2528, 'issue_return', 'edit', 3, '2022-05-30 08:52:37'),
+(2529, 'issue_return', 'add', 3, '2022-05-30 08:53:15'),
+(2530, 'issue_return', 'add', 3, '2022-05-30 08:56:27'),
+(2531, 'issue_return', 'add', 3, '2022-05-30 08:57:10'),
+(2532, 'issue_return', 'all', 3, '2022-05-30 08:57:10'),
+(2533, 'issue_return', 'edit', 3, '2022-05-30 08:57:18'),
+(2534, 'issue_return', 'edit', 3, '2022-05-30 08:57:18'),
+(2535, 'issue_return', 'view', 3, '2022-05-30 08:57:33'),
+(2536, 'issue_return', 'view', 3, '2022-05-30 08:57:33'),
+(2537, 'opening_master', 'change_status', 3, '2022-05-30 08:57:39'),
+(2538, 'issue_return', 'view', 3, '2022-05-30 08:57:39'),
+(2539, 'issue_return', 'view', 3, '2022-05-30 09:01:28'),
+(2540, 'issue_return', 'view', 3, '2022-05-30 09:01:30'),
+(2541, 'issue_return', 'issue_return_post', 3, '2022-05-30 09:01:36'),
+(2542, 'issue_return', 'view', 3, '2022-05-30 09:01:36'),
+(2543, 'issue_return', 'view', 3, '2022-05-30 09:02:38'),
+(2544, 'opening_master', 'change_status', 3, '2022-05-30 09:02:44'),
+(2545, 'issue_return', 'view', 3, '2022-05-30 09:02:44'),
+(2546, 'issue_return', 'issue_return_post', 3, '2022-05-30 09:02:46'),
+(2547, 'issue_return', 'view', 3, '2022-05-30 09:02:46'),
+(2548, 'grn_return', 'all', 3, '2022-05-30 09:04:32'),
+(2549, 'grn_return', 'view', 3, '2022-05-30 09:04:47'),
+(2550, 'grn_return', 'view', 3, '2022-05-30 09:04:48'),
+(2551, 'grn_return', 'view', 3, '2022-05-30 09:20:29'),
+(2552, 'grn_return', 'form', 3, '2022-05-30 09:20:36'),
+(2553, 'grn_return', 'form', 3, '2022-05-30 09:20:45'),
+(2554, 'grn_return', 'add', 3, '2022-05-30 09:20:45'),
+(2555, 'grn_return', 'all', 3, '2022-05-30 09:20:52'),
+(2556, 'grn_return', 'view', 3, '2022-05-30 09:20:55'),
+(2557, 'grn_return', 'view', 3, '2022-05-30 09:20:55'),
+(2558, 'grn_return', 'grn_return_post', 3, '2022-05-30 09:21:57'),
+(2559, 'grn_return', 'view', 3, '2022-05-30 09:21:57'),
+(2560, 'sales', 'all', 3, '2022-05-30 09:23:13'),
+(2561, 'sales', 'add', 3, '2022-05-30 09:23:22'),
+(2562, 'client', 'all', 3, '2022-05-30 09:23:49'),
+(2563, 'client', 'form', 3, '2022-05-30 09:23:51'),
+(2564, 'client', 'form', 3, '2022-05-30 09:24:40'),
+(2565, 'client', 'all', 3, '2022-05-30 09:24:40'),
+(2566, 'client', 'form', 3, '2022-05-30 09:24:42'),
+(2567, 'client', 'form', 3, '2022-05-30 09:25:16'),
+(2568, 'client', 'all', 3, '2022-05-30 09:25:16'),
+(2569, 'sales', 'add', 3, '2022-05-30 09:25:22'),
+(2570, 'items', 'form', 3, '2022-05-30 09:25:59'),
+(2571, 'sales', 'add', 3, '2022-05-30 09:27:39'),
+(2572, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-30 09:27:53'),
+(2573, 'items', 'form', 3, '2022-05-30 09:28:31'),
+(2574, 'items', 'all', 3, '2022-05-30 09:28:31'),
+(2575, 'sales', 'add', 3, '2022-05-30 09:28:37'),
+(2576, 'sales', 'getForm', 3, '2022-05-30 09:29:08'),
+(2577, 'sales', 'getForm', 3, '2022-05-30 09:29:12'),
+(2578, 'sales', 'add', 3, '2022-05-30 09:29:35'),
+(2579, 'sales', 'getForm', 3, '2022-05-30 09:30:11'),
+(2580, 'sales', 'getForm', 3, '2022-05-30 09:30:12'),
+(2581, 'sales', 'getForm', 3, '2022-05-30 09:30:13'),
+(2582, 'sales', 'getForm', 3, '2022-05-30 09:31:38'),
+(2583, 'sales', 'getForm', 3, '2022-05-30 09:31:42'),
+(2584, 'sales', 'add', 3, '2022-05-30 09:31:54'),
+(2585, 'sales', 'add', 3, '2022-05-30 09:41:34'),
+(2586, 'sales', 'add', 3, '2022-05-30 09:43:16'),
+(2587, 'sales', 'all', 3, '2022-05-30 09:43:16'),
+(2588, 'sales', 'edit', 3, '2022-05-30 09:43:21'),
+(2589, 'sales', 'view', 3, '2022-05-30 09:44:10'),
+(2590, 'opening_master', 'change_status', 3, '2022-05-30 09:44:31'),
+(2591, 'sales', 'view', 3, '2022-05-30 09:44:31'),
+(2592, 'requisition', 'cancel_row', 3, '2022-05-30 09:44:32'),
+(2593, 'sales', 'view', 3, '2022-05-30 09:46:11'),
+(2594, 'sales', 'view', 3, '2022-05-30 09:48:35'),
+(2595, 'issue', 'all', 3, '2022-05-30 09:53:19'),
+(2596, 'issue', 'direct_view', 3, '2022-05-30 09:54:23'),
+(2597, 'sales', 'add', 3, '2022-05-30 09:54:40'),
+(2598, 'sales', 'getForm', 3, '2022-05-30 09:54:44'),
+(2599, 'sales', 'getForm', 3, '2022-05-30 09:54:46'),
+(2600, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2601, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2602, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2603, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2604, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2605, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2606, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2607, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2608, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2609, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2610, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2611, 'sales', 'edit', 3, '2022-05-30 09:54:53'),
+(2612, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2613, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2614, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2615, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2616, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2617, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2618, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2619, 'sales', 'edit', 3, '2022-05-30 09:54:54'),
+(2620, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2621, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2622, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2623, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2624, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2625, 'sales', 'edit', 3, '2022-05-30 09:54:55'),
+(2626, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2627, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2628, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2629, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2630, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2631, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2632, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2633, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2634, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2635, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2636, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2637, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2638, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2639, 'sales', 'edit', 3, '2022-05-30 09:54:56'),
+(2640, 'sales', 'all', 3, '2022-05-30 09:55:03'),
+(2641, 'sales', 'view', 3, '2022-05-30 09:55:23'),
+(2642, 'sales', 'all', 3, '2022-05-30 09:56:02'),
+(2643, 'sales', 'edit', 3, '2022-05-30 09:56:04'),
+(2644, 'sales', 'view', 3, '2022-05-30 09:56:19'),
+(2645, 'sales', 'view', 3, '2022-05-30 09:59:12'),
+(2646, 'sales', 'view', 3, '2022-05-30 09:59:31'),
+(2647, 'issue', 'form', 3, '2022-05-30 10:00:33'),
+(2648, 'issue', 'form', 3, '2022-05-30 10:00:38'),
+(2649, 'issue', 'direct_add', 3, '2022-05-30 10:00:38'),
+(2650, 'issue', 'getForm', 3, '2022-05-30 10:00:43'),
+(2651, 'issue', 'getForm', 3, '2022-05-30 10:00:46'),
+(2652, 'issue', 'getForm', 3, '2022-05-30 10:00:50'),
+(2653, 'sales', 'view', 3, '2022-05-30 10:04:58'),
+(2654, 'sales', 'view', 3, '2022-05-30 10:38:59'),
+(2655, 'sales', 'all', 3, '2022-05-30 10:39:01'),
+(2656, 'sales', 'all', 3, '2022-05-30 10:39:19'),
+(2657, 'opening_master', 'change_status', 3, '2022-05-30 10:39:22'),
+(2658, 'sales', 'view', 3, '2022-05-30 10:39:22'),
+(2659, 'sales', 'view', 3, '2022-05-30 10:40:35'),
+(2660, 'sales', 'sales_post', 3, '2022-05-30 10:40:44'),
+(2661, 'sales', 'view', 3, '2022-05-30 10:40:44'),
+(2662, 'sales', 'view', 3, '2022-05-30 10:40:44'),
+(2663, 'sales', 'sales_post', 3, '2022-05-30 10:42:26'),
+(2664, 'sales', 'view', 3, '2022-05-30 10:42:26'),
+(2665, 'requisition', 'cancel_row', 3, '2022-05-30 10:42:27'),
+(2666, 'opening_master', 'change_status', 3, '2022-05-30 10:42:28'),
+(2667, 'sales', 'view', 3, '2022-05-30 10:42:28'),
+(2668, 'sales', 'all', 3, '2022-05-30 10:42:38'),
+(2669, 'sales', 'view', 3, '2022-05-30 10:42:40'),
+(2670, 'sales', 'all', 3, '2022-05-30 10:43:57'),
+(2671, 'sales_return', 'all', 3, '2022-05-30 10:45:48'),
+(2672, 'sales_return', 'form', 3, '2022-05-30 10:45:51'),
+(2673, 'sales_return', 'form', 3, '2022-05-30 10:45:54'),
+(2674, 'sales_return', 'add', 3, '2022-05-30 10:45:54'),
+(2675, 'sales_return', 'add', 3, '2022-05-30 10:46:09'),
+(2676, 'sales_return', 'add', 3, '2022-05-30 10:49:25'),
+(2677, 'sales_return', 'add', 3, '2022-05-30 10:52:09'),
+(2678, 'sales_return', 'add', 3, '2022-05-30 10:52:46'),
+(2679, 'sales_return', 'all', 3, '2022-05-30 10:52:46'),
+(2680, 'sales_return', 'edit', 3, '2022-05-30 10:52:49'),
+(2681, 'sales_return', 'all', 3, '2022-05-30 10:52:53'),
+(2682, 'sales_return', 'view', 3, '2022-05-30 10:52:56'),
+(2683, 'sales_return', 'all', 3, '2022-05-30 10:53:03'),
+(2684, 'sales_return', 'view', 3, '2022-05-30 10:53:33'),
+(2685, 'sales_return', 'view', 3, '2022-05-30 10:54:13'),
+(2686, 'sales_return', 'all', 3, '2022-05-30 10:54:17'),
+(2687, 'sales_return', 'edit', 3, '2022-05-30 10:54:19'),
+(2688, 'sales_return', 'all', 3, '2022-05-30 10:54:21'),
+(2689, 'sales_return', 'view', 3, '2022-05-30 10:54:23'),
+(2690, 'sales_return', 'view', 3, '2022-05-30 10:54:50'),
+(2691, 'opening_master', 'change_status', 3, '2022-05-30 10:54:58'),
+(2692, 'sales_return', 'view', 3, '2022-05-30 10:54:58'),
+(2693, 'sales_return', 'all', 3, '2022-05-30 10:55:46'),
+(2694, 'sales_return', 'form', 3, '2022-05-30 10:55:48'),
+(2695, 'sales_return', 'form', 3, '2022-05-30 10:55:50'),
+(2696, 'sales_return', 'add', 3, '2022-05-30 10:55:50'),
+(2697, 'sales_return', 'form', 3, '2022-05-30 11:04:47'),
+(2698, 'sales_return', 'all', 3, '2022-05-30 11:04:50'),
+(2699, 'sales_return', 'view', 3, '2022-05-30 11:04:52'),
+(2700, 'sales_return', 'form', 3, '2022-05-30 11:06:49'),
+(2701, 'sales_return', 'form', 3, '2022-05-30 11:06:51'),
+(2702, 'sales_return', 'add', 3, '2022-05-30 11:06:51'),
+(2703, 'issue_return', 'all', 3, '2022-05-30 11:08:16'),
+(2704, 'issue_return', 'form', 3, '2022-05-30 11:08:19'),
+(2705, 'issue_return', 'form', 3, '2022-05-30 11:08:22'),
+(2706, 'issue_return', 'add', 3, '2022-05-30 11:08:22'),
+(2707, 'sales_return', 'getForm', 3, '2022-05-30 11:08:44'),
+(2708, 'sales_return', 'add', 3, '2022-05-30 11:11:35'),
+(2709, 'sales_return', 'form', 3, '2022-05-30 11:11:42'),
+(2710, 'sales_return', 'all', 3, '2022-05-30 11:11:43'),
+(2711, 'sales_return', 'view', 3, '2022-05-30 11:11:47'),
+(2712, 'sales_return', 'all', 3, '2022-05-30 11:11:49'),
+(2713, 'sales_return', 'all', 3, '2022-05-30 11:12:07'),
+(2714, 'sales_return', 'edit', 3, '2022-05-30 11:12:08'),
+(2715, 'sales_return', 'edit', 3, '2022-05-30 11:12:48'),
+(2716, 'sales_return', 'edit', 3, '2022-05-30 11:13:08'),
+(2717, 'sales_return', 'edit', 3, '2022-05-30 11:13:24'),
+(2718, 'sales_return', 'getForm', 3, '2022-05-30 11:13:36'),
+(2719, 'issue_return', 'all', 3, '2022-05-30 11:15:10'),
+(2720, 'issue_return', 'form', 3, '2022-05-30 11:15:13'),
+(2721, 'issue_return', 'form', 3, '2022-05-30 11:15:15'),
+(2722, 'issue_return', 'add', 3, '2022-05-30 11:15:15'),
+(2723, 'sales_return', 'edit', 3, '2022-05-30 11:20:27'),
+(2724, 'sales_return', 'edit', 3, '2022-05-30 11:20:29'),
+(2725, 'sales_return', 'getForm', 3, '2022-05-30 11:20:34'),
+(2726, 'sales_return', 'edit', 3, '2022-05-30 11:21:57'),
+(2727, 'sales_return', 'all', 3, '2022-05-30 11:22:08'),
+(2728, 'sales_return', 'getForm', 3, '2022-05-30 11:22:14'),
+(2729, 'sales_return', 'edit', 3, '2022-05-30 11:22:25'),
+(2730, 'sales_return', 'all', 3, '2022-05-30 11:22:25'),
+(2731, 'sales_return', 'edit', 3, '2022-05-30 11:22:27'),
+(2732, 'sales_return', 'all', 3, '2022-05-30 11:22:32'),
+(2733, 'sales_return', 'form', 3, '2022-05-30 11:22:34'),
+(2734, 'sales_return', 'form', 3, '2022-05-30 11:22:36'),
+(2735, 'sales_return', 'add', 3, '2022-05-30 11:22:36'),
+(2736, 'sales_return', 'getForm', 3, '2022-05-30 11:22:46'),
+(2737, 'sales_return', 'edit', 3, '2022-05-30 11:24:46'),
+(2738, 'sales_return', 'edit', 3, '2022-05-30 11:24:52'),
+(2739, 'sales_return', 'all', 3, '2022-05-30 11:24:52'),
+(2740, 'sales_return', 'edit', 3, '2022-05-30 11:24:54'),
+(2741, 'sales_return', 'all', 3, '2022-05-30 11:24:59'),
+(2742, 'sales_return', 'form', 3, '2022-05-30 11:25:02'),
+(2743, 'sales_return', 'form', 3, '2022-05-30 11:25:11'),
+(2744, 'sales_return', 'form', 3, '2022-05-30 11:25:13'),
+(2745, 'sales_return', 'add', 3, '2022-05-30 11:25:13'),
+(2746, 'sales_return', 'add', 3, '2022-05-30 11:25:44'),
+(2747, 'sales_return', 'getForm', 3, '2022-05-30 11:25:48'),
+(2748, 'sales_return', 'add', 3, '2022-05-30 11:26:16'),
+(2749, 'sales_return', 'all', 3, '2022-05-30 11:26:16'),
+(2750, 'sales_return', 'edit', 3, '2022-05-30 11:26:18'),
+(2751, 'sales_return', 'all', 3, '2022-05-30 11:26:21'),
+(2752, 'sales_return', 'view', 3, '2022-05-30 11:26:23'),
+(2753, 'opening_master', 'change_status', 3, '2022-05-30 11:26:27'),
+(2754, 'sales_return', 'view', 3, '2022-05-30 11:26:27'),
+(2755, 'sales_return', 'all', 3, '2022-05-30 11:27:30'),
+(2756, 'sales_return', 'all', 3, '2022-05-30 11:27:32'),
+(2757, 'sales_return', 'view', 3, '2022-05-30 11:27:35'),
+(2758, 'issue_return', 'all', 3, '2022-05-30 11:33:29'),
+(2759, 'issue_return', 'view', 3, '2022-05-30 11:33:32'),
+(2760, 'opening_master', 'change_status', 3, '2022-05-30 11:33:34'),
+(2761, 'issue_return', 'view', 3, '2022-05-30 11:33:34'),
+(2762, 'issue_return', 'issue_return_post', 3, '2022-05-30 11:33:35'),
+(2763, 'issue_return', 'issue_return_post', 3, '2022-05-30 11:33:36'),
+(2764, 'issue_return', 'issue_return_post', 3, '2022-05-30 11:33:37'),
+(2765, 'issue_return', 'all', 3, '2022-05-30 11:37:43'),
+(2766, 'sales_return', 'all', 3, '2022-05-30 11:37:48'),
+(2767, 'sales_return', 'form', 3, '2022-05-30 11:37:51'),
+(2768, 'sales_return', 'form', 3, '2022-05-30 11:37:53'),
+(2769, 'sales_return', 'add', 3, '2022-05-30 11:37:53'),
+(2770, 'sales_return', 'form', 3, '2022-05-30 11:42:13'),
+(2771, 'sales_return', 'all', 3, '2022-05-30 11:42:17'),
+(2772, 'sales_return', 'all', 3, '2022-05-30 11:42:18'),
+(2773, 'sales_return', 'view', 3, '2022-05-30 11:42:20'),
+(2774, 'sales_return', 'sales_return_post', 3, '2022-05-30 11:42:23'),
+(2775, 'sales_return', 'view', 3, '2022-05-30 11:42:24'),
+(2776, 'sales_return', 'view', 3, '2022-05-30 11:42:39'),
+(2777, 'sales_return', 'all', 3, '2022-05-30 11:43:32'),
+(2778, 'sales_return', 'view', 3, '2022-05-30 11:43:34'),
+(2779, 'sales_return', 'sales_return_post', 3, '2022-05-30 11:43:36'),
+(2780, 'sales_return', 'view', 3, '2022-05-30 11:43:36'),
+(2781, 'sales_return', 'view', 3, '2022-05-30 11:43:39'),
+(2782, 'sales_return', 'sales_return_post', 3, '2022-05-30 11:43:41'),
+(2783, 'dashboard', NULL, 3, '2022-05-31 05:17:02'),
+(2784, 'location_transfer', 'all', 3, '2022-05-31 05:20:10'),
+(2785, 'location_transfer', 'form', 3, '2022-05-31 05:20:14'),
+(2786, 'location_transfer', 'getItems', 3, '2022-05-31 05:20:23'),
+(2787, 'location_transfer', 'getItems', 3, '2022-05-31 05:20:45'),
+(2788, 'location_transfer', 'getItems', 3, '2022-05-31 05:20:49'),
+(2789, 'items', 'all', 3, '2022-05-31 05:20:58'),
+(2790, 'opening_master', 'form', 3, '2022-05-31 05:21:21'),
+(2791, 'items', 'all', 3, '2022-05-31 05:21:40'),
+(2792, 'items', 'form', 3, '2022-05-31 05:21:45'),
+(2793, 'items', 'form', 3, '2022-05-31 05:21:45'),
+(2794, 'items', 'form', 3, '2022-05-31 05:21:46'),
+(2795, 'items', 'form', 3, '2022-05-31 05:22:14'),
+(2796, 'items', 'form', 3, '2022-05-31 05:22:15'),
+(2797, 'items', 'form', 3, '2022-05-31 05:22:16'),
+(2798, 'opening_master', 'form', 3, '2022-05-31 05:22:57'),
+(2799, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-31 05:24:12'),
+(2800, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-31 05:24:16'),
+(2801, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-31 05:24:21'),
+(2802, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-31 05:24:25'),
+(2803, 'opening_master', 'getItemsAndHeadings', 3, '2022-05-31 05:24:36'),
+(2804, 'opening_master', 'getForm', 3, '2022-05-31 05:24:40'),
+(2805, 'location_transfer', 'form', 3, '2022-05-31 05:25:29'),
+(2806, 'location_transfer', 'getItems', 3, '2022-05-31 05:25:36'),
+(2807, 'opening_master', 'form', 3, '2022-05-31 05:25:51'),
+(2808, 'opening_master', 'form', 3, '2022-05-31 05:27:18'),
+(2809, 'opening_master', 'form', 3, '2022-05-31 05:27:22'),
+(2810, 'opening_master', 'form', 3, '2022-05-31 05:28:17'),
+(2811, 'opening_master', 'all', 3, '2022-05-31 05:28:17'),
+(2812, 'opening_master', 'all', 3, '2022-05-31 05:29:39'),
+(2813, 'opening_master', 'form', 3, '2022-05-31 05:29:42'),
+(2814, 'opening_master', 'getForm', 3, '2022-05-31 05:30:00'),
+(2815, 'opening_master', 'form', 3, '2022-05-31 05:30:30'),
+(2816, 'opening_master', 'form', 3, '2022-05-31 05:31:02'),
+(2817, 'opening_master', 'all', 3, '2022-05-31 05:31:02'),
+(2818, 'opening_master', 'form', 3, '2022-05-31 05:31:20'),
+(2819, 'opening_master', 'view', 3, '2022-05-31 05:31:33'),
+(2820, 'opening_master', 'opening_post', 3, '2022-05-31 05:31:37'),
+(2821, 'opening_master', 'change_status', 3, '2022-05-31 05:31:38'),
+(2822, 'opening_master', 'view', 3, '2022-05-31 05:31:38'),
+(2823, 'opening_master', 'opening_post', 3, '2022-05-31 05:31:39'),
+(2824, 'opening_master', 'view', 3, '2022-05-31 05:31:40'),
+(2825, 'location_transfer', 'form', 3, '2022-05-31 05:31:52'),
+(2826, 'location_transfer', 'getItems', 3, '2022-05-31 05:31:59'),
+(2827, 'location_transfer', 'getItems', 3, '2022-05-31 05:32:06'),
+(2828, 'location_transfer', 'getForm', 3, '2022-05-31 05:32:08'),
+(2829, 'location_transfer', 'form', 3, '2022-05-31 05:32:46'),
+(2830, 'location_transfer', 'all', 3, '2022-05-31 05:32:47'),
+(2831, 'location_transfer', 'form', 3, '2022-05-31 05:32:59'),
+(2832, 'location_transfer', 'form', 3, '2022-05-31 05:33:06'),
+(2833, 'location_transfer', 'all', 3, '2022-05-31 05:33:06'),
+(2834, 'location_transfer', 'all', 3, '2022-05-31 05:38:42'),
+(2835, 'location_transfer', 'soft_delete', 3, '2022-05-31 05:38:44'),
+(2836, 'location_transfer', 'all', 3, '2022-05-31 05:38:44'),
+(2837, 'location_transfer', 'all', 3, '2022-05-31 05:38:52'),
+(2838, 'location_transfer', 'form', 3, '2022-05-31 05:38:58'),
+(2839, 'location_transfer', 'all', 3, '2022-05-31 05:40:35'),
+(2840, 'location_transfer', 'form', 3, '2022-05-31 05:40:41'),
+(2841, 'location_transfer', 'form', 3, '2022-05-31 05:40:46'),
+(2842, 'location_transfer', 'form', 3, '2022-05-31 05:40:46'),
+(2843, 'location_transfer', 'form', 3, '2022-05-31 05:40:56'),
+(2844, 'location_transfer', 'all', 3, '2022-05-31 05:40:56'),
+(2845, 'location_transfer', 'view', 3, '2022-05-31 05:40:59'),
+(2846, 'opening_master', 'change_status', 3, '2022-05-31 05:41:01'),
+(2847, 'opening_master', 'change_status', 3, '2022-05-31 05:41:02'),
+(2848, 'opening_master', 'change_status', 3, '2022-05-31 05:41:14'),
+(2849, 'location_transfer', 'view', 3, '2022-05-31 05:44:23'),
+(2850, 'opening_master', 'change_status', 3, '2022-05-31 05:44:26'),
+(2851, 'location_transfer', 'view', 3, '2022-05-31 05:44:26'),
+(2852, 'requisition', 'cancel_row', 3, '2022-05-31 05:44:28'),
+(2853, 'requisition', 'cancel_row', 3, '2022-05-31 05:54:41'),
+(2854, 'sales', 'all', 3, '2022-05-31 05:56:16'),
+(2855, 'sales', 'view', 3, '2022-05-31 05:56:37'),
+(2856, 'sales', 'view', 3, '2022-05-31 05:57:39'),
+(2857, 'sales', 'view', 3, '2022-05-31 05:57:57'),
+(2858, 'location_transfer', 'view', 3, '2022-05-31 05:59:20'),
+(2859, 'location_transfer', 'form', 3, '2022-05-31 05:59:51'),
+(2860, 'location_transfer', 'getForm', 3, '2022-05-31 05:59:55'),
+(2861, 'location_transfer', 'all', 3, '2022-05-31 06:00:08'),
+(2862, 'dashboard', NULL, 3, '2022-05-31 08:49:33'),
+(2863, 'location_transfer', 'view', 3, '2022-05-31 08:49:36'),
+(2864, 'location_transfer', 'view', 3, '2022-05-31 08:54:44'),
+(2865, 'opening_master', 'change_status', 3, '2022-05-31 08:54:49'),
+(2866, 'location_transfer', 'view', 3, '2022-05-31 08:54:49'),
+(2867, 'location_transfer', 'location_transfer_post', 3, '2022-05-31 08:54:54'),
+(2868, 'location_transfer', 'view', 3, '2022-05-31 08:56:40'),
+(2869, 'location_transfer', 'all', 3, '2022-05-31 08:56:40'),
+(2870, 'location_transfer', 'location_transfer_post', 3, '2022-05-31 08:56:48'),
+(2871, 'location_transfer', 'view', 3, '2022-05-31 08:56:49'),
+(2872, 'location_transfer', 'view', 3, '2022-05-31 08:56:49'),
+(2873, 'location_transfer', 'form', 3, '2022-05-31 08:58:36'),
+(2874, 'location_transfer', 'getItems', 3, '2022-05-31 08:58:42'),
+(2875, 'location_transfer', 'getForm', 3, '2022-05-31 08:58:46'),
+(2876, 'location_transfer', 'form', 3, '2022-05-31 08:59:08'),
+(2877, 'location_transfer', 'getForm', 3, '2022-05-31 08:59:11'),
+(2878, 'location_transfer', 'getItems', 3, '2022-05-31 08:59:14'),
+(2879, 'location_transfer', 'getForm', 3, '2022-05-31 08:59:16'),
+(2880, 'location_transfer', 'getItems', 3, '2022-05-31 09:00:42'),
+(2881, 'location_transfer', 'getForm', 3, '2022-05-31 09:00:45'),
+(2882, 'location_transfer', 'form', 3, '2022-05-31 09:01:06'),
+(2883, 'location_transfer', 'all', 3, '2022-05-31 09:01:06'),
+(2884, 'location_transfer', 'view', 3, '2022-05-31 09:01:09'),
+(2885, 'location_transfer', 'location_transfer_post', 3, '2022-05-31 09:01:12'),
+(2886, 'location_transfer', 'view', 3, '2022-05-31 09:01:12'),
+(2887, 'opening_master', 'change_status', 3, '2022-05-31 09:01:14');
+INSERT INTO `user_log` (`id`, `module`, `function`, `user_id`, `date_time`) VALUES
+(2888, 'location_transfer', 'view', 3, '2022-05-31 09:01:14'),
+(2889, 'location_transfer', 'location_transfer_post', 3, '2022-05-31 09:01:16'),
+(2890, 'location_transfer', 'view', 3, '2022-05-31 09:01:16'),
+(2891, 'location_transfer', 'view', 3, '2022-05-31 09:01:16'),
+(2892, 'location_transfer', 'location_transfer_post', 3, '2022-05-31 09:01:18'),
+(2893, 'location_transfer', 'view', 3, '2022-05-31 09:01:18'),
+(2894, 'location_transfer', 'form', 3, '2022-05-31 09:01:36'),
+(2895, 'location_transfer', 'getForm', 3, '2022-05-31 09:01:40'),
+(2896, 'location_transfer', 'getItems', 3, '2022-05-31 09:01:42'),
+(2897, 'location_transfer', 'getForm', 3, '2022-05-31 09:01:43'),
+(2898, 'requisition', 'all', 3, '2022-05-31 09:05:54'),
+(2899, 'requisition', 'getStaffOfDepartment', 3, '2022-05-31 09:06:04'),
+(2900, 'requisition', 'getStaffOfDepartment', 3, '2022-05-31 09:06:07'),
+(2901, 'requisition', 'search', 3, '2022-05-31 09:06:23'),
+(2902, 'requisition', 'search', 3, '2022-05-31 09:06:48'),
+(2903, 'requisition', 'search', 3, '2022-05-31 09:06:53'),
+(2904, 'requisition', 'search', 3, '2022-05-31 09:07:04'),
+(2905, 'requisition', 'all', 3, '2022-05-31 09:08:02'),
+(2906, 'requisition', 'all', 3, '2022-05-31 09:09:37'),
+(2907, 'requisition', 'search', 3, '2022-05-31 09:09:45'),
+(2908, 'requisition', 'search', 3, '2022-05-31 09:09:50'),
+(2909, 'requisition', 'search', 3, '2022-05-31 09:09:57'),
+(2910, 'requisition', 'search', 3, '2022-05-31 09:10:02'),
+(2911, 'requisition', 'search', 3, '2022-05-31 09:10:16'),
+(2912, 'requisition', 'search', 3, '2022-05-31 09:10:28'),
+(2913, 'requisition', 'search', 3, '2022-05-31 09:10:35'),
+(2914, 'requisition', 'search', 3, '2022-05-31 09:34:26'),
+(2915, 'requisition', 'search', 3, '2022-05-31 09:34:52'),
+(2916, 'requisition', 'search', 3, '2022-05-31 09:35:39'),
+(2917, 'requisition', 'all', 3, '2022-05-31 09:36:11'),
+(2918, 'requisition', 'all', 3, '2022-05-31 09:36:11'),
+(2919, 'requisition', 'all', 3, '2022-05-31 09:37:13'),
+(2920, 'requisition', 'search', 3, '2022-05-31 09:37:19'),
+(2921, 'requisition', 'search', 3, '2022-05-31 09:37:29'),
+(2922, 'requisition', 'all', 3, '2022-05-31 09:39:55'),
+(2923, 'requisition', 'search', 3, '2022-05-31 10:00:35'),
+(2924, 'requisition', 'search', 3, '2022-05-31 10:00:40'),
+(2925, 'requisition', 'search', 3, '2022-05-31 10:00:57'),
+(2926, 'requisition', 'all', 3, '2022-05-31 10:05:13'),
+(2927, 'requisition', 'all', 3, '2022-05-31 10:05:14'),
+(2928, 'requisition', 'all', 3, '2022-05-31 10:05:24'),
+(2929, 'requisition', 'all', 3, '2022-05-31 10:05:58'),
+(2930, 'requisition', 'all', 3, '2022-05-31 10:10:45'),
+(2931, 'requisition', 'all', 3, '2022-05-31 10:11:14'),
+(2932, 'requisition', 'all', 3, '2022-05-31 10:11:19'),
+(2933, 'requisition', 'all', 3, '2022-05-31 10:12:50'),
+(2934, 'requisition', 'all', 3, '2022-05-31 10:12:57'),
+(2935, 'requisition', 'all', 3, '2022-05-31 10:18:59'),
+(2936, 'requisition', 'all', 3, '2022-05-31 10:19:08'),
+(2937, 'requisition', 'all', 3, '2022-05-31 10:20:05'),
+(2938, 'requisition', 'all', 3, '2022-05-31 10:29:50'),
+(2939, 'requisition', 'search', 3, '2022-05-31 10:30:32'),
+(2940, 'requisition', 'search', 3, '2022-05-31 10:45:09'),
+(2941, 'requisition', 'search', 3, '2022-05-31 10:45:16'),
+(2942, 'requisition', 'search', 3, '2022-05-31 10:45:51'),
+(2943, 'requisition', 'search', 3, '2022-05-31 10:45:57'),
+(2944, 'requisition', 'search', 3, '2022-05-31 10:46:18'),
+(2945, 'dashboard', NULL, 3, '2022-06-01 06:13:31'),
+(2946, 'location_transfer', 'all', 3, '2022-06-01 06:13:50'),
+(2947, 'location_transfer', 'form', 3, '2022-06-01 06:38:33'),
+(2948, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:38'),
+(2949, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:42'),
+(2950, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:44'),
+(2951, 'location_transfer', 'getItems', 3, '2022-06-01 06:38:49'),
+(2952, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:51'),
+(2953, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:53'),
+(2954, 'location_transfer', 'getForm', 3, '2022-06-01 06:38:55'),
+(2955, 'location_transfer', 'getItems', 3, '2022-06-01 06:39:27'),
+(2956, 'location_transfer', 'getForm', 3, '2022-06-01 06:39:29'),
+(2957, 'location_transfer', 'getItems', 3, '2022-06-01 06:39:32'),
+(2958, 'location_transfer', 'getForm', 3, '2022-06-01 06:39:34'),
+(2959, 'scrap', 'all', 3, '2022-06-01 06:39:40'),
+(2960, 'scrap', 'form', 3, '2022-06-01 06:39:43'),
+(2961, 'scrap', 'getForm', 3, '2022-06-01 06:39:53'),
+(2962, 'requisition', 'all', 3, '2022-06-01 06:58:30'),
+(2963, 'requisition', 'form', 3, '2022-06-01 06:58:36'),
+(2964, 'requisition', 'getStaffOfDepartment', 3, '2022-06-01 06:58:51'),
+(2965, 'requisition', 'getForm', 3, '2022-06-01 06:58:55'),
+(2966, 'requisition', 'form', 3, '2022-06-01 06:59:24'),
+(2967, 'requisition', 'all', 3, '2022-06-01 06:59:24'),
+(2968, 'requisition', 'search', 3, '2022-06-01 06:59:31'),
+(2969, 'requisition', 'search', 3, '2022-06-01 06:59:43'),
+(2970, 'requisition', 'search', 3, '2022-06-01 07:00:20'),
+(2971, 'requisition', 'search', 3, '2022-06-01 07:00:29'),
+(2972, 'requisition', 'search', 3, '2022-06-01 07:00:34'),
+(2973, 'requisition', 'search', 3, '2022-06-01 07:01:42'),
+(2974, 'requisition', 'search', 3, '2022-06-01 07:01:57'),
+(2975, 'requisition', 'search', 3, '2022-06-01 07:03:46'),
+(2976, 'requisition', 'search', 3, '2022-06-01 07:03:57'),
+(2977, 'requisition', 'search', 3, '2022-06-01 07:04:09'),
+(2978, 'requisition', 'search', 3, '2022-06-01 07:04:18'),
+(2979, 'requisition', 'all', 3, '2022-06-01 07:04:23'),
+(2980, 'requisition', 'form', 3, '2022-06-01 07:04:23'),
+(2981, 'requisition', 'all', 3, '2022-06-01 07:04:23'),
+(2982, 'requisition', 'search', 3, '2022-06-01 07:04:30'),
+(2983, 'requisition', 'all', 3, '2022-06-01 07:04:35'),
+(2984, 'requisition', 'search', 3, '2022-06-01 07:04:39'),
+(2985, 'requisition', 'search', 3, '2022-06-01 07:06:45'),
+(2986, 'requisition', 'search', 3, '2022-06-01 07:07:28'),
+(2987, 'requisition', 'search', 3, '2022-06-01 07:08:16'),
+(2988, 'requisition', 'search', 3, '2022-06-01 07:09:15'),
+(2989, 'requisition', 'search', 3, '2022-06-01 07:09:23'),
+(2990, 'requisition', 'search', 3, '2022-06-01 07:09:53'),
+(2991, 'requisition', 'search', 3, '2022-06-01 07:10:04'),
+(2992, 'requisition', 'search', 3, '2022-06-01 07:10:59'),
+(2993, 'requisition', 'search', 3, '2022-06-01 07:11:24'),
+(2994, 'requisition', 'all', 3, '2022-06-01 07:13:42'),
+(2995, 'requisition', 'all', 3, '2022-06-01 07:13:42'),
+(2996, 'requisition', 'search', 3, '2022-06-01 07:13:46'),
+(2997, 'requisition', 'all', 3, '2022-06-01 07:14:31'),
+(2998, 'requisition', 'search', 3, '2022-06-01 07:14:34'),
+(2999, 'requisition', 'search', 3, '2022-06-01 07:15:00'),
+(3000, 'requisition', 'search', 3, '2022-06-01 07:15:21'),
+(3001, 'requisition', 'search', 3, '2022-06-01 07:15:29'),
+(3002, 'requisition', 'search', 3, '2022-06-01 07:15:34'),
+(3003, 'requisition', 'search', 3, '2022-06-01 07:15:40'),
+(3004, 'requisition', 'view', 3, '2022-06-01 07:15:43'),
+(3005, 'requisition', 'cancel_row', 3, '2022-06-01 07:15:46'),
+(3006, 'requisition', 'view', 3, '2022-06-01 07:15:46'),
+(3007, 'opening_master', 'change_status', 3, '2022-06-01 07:15:47'),
+(3008, 'requisition', 'all', 3, '2022-06-01 07:15:58'),
+(3009, 'requisition', 'search', 3, '2022-06-01 07:16:16'),
+(3010, 'requisition', 'search', 3, '2022-06-01 07:16:24'),
+(3011, 'requisition', 'search', 3, '2022-06-01 07:16:29'),
+(3012, 'requisition', 'search', 3, '2022-06-01 07:16:34'),
+(3013, 'requisition', 'search', 3, '2022-06-01 08:23:24'),
+(3014, 'requisition', 'search', 3, '2022-06-01 08:28:14'),
+(3015, 'requisition', 'search', 3, '2022-06-01 08:28:27'),
+(3016, 'location_transfer', 'all', 3, '2022-06-01 08:28:39'),
+(3017, 'user_role', 'all', 3, '2022-06-01 08:28:52'),
+(3018, 'user_role', 'all', 3, '2022-06-01 08:30:19'),
+(3019, 'user_role', 'form', 3, '2022-06-01 08:30:25'),
+(3020, 'staff', 'all', 3, '2022-06-01 08:30:47'),
+(3021, 'staff', 'form', 3, '2022-06-01 08:31:34'),
+(3022, 'staff', 'all', 3, '2022-06-01 08:31:58'),
+(3023, 'staff', 'form', 3, '2022-06-01 08:32:04'),
+(3024, 'staff', 'all', 3, '2022-06-01 08:32:13'),
+(3025, 'fiscal_year', 'all', 3, '2022-06-01 08:32:25'),
+(3026, 'fiscal_year', 'all', 3, '2022-06-01 08:32:40'),
+(3027, 'scrap', 'all', 3, '2022-06-01 08:32:45'),
+(3028, 'scrap', 'form', 3, '2022-06-01 08:32:48'),
+(3029, 'scrap', 'getForm', 3, '2022-06-01 08:32:52'),
+(3030, 'opening_master', 'form', 3, '2022-06-01 08:33:21'),
+(3031, 'opening_master', 'getForm', 3, '2022-06-01 08:33:27'),
+(3032, 'opening_master', 'getItemsAndHeadings', 3, '2022-06-01 08:33:29'),
+(3033, 'opening_master', 'getItemsAndHeadings', 3, '2022-06-01 08:33:31'),
+(3034, 'opening_master', 'getForm', 3, '2022-06-01 08:35:23'),
+(3035, 'items', 'all', 3, '2022-06-01 08:50:44'),
+(3036, 'items', 'form', 3, '2022-06-01 08:50:50'),
+(3037, 'items', 'all', 3, '2022-06-01 08:50:58'),
+(3038, 'items', 'form', 3, '2022-06-01 08:51:01'),
+(3039, 'items', 'form', 3, '2022-06-01 08:51:03'),
+(3040, 'items', 'form', 3, '2022-06-01 08:51:21'),
+(3041, 'items', 'form', 3, '2022-06-01 08:51:23'),
+(3042, 'items', 'form', 3, '2022-06-01 08:51:24'),
+(3043, 'opening_master', 'form', 3, '2022-06-01 08:52:06'),
+(3044, 'opening_master', 'getForm', 3, '2022-06-01 08:52:24'),
+(3045, 'purchase_order', 'form', 3, '2022-06-01 08:53:29'),
+(3046, 'purchase_order', 'form', 3, '2022-06-01 08:53:35'),
+(3047, 'purchase_order', 'direct_add', 3, '2022-06-01 08:53:35'),
+(3048, 'purchase_order', 'getForm', 3, '2022-06-01 08:53:45'),
+(3049, 'items', 'form', 3, '2022-06-01 08:55:29'),
+(3050, 'purchase_order', 'getForm', 3, '2022-06-01 08:56:08'),
+(3051, 'purchase_order', 'direct_add', 3, '2022-06-01 10:32:49'),
+(3052, 'purchase_order', 'getForm', 3, '2022-06-01 10:32:56'),
+(3053, 'opening_master', 'form', 3, '2022-06-01 10:43:21'),
+(3054, 'dashboard', NULL, 3, '2022-06-03 05:16:31'),
+(3055, 'dashboard', NULL, 3, '2022-06-03 05:27:21'),
+(3056, 'opening_master', 'all', 3, '2022-06-03 05:27:28'),
+(3057, 'opening_master', 'form', 3, '2022-06-03 05:27:30'),
+(3058, 'opening_master', 'getForm', 3, '2022-06-03 05:27:54'),
+(3059, 'opening_master', 'getForm', 3, '2022-06-03 05:27:55'),
+(3060, 'opening_master', 'form', 3, '2022-06-03 05:29:09'),
+(3061, 'opening_master', 'all', 3, '2022-06-03 05:29:09'),
+(3062, 'opening_master', 'view', 3, '2022-06-03 05:29:11'),
+(3063, 'opening_master', 'opening_post', 3, '2022-06-03 05:29:13'),
+(3064, 'opening_master', 'change_status', 3, '2022-06-03 05:29:14'),
+(3065, 'opening_master', 'view', 3, '2022-06-03 05:29:14'),
+(3066, 'opening_master', 'opening_post', 3, '2022-06-03 05:29:15'),
+(3067, 'opening_master', 'view', 3, '2022-06-03 05:29:15'),
+(3068, 'opening_master', 'all', 3, '2022-06-03 05:29:47'),
+(3069, 'opening_master', 'form', 3, '2022-06-03 05:29:50'),
+(3070, 'opening_master', 'getItemsAndHeadings', 3, '2022-06-03 05:29:59'),
+(3071, 'opening_master', 'getForm', 3, '2022-06-03 05:30:05'),
+(3072, 'opening_master', 'form', 3, '2022-06-03 05:30:22'),
+(3073, 'opening_master', 'all', 3, '2022-06-03 05:30:22'),
+(3074, 'opening_master', 'view', 3, '2022-06-03 05:30:25'),
+(3075, 'opening_master', 'opening_post', 3, '2022-06-03 05:30:27'),
+(3076, 'opening_master', 'change_status', 3, '2022-06-03 05:30:27'),
+(3077, 'opening_master', 'view', 3, '2022-06-03 05:30:27'),
+(3078, 'requisition', 'cancel_row', 3, '2022-06-03 05:30:28'),
+(3079, 'opening_master', 'opening_post', 3, '2022-06-03 05:30:30'),
+(3080, 'opening_master', 'view', 3, '2022-06-03 05:30:30'),
+(3081, 'opening_master', 'form', 3, '2022-06-03 05:41:14'),
+(3082, 'grn', 'all', 3, '2022-06-03 06:40:28'),
+(3083, 'grn', 'direct_add', 3, '2022-06-03 06:40:32'),
+(3084, 'grn', 'form', 3, '2022-06-03 06:40:34'),
+(3085, 'grn', 'direct_add', 3, '2022-06-03 06:40:34'),
+(3086, 'grn', 'getForm', 3, '2022-06-03 06:40:40'),
+(3087, 'grn', 'getForm', 3, '2022-06-03 06:40:42'),
+(3088, 'purchase_request', 'form', 3, '2022-06-03 06:42:05'),
+(3089, 'purchase_request', 'form', 3, '2022-06-03 06:42:40'),
+(3090, 'purchase_request', 'direct_add', 3, '2022-06-03 06:42:41'),
+(3091, 'purchase_request', 'getForm', 3, '2022-06-03 06:42:44'),
+(3092, 'sales_return', 'add', 3, '2022-06-03 06:42:58'),
+(3093, 'sales_return', 'form', 3, '2022-06-03 06:42:58'),
+(3094, 'sales_return', 'form', 3, '2022-06-03 06:43:01'),
+(3095, 'sales_return', 'add', 3, '2022-06-03 06:43:01'),
+(3096, 'year_end', 'all', 3, '2022-06-03 07:04:07'),
+(3097, 'fiscal_year', 'all', 3, '2022-06-03 07:05:08'),
+(3098, 'year_end', 'all', 3, '2022-06-03 07:07:13'),
+(3099, 'year_end', 'all', 3, '2022-06-03 07:12:35'),
+(3100, 'year_end', 'form', 3, '2022-06-03 07:12:51'),
+(3101, 'year_end', 'all', 3, '2022-06-03 07:12:56'),
+(3102, 'year_end', 'all', 3, '2022-06-03 07:14:38'),
+(3103, 'year_end', 'all', 3, '2022-06-03 07:16:02'),
+(3104, 'year_end', 'all', 3, '2022-06-03 07:18:53'),
+(3105, 'year_end', 'all', 3, '2022-06-03 07:19:04'),
+(3106, 'year_end', 'all', 3, '2022-06-03 07:19:14'),
+(3107, 'year_end', 'all', 3, '2022-06-03 08:31:56'),
+(3108, 'year_end', 'all', 3, '2022-06-03 08:32:34'),
+(3109, 'year_end', 'all', 3, '2022-06-03 08:33:10'),
+(3110, 'year_end', 'all', 3, '2022-06-03 08:34:14'),
+(3111, 'year_end', 'all', 3, '2022-06-03 08:34:47'),
+(3112, 'year_end', 'all', 3, '2022-06-03 08:35:54'),
+(3113, 'year_end', 'all', 3, '2022-06-03 08:37:13'),
+(3114, 'year_end', 'all', 3, '2022-06-03 08:37:21'),
+(3115, 'year_end', 'all', 3, '2022-06-03 08:38:03'),
+(3116, 'year_end', 'all', 3, '2022-06-03 08:38:18'),
+(3117, 'year_end', 'all', 3, '2022-06-03 08:38:18'),
+(3118, 'year_end', 'all', 3, '2022-06-03 08:38:25'),
+(3119, 'fiscal_year', 'all', 3, '2022-06-03 08:39:21'),
+(3120, 'fiscal_year', 'form', 3, '2022-06-03 08:39:24'),
+(3121, 'fiscal_year', 'form', 3, '2022-06-03 08:41:18'),
+(3122, 'fiscal_year', 'all', 3, '2022-06-03 08:41:18'),
+(3123, 'fiscal_year', 'all', 3, '2022-06-03 08:42:12'),
+(3124, 'fiscal_year', 'all', 3, '2022-06-03 08:42:49'),
+(3125, 'fiscal_year', 'all', 3, '2022-06-03 08:42:52'),
+(3126, 'fiscal_year', 'all', 3, '2022-06-03 08:43:17'),
+(3127, 'year_end', 'all', 3, '2022-06-03 08:43:23'),
+(3128, 'year_end', 'all', 3, '2022-06-03 08:43:35'),
+(3129, 'year_end', 'all', 3, '2022-06-03 08:43:46'),
+(3130, 'year_end', 'all', 3, '2022-06-03 08:43:57'),
+(3131, 'year_end', 'all', 3, '2022-06-03 08:46:40'),
+(3132, 'purchase_request', 'direct_add', 3, '2022-06-03 08:49:22'),
+(3133, 'year_end', 'all', 3, '2022-06-03 08:50:57'),
+(3134, 'year_end', 'all', 3, '2022-06-03 08:56:16'),
+(3135, 'year_end', 'all', 3, '2022-06-03 08:57:21'),
+(3136, 'year_end', 'all', 3, '2022-06-03 08:58:33'),
+(3137, 'year_end', 'all', 3, '2022-06-03 08:59:46'),
+(3138, 'year_end', 'all', 3, '2022-06-03 08:59:51'),
+(3139, 'site_settings', NULL, 3, '2022-06-03 09:01:31'),
+(3140, 'supplier', 'form', 3, '2022-06-03 09:02:19'),
+(3141, 'site_settings', NULL, 3, '2022-06-03 09:04:12'),
+(3142, 'site_settings', NULL, 3, '2022-06-03 09:04:12'),
+(3143, 'supplier', 'form', 3, '2022-06-03 09:07:30'),
+(3144, 'year_end', 'all', 3, '2022-06-03 09:07:43'),
+(3145, 'year_end', 'all', 3, '2022-06-03 09:07:51'),
+(3146, 'year_end', 'all', 3, '2022-06-03 09:09:51'),
+(3147, 'year_end', 'all', 3, '2022-06-03 09:10:57'),
+(3148, 'year_end', 'all', 3, '2022-06-03 09:11:41'),
+(3149, 'year_end', 'all', 3, '2022-06-03 09:11:48'),
+(3150, 'year_end', 'all', 3, '2022-06-03 09:12:02'),
+(3151, 'year_end', 'all', 3, '2022-06-03 09:13:39'),
+(3152, 'year_end', 'all', 3, '2022-06-03 09:14:13'),
+(3153, 'site_settings', NULL, 3, '2022-06-03 09:19:33'),
+(3154, 'site_settings', NULL, 3, '2022-06-03 09:19:37'),
+(3155, 'site_settings', NULL, 3, '2022-06-03 09:22:29'),
+(3156, 'site_settings', NULL, 3, '2022-06-03 09:22:42'),
+(3157, 'site_settings', NULL, 3, '2022-06-03 09:22:42'),
+(3158, 'year_end', 'all', 3, '2022-06-03 09:24:37'),
+(3159, 'year_end', 'all', 3, '2022-06-03 09:28:13'),
+(3160, 'year_end', 'all', 3, '2022-06-03 09:28:43'),
+(3161, 'year_end', 'all', 3, '2022-06-03 09:29:15'),
+(3162, 'year_end', 'all', 3, '2022-06-03 09:29:37'),
+(3163, 'year_end', 'all', 3, '2022-06-03 09:30:22'),
+(3164, 'year_end', 'all', 3, '2022-06-03 09:30:33'),
+(3165, 'year_end', 'all', 3, '2022-06-03 09:32:14'),
+(3166, 'year_end', 'all', 3, '2022-06-03 09:42:52'),
+(3167, 'year_end', 'all', 3, '2022-06-03 09:43:36'),
+(3168, 'year_end', 'generate_year_end', 3, '2022-06-03 09:43:39'),
+(3169, 'year_end', 'all', 3, '2022-06-03 10:11:25'),
+(3170, 'year_end', 'generate_year_end', 3, '2022-06-03 10:11:34'),
+(3171, 'year_end', 'all', 3, '2022-06-03 10:11:40'),
+(3172, 'year_end', 'generate_year_end', 3, '2022-06-03 10:11:44'),
+(3173, 'year_end', 'all', 3, '2022-06-03 10:11:50'),
+(3174, 'year_end', 'generate_year_end', 3, '2022-06-03 10:12:09'),
+(3175, 'year_end', 'all', 3, '2022-06-03 10:12:16'),
+(3176, 'year_end', 'generate_year_end', 3, '2022-06-03 10:12:49'),
+(3177, 'year_end', 'all', 3, '2022-06-03 10:12:51'),
+(3178, 'year_end', 'generate_year_end', 3, '2022-06-03 10:14:22'),
+(3179, 'year_end', 'all', 3, '2022-06-03 10:15:05'),
+(3180, 'dashboard', NULL, 3, '2022-06-05 05:32:22'),
+(3181, 'supplier', 'all', 3, '2022-06-05 05:32:33'),
+(3182, 'year_end', 'all', 3, '2022-06-05 05:32:48'),
+(3183, 'year_end', 'all', 3, '2022-06-05 05:42:42'),
+(3184, 'year_end', 'all', 3, '2022-06-05 05:43:11'),
+(3185, 'year_end', 'generate_year_end', 3, '2022-06-05 05:43:15'),
+(3186, 'year_end', 'all', 3, '2022-06-05 05:48:10'),
+(3187, 'year_end', 'all', 3, '2022-06-05 05:48:20'),
+(3188, 'year_end', 'all', 3, '2022-06-05 05:48:52'),
+(3189, 'year_end', 'all', 3, '2022-06-05 05:51:22'),
+(3190, 'year_end', 'generate_year_end', 3, '2022-06-05 05:51:28'),
+(3191, 'grn', 'all', 3, '2022-06-05 05:58:48'),
+(3192, 'grn', 'direct_add', 3, '2022-06-05 05:59:03'),
+(3193, 'grn', 'getForm', 3, '2022-06-05 05:59:08'),
+(3194, 'opening_master', 'form', 3, '2022-06-05 06:09:45'),
+(3195, 'opening_master', 'getForm', 3, '2022-06-05 06:09:48'),
+(3196, 'year_end', 'all', 3, '2022-06-05 06:16:53'),
+(3197, 'year_end', 'all', 3, '2022-06-05 06:17:08'),
+(3198, 'year_end', 'all', 3, '2022-06-05 06:17:08'),
+(3199, 'year_end', 'all', 3, '2022-06-05 06:17:58'),
+(3200, 'year_end', 'all', 3, '2022-06-05 06:18:13'),
+(3201, 'year_end', 'all', 3, '2022-06-05 06:19:19'),
+(3202, 'year_end', 'all', 3, '2022-06-05 06:19:25'),
+(3203, 'year_end', 'all', 3, '2022-06-05 06:19:27'),
+(3204, 'year_end', 'all', 3, '2022-06-05 06:22:46'),
+(3205, 'year_end', 'generate_year_end', 3, '2022-06-05 06:23:05'),
+(3206, 'year_end', 'all', 3, '2022-06-05 06:35:04'),
+(3207, 'year_end', 'all', 3, '2022-06-05 06:37:55'),
+(3208, 'fiscal_year', 'all', 3, '2022-06-05 06:38:20'),
+(3209, 'fiscal_year', 'form', 3, '2022-06-05 06:38:23'),
+(3210, 'fiscal_year', 'form', 3, '2022-06-05 06:38:57'),
+(3211, 'fiscal_year', 'all', 3, '2022-06-05 06:38:57'),
+(3212, 'fiscal_year', 'form', 3, '2022-06-05 06:39:09'),
+(3213, 'fiscal_year', 'form', 3, '2022-06-05 06:40:36'),
+(3214, 'fiscal_year', 'form', 3, '2022-06-05 06:43:39'),
+(3215, 'fiscal_year', 'form', 3, '2022-06-05 06:43:47'),
+(3216, 'fiscal_year', 'all', 3, '2022-06-05 06:43:47'),
+(3217, 'depreciation_para', 'all', 3, '2022-06-05 06:58:36'),
+(3218, 'depreciation_para', 'form', 3, '2022-06-05 06:59:39'),
+(3219, 'depreciation_para', 'all', 3, '2022-06-05 07:12:23'),
+(3220, 'depreciation_para', 'form', 3, '2022-06-05 07:12:34'),
+(3221, 'depreciation_para', 'form', 3, '2022-06-05 08:40:24'),
+(3222, 'year_end', 'all', 3, '2022-06-05 08:52:43'),
+(3223, 'year_end', 'generate_year_end', 3, '2022-06-05 08:52:51'),
+(3224, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:02'),
+(3225, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:05'),
+(3226, 'year_end', 'generate_year_end', 3, '2022-06-05 08:53:17'),
+(3227, 'year_end', 'generate_year_end', 3, '2022-06-05 08:54:53'),
+(3228, 'year_end', 'generate_year_end', 3, '2022-06-05 08:54:55'),
+(3229, 'opening_master', 'all', 3, '2022-06-05 08:55:13'),
+(3230, 'opening_master', 'all', 3, '2022-06-05 08:58:27'),
+(3231, 'fiscal_year', 'all', 3, '2022-06-05 08:58:34'),
+(3232, 'client', 'all', 3, '2022-06-05 08:58:38'),
+(3233, 'supplier', 'all', 3, '2022-06-05 08:58:42'),
+(3234, 'depreciation_para', 'all', 3, '2022-06-05 08:58:59'),
+(3235, 'depreciation_para', 'form', 3, '2022-06-05 08:59:02'),
+(3236, 'fiscal_year', 'all', 3, '2022-06-05 08:59:43'),
+(3237, 'fiscal_year', 'form', 3, '2022-06-05 08:59:55'),
+(3238, 'fiscal_year', 'form', 3, '2022-06-05 09:00:23'),
+(3239, 'fiscal_year', 'all', 3, '2022-06-05 09:00:23'),
+(3240, 'fiscal_year', 'form', 3, '2022-06-05 09:00:27'),
+(3241, 'fiscal_year', 'form', 3, '2022-06-05 09:00:47'),
+(3242, 'fiscal_year', 'all', 3, '2022-06-05 09:00:47'),
+(3243, 'fiscal_year', 'form', 3, '2022-06-05 09:00:55'),
+(3244, 'fiscal_year', 'form', 3, '2022-06-05 09:01:00'),
+(3245, 'fiscal_year', 'all', 3, '2022-06-05 09:01:00'),
+(3246, 'depreciation_para', 'form', 3, '2022-06-05 09:02:17'),
+(3247, 'depreciation_para', 'all', 3, '2022-06-05 09:02:17'),
+(3248, 'depreciation_para', 'form', 3, '2022-06-05 09:02:20'),
+(3249, 'depreciation_para', 'form', 3, '2022-06-05 09:03:43'),
+(3250, 'depreciation_para', 'form', 3, '2022-06-05 09:03:55'),
+(3251, 'depreciation_para', 'all', 3, '2022-06-05 09:03:55'),
+(3252, 'depreciation_para', 'form', 3, '2022-06-05 09:03:58'),
+(3253, 'depreciation_para', 'all', 3, '2022-06-05 09:04:00'),
+(3254, 'depreciation_para', 'form', 3, '2022-06-05 09:04:05'),
+(3255, 'depreciation_para', 'form', 3, '2022-06-05 09:04:51'),
+(3256, 'depreciation_para', 'all', 3, '2022-06-05 09:04:51'),
+(3257, 'depreciation_para', 'form', 3, '2022-06-05 09:04:59'),
+(3258, 'depreciation_para', 'form', 3, '2022-06-05 09:05:25'),
+(3259, 'depreciation_para', 'form', 3, '2022-06-05 09:06:05'),
+(3260, 'depreciation_para', 'form', 3, '2022-06-05 09:06:15'),
+(3261, 'depreciation_para', 'all', 3, '2022-06-05 09:06:15'),
+(3262, 'requisition', 'all', 3, '2022-06-05 09:06:27'),
+(3263, 'requisition', 'all', 3, '2022-06-05 09:06:59'),
+(3264, 'issue', 'all', 3, '2022-06-05 09:07:21'),
+(3265, 'issue', 'all', 3, '2022-06-05 09:07:52'),
+(3266, 'issue_return', 'all', 3, '2022-06-05 09:07:57'),
+(3267, 'issue_return', 'all', 3, '2022-06-05 09:08:27'),
+(3268, 'mrn', 'all', 3, '2022-06-05 09:08:32'),
+(3269, 'purchase_request', 'all', 3, '2022-06-05 09:08:38'),
+(3270, 'purchase_order', 'all', 3, '2022-06-05 09:08:43'),
+(3271, 'invoice', 'all', 3, '2022-06-05 09:08:48'),
+(3272, 'charge_parameter', 'all', 3, '2022-06-05 09:08:54'),
+(3273, 'grn', 'all', 3, '2022-06-05 09:09:00'),
+(3274, 'grn', 'all', 3, '2022-06-05 09:09:29'),
+(3275, 'grn_return', 'all', 3, '2022-06-05 09:09:35'),
+(3276, 'grn_return', 'all', 3, '2022-06-05 09:10:01'),
+(3277, 'grn_return', 'all', 3, '2022-06-05 09:10:52'),
+(3278, 'sales', 'all', 3, '2022-06-05 09:28:27'),
+(3279, 'sales', 'all', 3, '2022-06-05 09:29:01'),
+(3280, 'sales_return', 'all', 3, '2022-06-05 09:29:06'),
+(3281, 'sales_return', 'all', 3, '2022-06-05 09:29:39'),
+(3282, 'location_transfer', 'all', 3, '2022-06-05 09:29:47'),
+(3283, 'location_transfer', 'all', 3, '2022-06-05 09:30:19'),
+(3284, 'scrap', 'all', 3, '2022-06-05 09:30:28'),
+(3285, 'year_end', 'all', 3, '2022-06-05 09:38:36'),
+(3286, 'year_end', 'all', 3, '2022-06-05 09:38:36'),
+(3287, 'year_end', 'generate_year_end', 3, '2022-06-05 09:38:47'),
+(3288, 'year_end', 'all', 3, '2022-06-05 09:51:47'),
+(3289, 'year_end', 'all', 3, '2022-06-05 09:51:47'),
+(3290, 'year_end', 'generate_year_end', 3, '2022-06-05 09:51:52'),
+(3291, 'year_end', 'all', 3, '2022-06-05 09:52:49'),
+(3292, 'year_end', 'all', 3, '2022-06-05 09:52:50'),
+(3293, 'year_end', 'generate_year_end', 3, '2022-06-05 09:52:56'),
+(3294, 'year_end', 'all', 3, '2022-06-05 09:53:11'),
+(3295, 'year_end', 'all', 3, '2022-06-05 09:53:11'),
+(3296, 'year_end', 'generate_year_end', 3, '2022-06-05 09:53:15'),
+(3297, 'year_end', 'all', 3, '2022-06-05 09:53:49'),
+(3298, 'year_end', 'all', 3, '2022-06-05 09:53:49'),
+(3299, 'year_end', 'generate_year_end', 3, '2022-06-05 09:53:55'),
+(3300, 'year_end', 'all', 3, '2022-06-05 09:54:39'),
+(3301, 'year_end', 'all', 3, '2022-06-05 09:54:40'),
+(3302, 'year_end', 'generate_year_end', 3, '2022-06-05 09:54:44'),
+(3303, 'year_end', 'all', 3, '2022-06-05 09:54:51'),
+(3304, 'year_end', 'all', 3, '2022-06-05 09:54:51'),
+(3305, 'year_end', 'generate_year_end', 3, '2022-06-05 09:54:57'),
+(3306, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3307, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3308, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3309, 'year_end', 'all', 3, '2022-06-05 09:55:17'),
+(3310, 'year_end', 'all', 3, '2022-06-05 09:55:18'),
+(3311, 'year_end', 'all', 3, '2022-06-05 09:55:18'),
+(3312, 'year_end', 'generate_year_end', 3, '2022-06-05 09:55:24'),
+(3313, 'year_end', 'all', 3, '2022-06-05 09:57:00'),
+(3314, 'year_end', 'all', 3, '2022-06-05 09:57:00'),
+(3315, 'year_end', 'generate_year_end', 3, '2022-06-05 09:57:06');
 
 -- --------------------------------------------------------
 
@@ -4707,7 +5450,7 @@ ALTER TABLE `charge_parameter`
 -- AUTO_INCREMENT for table `client_infos`
 --
 ALTER TABLE `client_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `contents`
@@ -4731,7 +5474,7 @@ ALTER TABLE `department_para`
 -- AUTO_INCREMENT for table `depreciation_para`
 --
 ALTER TABLE `depreciation_para`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `designation_para`
@@ -4743,7 +5486,7 @@ ALTER TABLE `designation_para`
 -- AUTO_INCREMENT for table `fiscal_year_para`
 --
 ALTER TABLE `fiscal_year_para`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `gate_pass`
@@ -4761,25 +5504,25 @@ ALTER TABLE `gate_pass_details`
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_master`
 --
 ALTER TABLE `grn_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_return`
 --
 ALTER TABLE `grn_return`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_return_details`
 --
 ALTER TABLE `grn_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoice_details`
@@ -4797,25 +5540,25 @@ ALTER TABLE `invoice_master`
 -- AUTO_INCREMENT for table `issue_return_details`
 --
 ALTER TABLE `issue_return_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_return_master`
 --
 ALTER TABLE `issue_return_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_details`
 --
 ALTER TABLE `issue_slip_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `issue_slip_master`
 --
 ALTER TABLE `issue_slip_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `item_accessories`
@@ -4833,7 +5576,7 @@ ALTER TABLE `item_amc`
 -- AUTO_INCREMENT for table `item_infos`
 --
 ALTER TABLE `item_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `item_insurance`
@@ -4866,6 +5609,12 @@ ALTER TABLE `location_para`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `location_transfer`
+--
+ALTER TABLE `location_transfer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `location_transfer_detail`
 --
 ALTER TABLE `location_transfer_detail`
@@ -4887,13 +5636,13 @@ ALTER TABLE `mrn_master`
 -- AUTO_INCREMENT for table `opening_detail`
 --
 ALTER TABLE `opening_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `opening_master`
 --
 ALTER TABLE `opening_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_order`
@@ -4923,13 +5672,13 @@ ALTER TABLE `purchase_request_details`
 -- AUTO_INCREMENT for table `requisition_details`
 --
 ALTER TABLE `requisition_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `requisition_master`
 --
 ALTER TABLE `requisition_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sales_details`
@@ -4977,7 +5726,7 @@ ALTER TABLE `staff_infos`
 -- AUTO_INCREMENT for table `stock_ledger`
 --
 ALTER TABLE `stock_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `supplier_cat`
@@ -5001,7 +5750,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_log`
 --
 ALTER TABLE `user_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2477;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3316;
 
 --
 -- AUTO_INCREMENT for table `user_role`
@@ -5014,159 +5763,6 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `year_end`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `client_infos`
---
-ALTER TABLE `client_infos`
-  ADD CONSTRAINT `fk_country_code_cntry_client` FOREIGN KEY (`country_code`) REFERENCES `country_para` (`country_code`);
-
---
--- Constraints for table `depreciation_para`
---
-ALTER TABLE `depreciation_para`
-  ADD CONSTRAINT `fk_fiscal_yr_deprec_para_fiscal_yr` FOREIGN KEY (`fiscal_year`) REFERENCES `fiscal_year_para` (`fiscal_year`);
-
---
--- Constraints for table `grn_charges`
---
-ALTER TABLE `grn_charges`
-  ADD CONSTRAINT `fk_charge_code_grn_chrgs_chrg_para` FOREIGN KEY (`charge_code`) REFERENCES `charge_parameter` (`charge_code`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_grn_no_grn_chrgs_grn_mstr` FOREIGN KEY (`grn_no`) REFERENCES `grn_master` (`grn_no`) ON UPDATE CASCADE;
-
---
--- Constraints for table `grn_master`
---
-ALTER TABLE `grn_master`
-  ADD CONSTRAINT `fk_supplier_id_sup_grn_mst` FOREIGN KEY (`supplier_id`) REFERENCES `supplier_infos` (`id`);
-
---
--- Constraints for table `grn_return`
---
-ALTER TABLE `grn_return`
-  ADD CONSTRAINT `fk_grn_no_client_info_grn_rtn` FOREIGN KEY (`grn_no`) REFERENCES `grn_master` (`grn_no`),
-  ADD CONSTRAINT `fk_supplier_id_sup_infos_grn_rtn` FOREIGN KEY (`supplier_id`) REFERENCES `supplier_infos` (`id`);
-
---
--- Constraints for table `grn_return_details`
---
-ALTER TABLE `grn_return_details`
-  ADD CONSTRAINT `fk_grn_rtn_no_grn_rtn_dtls_grn_rtn` FOREIGN KEY (`grn_return_no`) REFERENCES `grn_return` (`grn_return_no`),
-  ADD CONSTRAINT `fk_item_code_item_info_grn_rtn_dtls` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
-
---
--- Constraints for table `issue_return_details`
---
-ALTER TABLE `issue_return_details`
-  ADD CONSTRAINT `fk_issue_return_no_isslp_mstr_isrtrn_dtl` FOREIGN KEY (`issue_return_no`) REFERENCES `issue_return_master` (`issue_return_no`),
-  ADD CONSTRAINT `fk_item_code_isslp_mstr_item` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
-
---
--- Constraints for table `issue_return_master`
---
-ALTER TABLE `issue_return_master`
-  ADD CONSTRAINT `fk_department_id_dprtmnt_para_isrtrn_mstr` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
-  ADD CONSTRAINT `fk_issue_no_isslp_mstr_isrtrn_mstr` FOREIGN KEY (`issue_no`) REFERENCES `issue_slip_master` (`issue_slip_no`),
-  ADD CONSTRAINT `fk_staff_id_stf_infos_iss_rmst` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
-
---
--- Constraints for table `issue_slip_details`
---
-ALTER TABLE `issue_slip_details`
-  ADD CONSTRAINT `fk_issue_slip_no_isslp_mstr_isslp_dtl` FOREIGN KEY (`issue_slip_no`) REFERENCES `issue_slip_master` (`issue_slip_no`),
-  ADD CONSTRAINT `fk_item_code_itm_infos_isslp_dtl` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
-
---
--- Constraints for table `issue_slip_master`
---
-ALTER TABLE `issue_slip_master`
-  ADD CONSTRAINT `fk_department_id_isslp_mstr_dprt` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
-  ADD CONSTRAINT `fk_requisition_no_issslp_mstr_rquistn_mstr` FOREIGN KEY (`requisition_no`) REFERENCES `requisition_master` (`requisition_no`),
-  ADD CONSTRAINT `fk_staff_id_usr_isslp_mstr` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
-
---
--- Constraints for table `item_accessories`
---
-ALTER TABLE `item_accessories`
-  ADD CONSTRAINT `fk_item_code_itm_infos_itm_acc` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
-
---
--- Constraints for table `item_infos`
---
-ALTER TABLE `item_infos`
-  ADD CONSTRAINT `fk_cat_id_cat_itm_infos` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
-  ADD CONSTRAINT `fk_loc_id_loc_para_itm_infos` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`);
-
---
--- Constraints for table `item_scrap_detail`
---
-ALTER TABLE `item_scrap_detail`
-  ADD CONSTRAINT `fk_item_code_itm_scrap_dtls_item_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
-  ADD CONSTRAINT `fk_location_id_itm_scrap_dtl_location_para` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`),
-  ADD CONSTRAINT `fk_scrap_code_itm_scrap_dtls_itm_scrap` FOREIGN KEY (`scrap_code`) REFERENCES `item_scrap` (`scrap_code`);
-
---
--- Constraints for table `location_transfer_detail`
---
-ALTER TABLE `location_transfer_detail`
-  ADD CONSTRAINT `fk_item_code_loc_trans_dtls_itm_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
-  ADD CONSTRAINT `location_transfer_detail_ibfk_1` FOREIGN KEY (`transfer_code`) REFERENCES `location_transfer` (`transfer_code`);
-
---
--- Constraints for table `mrn_details`
---
-ALTER TABLE `mrn_details`
-  ADD CONSTRAINT `fk_item_code_mrn_dtls_item_infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
-
---
--- Constraints for table `opening_detail`
---
-ALTER TABLE `opening_detail`
-  ADD CONSTRAINT `fk_location_id_opnin_dtl_loc_para` FOREIGN KEY (`location_id`) REFERENCES `location_para` (`id`),
-  ADD CONSTRAINT `fk_supplier_id_opnin_dtl_supp_info` FOREIGN KEY (`supplier_id`) REFERENCES `supplier_infos` (`id`);
-
---
--- Constraints for table `purchase_order`
---
-ALTER TABLE `purchase_order`
-  ADD CONSTRAINT `fk_department_id_dprtmnt_para_pur_rqst` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
-  ADD CONSTRAINT `fk_mrn_no_pur_ordr_mrn_master` FOREIGN KEY (`mrn_no`) REFERENCES `mrn_master` (`mrn_no`),
-  ADD CONSTRAINT `fk_purchase_request_no_pur_rqst_pur_rqst_ord` FOREIGN KEY (`purchase_request_no`) REFERENCES `purchase_request` (`purchase_request_no`),
-  ADD CONSTRAINT `fk_requisition_no_por_ordr_requisi_mstr` FOREIGN KEY (`requisition_no`) REFERENCES `requisition_master` (`requisition_no`),
-  ADD CONSTRAINT `fk_staff_id_staff_info_pur_req` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
-
---
--- Constraints for table `purchase_order_details`
---
-ALTER TABLE `purchase_order_details`
-  ADD CONSTRAINT `fk_item_code_itm_infos_pur_req_dtls` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`),
-  ADD CONSTRAINT `fk_purchase_order_no_pur_rqst_ord_pur_rqst_ord_dtl` FOREIGN KEY (`purchase_order_no`) REFERENCES `purchase_order` (`purchase_order_no`);
-
---
--- Constraints for table `purchase_request`
---
-ALTER TABLE `purchase_request`
-  ADD CONSTRAINT `fk_mrn_no_pur_rqst_mrn_master` FOREIGN KEY (`mrn_no`) REFERENCES `mrn_details` (`mrn_no`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_requisition_no_pur_rqst_requi_mastr` FOREIGN KEY (`requisition_no`) REFERENCES `requisition_master` (`requisition_no`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_staff_id_usr_pur_rqst` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `requisition_master`
---
-ALTER TABLE `requisition_master`
-  ADD CONSTRAINT `fk_department_id_requi_mstrdprtmnt_para` FOREIGN KEY (`department_id`) REFERENCES `department_para` (`id`),
-  ADD CONSTRAINT `fk_staff_id_requi_mstr_staff_infos` FOREIGN KEY (`staff_id`) REFERENCES `staff_infos` (`id`);
-
---
--- Constraints for table `year_end`
---
-ALTER TABLE `year_end`
-  ADD CONSTRAINT `fk_fiscal_yr_year_end_fiscal_yr` FOREIGN KEY (`fiscal_year`) REFERENCES `fiscal_year_para` (`fiscal_year`),
-  ADD CONSTRAINT `fk_item_code_year_end_item-infos` FOREIGN KEY (`item_code`) REFERENCES `item_infos` (`item_code`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

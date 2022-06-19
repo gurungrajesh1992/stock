@@ -8,7 +8,7 @@
           <div class="inner">
             <h3>150</h3>
 
-            <p>Producs</p>
+            <p>Inventory Items</p>
           </div>
           <div class="icon">
             <i class="ion ion-bag"></i>
@@ -21,7 +21,7 @@
         <!-- small box -->
         <div class="small-box bg-success">
           <div class="inner">
-            <h3>53<sup style="font-size: 20px">%</sup></h3>
+            <h3>53</h3>
 
             <p>Customers</p>
           </div>

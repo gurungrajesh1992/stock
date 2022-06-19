@@ -58,6 +58,304 @@
 <script>
   $(document).ready(function() {
 
+    // on change role get permissions form
+    $(document).off('change', '#role_id').on('change', '#role_id', function(e) {
+      e.preventDefault();
+      var role_id = $(this).val();
+
+      $.ajax({
+
+        url: '<?php echo base_url('module/admin/getForm'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "role_id": role_id,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#append_persmission').html(resp.data);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //get form for functions for role
+    $(document).off('click', '#add_function').on('click', '#add_function', function(e) {
+      e.preventDefault();
+
+      // $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class = "form-group"> <label> Function Name <span class = "req" > * </span></label> <span class = "rmv_btn_mdl rmv" > X </span> <input type = "text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = "" > </div> </div > ');
+      $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class="row" ><div class="col-md-6"> <div class="form-group"> <label> Function name <span class="req"> * </span></label> <input type="text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = ""> </div> </div> <div class="col-md-6"><div class="form-group"> <label> Display name <span class="req"> * </span></label> <input type="text" name="display_name[]" class="form-control" placeholder="Display Name" value="" ></div></div></div><span class="rmv_btn_mdl rmv_functns"> X </span> </div> ');
+    });
+
+    //generate year_end
+    $(document).off('click', '#generate_year_end').on('click', '#generate_year_end', function() {
+      $('#loader_year_end').css('display', 'block');
+      // $('#generate_year_end').css('display', 'none');
+      $.ajax({
+
+        url: '<?php echo base_url('year_end/admin/generate_year_end'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        // data: {
+        //   "table": table,
+        //   "row_id": row_id,
+        // },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            $('#loader_year_end').css('display', 'none');
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            $('#loader_year_end').css('display', 'none');
+          }
+        }
+      });
+
+    });
+
+    //location transfer post
+    $(document).off('click', '#post_loc_transfer').on('click', '#post_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      // var list = $('.req_item .out_of_stock').map(function() {
+      //   return 'out of stock';
+      // }).get();
+      // console.log(list.length);
+      // return false;
+      // if (list.length > 0) {
+      //   Toastify({
+
+      //     text: 'Some Product Out of stock !!!',
+
+      //     duration: 1000,
+
+      //     style: {
+      //       background: "linear-gradient(to right, red, yellow)",
+      //     },
+
+      //   }).showToast();
+      //   return false;
+      // }
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/location_transfer_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+
+            $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
+          }
+        }
+      });
+
+    });
+
+    //sales return post
+    $(document).off('click', '#post_sales_return').on('click', '#post_sales_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('sales_return/admin/sales_return_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //Sales post
+    $(document).off('click', '#post_sales').on('click', '#post_sales', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      var list = $('.req_item .out_of_stock').map(function() {
+        return 'out of stock';
+      }).get();
+      // console.log(list.length);
+      // return false;
+      if (list.length > 0) {
+        Toastify({
+
+          text: 'Some Product Out of stock !!!',
+
+          duration: 1000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          },
+
+        }).showToast();
+        return false;
+      }
+      $.ajax({
+
+        url: '<?php echo base_url('sales/admin/sales_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+
+            $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
+          }
+        }
+      });
+
+    });
+
     //grn return post
     $(document).off('click', '#post_grn_return').on('click', '#post_grn_return', function() {
       var table_id = $(this).attr('table_id');
@@ -224,6 +522,8 @@
       var splited = selected_val.split(",");
       var val = splited[0];
       var unit_price = splited[1];
+      var ledger_code = splited[2];
+      var item_type = $('#item_type_scrap').val();
       // alert(unit_price);
       // return false;
       var already_items = $('input[name^=item_code]').map(function(idx, elem) {
@@ -256,6 +556,8 @@
           "val": val,
           "unit_price": unit_price,
           "total": already_items.length,
+          "item_type": item_type,
+          "ledger_code": ledger_code
         },
         success: function(resp) {
           // console.log(resp.data);return false;
@@ -280,6 +582,7 @@
         }
       });
     });
+
     //issue items
     $(document).off('change', '#item_goods_return').on('change', '#item_goods_return', function(e) {
       e.preventDefault();
@@ -708,8 +1011,8 @@
 
     });
 
-    //approve row
-    $(document).off('click', '#approve').on('click', '#approve', function() {
+    //approve row opening
+    $(document).off('click', '#approve_opening').on('click', '#approve_opening', function() {
       var table_id = $(this).attr('table_id');
       var split_by_underline = table_id.split("-");
       var table = split_by_underline[0];
@@ -761,8 +1064,114 @@
 
     });
 
-    //cancel row
-    $(document).off('click', '#cancel').on('click', '#cancel', function() {
+    //cancel row opening
+    $(document).off('click', '#cancel_opening').on('click', '#cancel_opening', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('opening_master/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row requisition
+    $(document).off('click', '#approve_requisition').on('click', '#approve_requisition', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('requisition/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row requisition
+    $(document).off('click', '#cancel_requisition').on('click', '#cancel_requisition', function() {
       var table_id = $(this).attr('table_id');
       var split_by_underline = table_id.split("-");
       var table = split_by_underline[0];
@@ -773,6 +1182,1172 @@
       $.ajax({
 
         url: '<?php echo base_url('requisition/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row issue
+    $(document).off('click', '#approve_issue').on('click', '#approve_issue', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row issue
+    $(document).off('click', '#cancel_issue').on('click', '#cancel_issue', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('issue/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row issue return
+    $(document).off('click', '#approve_issue_return').on('click', '#approve_issue_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('issue_return/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row issue return
+    $(document).off('click', '#cancel_issue_return').on('click', '#cancel_issue_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('issue_return/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row mrn
+    $(document).off('click', '#approve_mrn').on('click', '#approve_mrn', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('mrn/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row mrn
+    $(document).off('click', '#cancel_mrn').on('click', '#cancel_mrn', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('mrn/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row purchase request
+    $(document).off('click', '#approve_purchase_request').on('click', '#approve_purchase_request', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('purchase_request/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row purchase request
+    $(document).off('click', '#cancel_purchase_request').on('click', '#cancel_purchase_request', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('purchase_request/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row purchase order
+    $(document).off('click', '#approve_purchase_order').on('click', '#approve_purchase_order', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('purchase_order/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row purchase order
+    $(document).off('click', '#cancel_purchase_order').on('click', '#cancel_purchase_order', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('purchase_order/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row invoice
+    $(document).off('click', '#approve_invoice').on('click', '#approve_invoice', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('invoice/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row invoice
+    $(document).off('click', '#cancel_invoice').on('click', '#cancel_invoice', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('invoice/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row grn
+    $(document).off('click', '#approve_grn').on('click', '#approve_grn', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row grn
+    $(document).off('click', '#cancel_grn').on('click', '#cancel_grn', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row grn return
+    $(document).off('click', '#approve_grn_return').on('click', '#approve_grn_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn_return/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row grn return
+    $(document).off('click', '#cancel_grn_return').on('click', '#cancel_grn_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('grn_return/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row sales
+    $(document).off('click', '#approve_sales').on('click', '#approve_sales', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('sales/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row grn sales
+    $(document).off('click', '#cancel_sales').on('click', '#cancel_sales', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('sales/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row sales return
+    $(document).off('click', '#approve_sales_return').on('click', '#approve_sales_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('sales_return/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row sales return
+    $(document).off('click', '#cancel_sales_return').on('click', '#cancel_sales_return', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('sales_return/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row gate pass
+    $(document).off('click', '#approve_gate_pass').on('click', '#approve_gate_pass', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('gate_pass/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row gate pass
+    $(document).off('click', '#cancel_gate_pass').on('click', '#cancel_gate_pass', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('gate_pass/admin/cancel_row'); ?>',
         type: "POST",
         // contentType: "application/json",  
         dataType: "json",
@@ -1313,5 +2888,339 @@
       });
     });
 
+    // onchange item type get items and heading a/c to type in scrap
+
+    $(document).off('change', '#item_type_scrap').on('change', '#item_type_scrap', function(e) {
+      e.preventDefault();
+      var val = $(this).val();
+      // alert(val);
+      // return false;
+      // alert(val);return false; 
+      $.ajax({
+        url: '<?php echo base_url('scrap/admin/getItemsAndHeadings'); ?>',
+        type: "POST",
+        // contentType: "application/json",
+        dataType: "json",
+        data: {
+          "val": val,
+        },
+        success: function(resp) {
+          // console.log(resp.data);return false;
+          // var obj = jQuery.parseJSON(resp);
+          // console.log(resp.status);return false;
+          if (resp.status == "success") {
+            $('#items').html(resp.html);
+            $('#item_scrap').html(resp.option);
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 6000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+          }
+        }
+      });
+    });
+
+    //Scrap post
+    $(document).off('click', '#post_scrap').on('click', '#post_scrap', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      var list = $('.scrap_item .out_of_stock').map(function() {
+        return 'out of stock';
+      }).get();
+      // console.log(list.length);
+      // return false;
+      if (list.length > 0) {
+        Toastify({
+
+          text: 'Some Product Out of stock !!!',
+
+          duration: 1000,
+
+          style: {
+            background: "linear-gradient(to right, red, yellow)",
+          },
+
+        }).showToast();
+        return false;
+      }
+      $.ajax({
+
+        url: '<?php echo base_url('scrap/admin/scrap_post'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+
+            $('.card-tools').load(document.URL + ' .card-tools');
+
+            location.reload();
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              }
+
+            }).showToast();
+            // alert(resp.status_message);
+            $('.card-tools').load(document.URL + ' .card-tools');
+          }
+        }
+      });
+
+    });
+
+    //approve row scrap
+    $(document).off('click', '#approve_scrap').on('click', '#approve_scrap', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('scrap/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row scrap
+    $(document).off('click', '#cancel_scrap').on('click', '#cancel_scrap', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('scrap/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //approve row location transfer
+    $(document).off('click', '#approve_loc_transfer').on('click', '#approve_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row location transfer
+    $(document).off('click', '#cancel_loc_transfer').on('click', '#cancel_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    // REMOVE functions in module module
+
+    $(document).off('click', '.rmv_functns').on('click', '.rmv_functns', function(e) {
+      e.preventDefault();
+      // alert('hi');
+      $(this).parent().remove();
+    });
   })
 </script>

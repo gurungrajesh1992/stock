@@ -16,7 +16,7 @@ class Admin extends Auth_controller
 
 	public function all($page = '')
 	{
-		$config['base_url'] = base_url($this->redirect.'/admin/all');
+		$config['base_url'] = base_url($this->redirect . '/admin/all');
 		$config['total_rows'] = $this->crud_model->count_all($this->table, array('status !=' => '2'), 'id');
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 10;
@@ -82,10 +82,10 @@ class Admin extends Auth_controller
 				$data = array(
 					'country_name' => $this->input->post('country_name'),
 					'nationality' => $this->input->post('nationality'),
-					'status' => $this->input->post('status'), 
+					'status' => $this->input->post('status'),
 				);
 
-				$country_code = substr($data['country_name'],0,4);
+				$country_code = substr($data['country_name'], 0, 4);
 				$data['country_code'] = $country_code;
 				$id = $this->input->post('id');
 				if ($id == '') {
@@ -100,7 +100,7 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 				} else {
-					$data['updated_on'] = date('Y-m-d');  
+					$data['updated_on'] = date('Y-m-d');
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 						$this->session->set_flashdata('success', 'Successfully Updated.');

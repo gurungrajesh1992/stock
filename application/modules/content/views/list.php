@@ -4,7 +4,14 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><a href="<?php echo base_url('content/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+            <h3 class="card-title">
+              <?php
+              $check_content_form = $this->crud_model->get_module_function_for_role('content', 'form');
+              if ($check_content_form == true) {
+              ?>
+                <a href="<?php echo base_url('content/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a>
+              <?php } ?>
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -68,28 +75,37 @@
                       <td><?php echo $updated_by ?></td>
                       <td><?php echo $status ?></td>
                       <td>
-                        <a href="<?php echo base_url('content/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
-                        <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
+                        <?php
+                        if ($check_content_form == true) {
+                        ?>
+                          <a href="<?php echo base_url('content/admin/form/' . $value->id); ?>" class="btn btn-sm btn-primary">Edit</a>
+                        <?php } ?>
+                        <?php
+                        $check_content_soft_delete = $this->crud_model->get_module_function_for_role('content', 'soft_delete');
+                        if ($check_content_soft_delete == true) {
+                        ?>
+                          <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal<?php echo $value->id; ?>">Delete</a>
 
-                        <div class="modal fade" id="exampleModal<?php echo $value->id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                Are You Sure To Delete?
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <a href="<?php echo base_url('content/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
+                          <div class="modal fade" id="exampleModal<?php echo $value->id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  Are You Sure To Delete?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                  <a href="<?php echo base_url('content/admin/soft_delete/' . $value->id); ?>" class="btn btn-primary">Yes</a>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        <?php } ?>
                       </td>
                     </tr>
                   <?php } ?>

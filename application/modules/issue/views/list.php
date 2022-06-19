@@ -1,10 +1,18 @@
+<?php include('search.php'); ?>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"><a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a></h3>
+            <h3 class="card-title">
+              <?php
+              $check_issue_form = $this->crud_model->get_module_function_for_role('issue', 'form');
+              if ($check_issue_form == true) {
+              ?>
+                <a href="<?php echo base_url($redirect . '/admin/form'); ?>" class="btn btn-sm btn-primary">Add New</a>
+              <?php } ?>
+            </h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -67,20 +75,44 @@
                       <td><?php echo (isset($value->approved_by) && $value->approved_by != '') ? 'Yes' : 'No'; ?></td>
                       <td><?php echo $posted_tag; ?></td>
                       <td>
-                        <?php if ($value->requisition_no == NULL) { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
-                        <?php } else { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/edit/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
-                        <?php } ?>
 
                         <?php if ($value->requisition_no == NULL) { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                          <?php
+                          $check_issue_direct_add = $this->crud_model->get_module_function_for_role('issue', 'direct_add');
+                          if ($check_issue_direct_add == true) {
+                          ?>
+                            <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/direct_add/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
+                          <?php } ?>
                         <?php } else { ?>
-                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                          <?php
+                          $check_issue_edit = $this->crud_model->get_module_function_for_role('issue', 'edit');
+                          if ($check_issue_edit == true) {
+                          ?>
+                            <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/edit/' . $value->id) . '" class="btn btn-sm btn-primary" style="margin: 5px;">Edit</a>'; ?>
+                        <?php }
+                        } ?>
+                        <?php if ($value->requisition_no == NULL) { ?>
+                          <?php
+                          $check_issue_direct_view = $this->crud_model->get_module_function_for_role('issue', 'direct_view');
+                          if ($check_issue_direct_view == true) {
+                          ?>
+                            <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/direct_view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                          <?php } ?>
+                        <?php } else { ?>
+                          <?php
+                          $check_issue_view = $this->crud_model->get_module_function_for_role('issue', 'view');
+                          if ($check_issue_view == true) {
+                          ?>
+                            <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>' : '<a href="' . base_url($redirect . '/admin/view/' . $value->id) . '" class="btn btn-sm btn-info" style="margin: 5px;">View</a>'; ?>
+                          <?php } ?>
                         <?php } ?>
 
-                        <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>'; ?>
-
+                        <?php
+                        $check_issue_soft_delete = $this->crud_model->get_module_function_for_role('issue', 'soft_delete');
+                        if ($check_issue_soft_delete == true) {
+                        ?>
+                          <?php echo (isset($value->approved_by) && $value->approved_by != '') ? '' : '<a href="' . base_url($redirect . '/admin/soft_delete/' . $value->id) . '" class="btn btn-sm btn-danger" style="margin: 5px;">Delete</a>'; ?>
+                        <?php } ?>
                       </td>
                     </tr>
                   <?php }
