@@ -1219,6 +1219,34 @@ $current_user = $this->session->userdata('current_user');
             </ul>
           </li>
         <?php } ?>
+
+        <?php
+        $check_report = $this->crud_model->get_module_for_role('report');
+        if ($check_report == true) {
+        ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fa fa-calendar"></i>
+              <p>
+                Report
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <?php
+              $check_report_all = $this->crud_model->get_module_function_for_role('report', 'all');
+              if ($check_report_all == true) {
+              ?>
+                <li class="nav-item">
+                  <a href="<?php echo base_url('report/admin/all/' . date('Y-m-d')); ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Stock Report</p>
+                  </a>
+                </li>
+              <?php } ?>
+            </ul>
+          </li>
+        <?php } ?>
         <li class="nav-header">User Management</li>
         <?php
         $check_user_role = $this->crud_model->get_module_for_role('user_role');

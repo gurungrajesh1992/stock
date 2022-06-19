@@ -408,10 +408,37 @@ class Crud_model extends CI_Model
 
     public function getItems($table, $where, $group_by)
     {
-        $this->db->select('sum(rem_qty) total_stock, item_code, location_id', false);
+        $this->db->select('sum(rem_qty) as total_stock, item_code, location_id', false);
         $this->db->from($table);
         $this->db->where($where);
         $this->db->group_by($group_by);
+        $result = $this->db->get('')->result();
+
+        return $result;
+    }
+
+    public function geStocktItems($where)
+    {
+        $this->db->select('sum(s.in_qty - s.out_qty) as total_stock, sum(s.rem_qty) as total_stock_check, s.item_code, i.item_name, i.item_type, i.model_no, i.item_image, sum(s.in_unit_price + s.out_unit_price) as total_unit_price, count(s.id) as total_row_count', false);
+        $this->db->join('item_infos i', 'i.item_code = s.item_code', 'left');
+        $this->db->from('stock_ledger s');
+        $this->db->where($where);
+        $this->db->group_by('s.item_code');
+        $this->db->order_by('i.id', 'ASC');
+        $result = $this->db->get('')->result();
+
+        return count($result);
+    }
+
+    public function geStocktItemsLimitOrder($where, $limit, $offset)
+    {
+        $this->db->select('sum(s.in_qty - s.out_qty) as total_stock, sum(s.rem_qty) as total_stock_check, s.item_code, i.item_name, i.item_type, i.model_no, i.item_image, sum(s.in_unit_price + s.out_unit_price) as total_unit_price, count(s.id) as total_row_count', false);
+        $this->db->join('item_infos i', 'i.item_code = s.item_code', 'left');
+        $this->db->from('stock_ledger s');
+        $this->db->where($where);
+        $this->db->group_by('s.item_code');
+        $this->db->order_by('i.id', 'ASC');
+        $this->db->limit($limit, $offset);
         $result = $this->db->get('')->result();
 
         return $result;
