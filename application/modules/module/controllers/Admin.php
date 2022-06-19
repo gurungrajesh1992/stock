@@ -90,18 +90,20 @@ class Admin extends Auth_controller
 						redirect($this->redirect . '/admin/form');
 					}
 					$data['module_name'] = $this->input->post('module_name');
+					$data['display_name'] = $this->input->post('display_name');
 					$result = $this->crud_model->insert($this->table, $data);
 					$insert_id = $this->db->insert_id();
 					if ($result == true) {
 
 						$function_name = $this->input->post('function_name');
-						$function_name = array_unique($function_name);
+						$display_name_function = $this->input->post('display_name_function');
 
 						if (count($function_name) > 0) {
 							$batch_data = array();
 							for ($i = 0; $i < count($function_name); $i++) {
 								$insert_child['module_id'] = $insert_id;
 								$insert_child['function_name'] = $function_name[$i];
+								$insert_child['display_name'] = $display_name_function[$i];
 
 								$batch_data[] = $insert_child;
 							}
@@ -116,6 +118,7 @@ class Admin extends Auth_controller
 					}
 				} else {
 
+					$data['display_name'] = $this->input->post('display_name');
 					$result = $this->crud_model->update($this->table, $data, array('id' => $id));
 					if ($result == true) {
 
@@ -123,13 +126,14 @@ class Admin extends Auth_controller
 
 						$function_name = $this->input->post('function_name');
 
-						$function_name = array_unique($function_name);
+						$display_name_function = $this->input->post('display_name_function');
 
 						if (count($function_name) > 0) {
 							$batch_data = array();
 							for ($i = 0; $i < count($function_name); $i++) {
 								$insert_child['module_id'] = $id;
 								$insert_child['function_name'] = $function_name[$i];
+								$insert_child['display_name'] = $display_name_function[$i];
 
 								$batch_data[] = $insert_child;
 							}
@@ -173,9 +177,20 @@ class Admin extends Auth_controller
 
 	public function role_function($id = '')
 	{
-		$module = $this->crud_model->get_where('module', array('status' => '1'));
-		$role = $this->crud_model->get_where_order_by('user_role', array('status' => '1'), 'id', 'ASC');
+		// echo "<pre>";
+		// var_dump($this->auth->current_user()->role_id);
+		// exit;
+		if ($this->auth->current_user()->role_id == 1) {
+			$module = $this->crud_model->get_where('module', array('status' => '1'));
+		} else {
+			$module = $this->crud_model->get_where('module', array('status' => '1', 'id !=' => 33));
+		}
 
+		if ($this->auth->current_user()->role_id == 1) {
+			$role = $this->crud_model->get_where_order_by('user_role', array('status' => '1'), 'id', 'ASC');
+		} else {
+			$role = $this->crud_model->get_where_order_by('user_role', array('status' => '1', 'id !=' => 1), 'id', 'ASC');
+		}
 		$data['role'] = $role;
 		$data['module'] = $module;
 		// echo "<pre>";
@@ -203,7 +218,12 @@ class Admin extends Auth_controller
 						$batch_data[] = $insert_child;
 					}
 
-					$this->db->delete('module_function_role', array('role_id' => $role));
+
+					if ($this->auth->current_user()->role_id == 1) {
+						$this->db->delete('module_function_role', array('role_id' => $role));
+					} else {
+						$this->db->delete('module_function_role', array('role_id' => $role, 'module_function_id  !=' => 278));
+					}
 					$this->db->insert_batch('module_function_role', $batch_data);
 				}
 
@@ -230,7 +250,11 @@ class Admin extends Auth_controller
 				// $check = $this->load->view('listall/image_form');  
 				$role_id = $this->input->post('role_id');
 
-				$module = $this->crud_model->get_where('module', array('status' => '1'));
+				if ($this->auth->current_user()->role_id == 1) {
+					$module = $this->crud_model->get_where('module', array('status' => '1'));
+				} else {
+					$module = $this->crud_model->get_where('module', array('status' => '1', 'id !=' => 33));
+				}
 
 				$module_function_role = $this->crud_model->get_where('module_function_role', array('role_id' => $role_id));
 

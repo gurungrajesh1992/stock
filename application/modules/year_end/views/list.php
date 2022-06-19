@@ -32,12 +32,17 @@
                   </h3>
                 </div>
                 <div class="col-md-6">
-                  <div class="year_end_blk">
-                    <h3 class="loader_year_end" id="loader_year_end" style="display:none;">
-                      <img src="http://localhost:7777/stock/uploads/svg/barLoading.svg" class="img_cl" id="defff0" style="max-width: 100%; color: #28a545; width: 58px; background-color: #28a745; position: absolute; right: 15px; height: 31px;border-radius: 5px;">
-                    </h3>
-                    <h3 class="year_end_generate"><a class="btn btn-sm btn-success" id="generate_year_end">Generate</a></h3>
-                  </div>
+                  <?php
+                  $check_year_end_generate_year_end = $this->crud_model->get_module_function_for_role('year_end', 'generate_year_end');
+                  if ($check_year_end_generate_year_end == true) {
+                  ?>
+                    <div class="year_end_blk">
+                      <h3 class="loader_year_end" id="loader_year_end" style="display:none;">
+                        <img src="http://localhost:7777/stock/uploads/svg/barLoading.svg" class="img_cl" id="defff0" style="max-width: 100%; color: #28a545; width: 58px; background-color: #28a745; position: absolute; right: 15px; height: 31px;border-radius: 5px;">
+                      </h3>
+                      <h3 class="year_end_generate"><a class="btn btn-sm btn-success" id="generate_year_end">Generate</a></h3>
+                    </div>
+                  <?php } ?>
                 </div>
             </form>
           </div>

@@ -101,8 +101,8 @@
     $(document).off('click', '#add_function').on('click', '#add_function', function(e) {
       e.preventDefault();
 
-      $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class = "form-group"> <label> Function Name <span class = "req" > * </span></label> <span class = "rmv_btn_mdl rmv" > X </span> <input type = "text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = "" > </div> </div > ');
-
+      // $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class = "form-group"> <label> Function Name <span class = "req" > * </span></label> <span class = "rmv_btn_mdl rmv" > X </span> <input type = "text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = "" > </div> </div > ');
+      $('#apnd_funct').append('<div class="col-md-4 rmv_modle"> <div class="row" ><div class="col-md-6"> <div class="form-group"> <label> Function name <span class="req"> * </span></label> <input type="text" name = "function_name[]" class = "form-control" placeholder = "Function Name" value = ""> </div> </div> <div class="col-md-6"><div class="form-group"> <label> Display name <span class="req"> * </span></label> <input type="text" name="display_name[]" class="form-control" placeholder="Display Name" value="" ></div></div></div><span class="rmv_btn_mdl rmv_functns"> X </span> </div> ');
     });
 
     //generate year_end
@@ -3056,7 +3056,7 @@
 
     });
 
-    //cancel row opening
+    //cancel row scrap
     $(document).off('click', '#cancel_scrap').on('click', '#cancel_scrap', function() {
       var table_id = $(this).attr('table_id');
       var split_by_underline = table_id.split("-");
@@ -3107,6 +3107,120 @@
         }
       });
 
+    });
+
+    //approve row location transfer
+    $(document).off('click', '#approve_loc_transfer').on('click', '#approve_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/change_status'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    //cancel row location transfer
+    $(document).off('click', '#cancel_loc_transfer').on('click', '#cancel_loc_transfer', function() {
+      var table_id = $(this).attr('table_id');
+      var split_by_underline = table_id.split("-");
+      var table = split_by_underline[0];
+      var row_id = split_by_underline[1];
+      // console.log(table, row_id);
+      // return false;
+
+      $.ajax({
+
+        url: '<?php echo base_url('location_transfer/admin/cancel_row'); ?>',
+        type: "POST",
+        // contentType: "application/json",  
+        dataType: "json",
+        data: {
+          "table": table,
+          "row_id": row_id,
+        },
+        success: function(resp) {
+          if (resp.status == "success") {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 1000,
+
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              },
+
+            }).showToast();
+            // location.reload();
+            $('.card-tools').load(document.URL + ' .card-tools');
+          } else {
+            Toastify({
+
+              text: resp.status_message,
+
+              duration: 5000,
+
+              style: {
+                background: "linear-gradient(to right, red, yellow)",
+              },
+
+            }).showToast();
+            // alert(resp.status_message);
+          }
+        }
+      });
+
+    });
+
+    // REMOVE functions in module module
+
+    $(document).off('click', '.rmv_functns').on('click', '.rmv_functns', function(e) {
+      e.preventDefault();
+      // alert('hi');
+      $(this).parent().remove();
     });
   })
 </script>

@@ -39,7 +39,7 @@
                 ?>
                     <tr>
                       <td><?php echo $key + 1; ?></td>
-                      <td><?php echo $value->module_name; ?></td>
+                      <td><?php echo $value->display_name; ?>( <?php echo $value->module_name; ?> )</td>
                       <td>
                         <?php if (isset($childs)) {
                           foreach ($childs as $key_c => $val_c) {
