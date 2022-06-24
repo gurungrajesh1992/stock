@@ -529,6 +529,8 @@ class Admin extends Auth_controller
 		// echo "<pre>";
 		// var_dump($master_detail);
 		// exit;
+		$data['setting_details'] = $this->crud_model->get_where_single('site_settings', array('status', '1'));
+
 		$data['master_detail'] = $master_detail;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';

@@ -76,6 +76,8 @@ class Admin extends Auth_controller
 		$data['fiscals'] = $this->crud_model->get_where('fiscal_year_para', array('status' => '1'));
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['locations'] = $this->crud_model->get_where('location_para', array('status' => '1'));
+		$setting_details = $this->crud_model->get_where_single('site_settings', array('status', '1'));
+		$data['setting_details'] = $setting_details;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);

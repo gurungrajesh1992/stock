@@ -390,6 +390,8 @@ class Admin extends Auth_controller
 
 		$data['master_detail'] = $master_detail;
 		$data['issue_return_details'] = $issue_return_details;
+		$data['setting_details'] = $this->crud_model->get_where_single('site_settings', array('status', '1'));
+
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
 		$this->load->view('layouts/admin/index', $data);

@@ -243,6 +243,8 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'No Data Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
+		$data['setting_details'] = $this->crud_model->get_where_single('site_settings', array('status', '1'));
+
 		$data['detail'] = $detail;
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'view';
