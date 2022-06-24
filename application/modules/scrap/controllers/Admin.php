@@ -13,6 +13,7 @@ class Admin extends Auth_controller
 		$this->title = 'Scrap'; // module title
 		$this->redirect = 'scrap'; //module foldername
 	}
+	
 	public function search($page = '')
 	{
 		
