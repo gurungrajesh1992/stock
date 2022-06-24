@@ -53,7 +53,7 @@
                         ?>
                             <div class=" row">
                                 <div class="col-md-12">
-                                    <label><?php echo $val->module_name; ?></label>
+                                    <label><?php echo $val->display_name; ?></label>
                                 </div>
 
                                 <?php foreach ($module_function as $key_f => $val_f) { ?>
@@ -62,7 +62,7 @@
                                                                                                                                                                 if ($val_fr->module_function_id == $val_f->id) {
                                                                                                                                                                     echo "checked";
                                                                                                                                                                 }
-                                                                                                                                                            } ?>><?php echo $val_f->function_name ?>
+                                                                                                                                                            } ?>><?php echo $val_f->display_name ?>
                                     </div>
                                 <?php } ?>
 

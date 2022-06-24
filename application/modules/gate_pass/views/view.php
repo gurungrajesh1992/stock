@@ -6,9 +6,18 @@
                     <h3 class="card-title"><?php echo $title ?></h3>
 
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-success" id="post_issue" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->posted_by) && $master_detail->posted_by != '') ? 'Posted' : 'Post' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php
+                        $check_gate_pass_change_status = $this->crud_model->get_module_function_for_role('gate_pass', 'change_status');
+                        if ($check_gate_pass_change_status == true) {
+                        ?>
+                            <a class="btn btn-sm btn-info" id="approve_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_gate_pass_cancel_row = $this->crud_model->get_module_function_for_role('gate_pass', 'cancel_row');
+                        if ($check_gate_pass_cancel_row == true) {
+                        ?>
+                            <a class="btn btn-sm btn-danger" id="cancel_gate_pass" table_id="gate_pass-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="card-body" id="printableArea">

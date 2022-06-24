@@ -5,8 +5,18 @@
                 <div class="card-header">
                     <h3 class="card-title"><?php echo $title ?></h3>
                     <div class="card-tools">
-                        <a class="btn btn-sm btn-info" id="approve_purchase_order" table_id="purchase_order-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
-                        <a class="btn btn-sm btn-danger" id="cancel_purchase_order" table_id="purchase_order-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php
+                        $check_purchase_order_change_status = $this->crud_model->get_module_function_for_role('purchase_order', 'change_status');
+                        if ($check_purchase_order_change_status == true) {
+                        ?>
+                            <a class="btn btn-sm btn-info" id="approve_purchase_order" table_id="purchase_order-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->approved_by) && $master_detail->approved_by != '') ? 'Approved' : 'Approve' ?></a>
+                        <?php } ?>
+                        <?php
+                        $check_purchase_order_cancel_row = $this->crud_model->get_module_function_for_role('purchase_order', 'cancel_row');
+                        if ($check_purchase_order_cancel_row == true) {
+                        ?>
+                            <a class="btn btn-sm btn-danger" id="cancel_purchase_order" table_id="purchase_order-<?php echo $master_detail->id; ?>"><?php echo (isset($master_detail->cancel_tag) && $master_detail->cancel_tag == '1') ? 'Cancelled' : 'Cancel' ?></a>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="card-body">
@@ -193,5 +203,238 @@
                 </div>
             </div>
         </form>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input type="button" class="form-control btn btn-sm btn-primary" onclick="printDiv('printableArea')" id="submit" value="Print">
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
+<div class="container-fluid invoice-container" id="printableArea" hidden>
+    <!-- Header -->
+    <?php echo $this->load->view('layouts/admin/partials/bill_head'); ?>
+
+
+    <!-- Main Content -->
+    <main>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Purchase Order No : </label>
+                        <?php echo set_value('purchase_order_no', (((isset($master_detail->purchase_order_no)) && $master_detail->purchase_order_no != '') ? $master_detail->purchase_order_no : '')); ?>
+                    </div>
+                </div>
+
+                <?php if ($master_detail->request_type == "REQ") { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Requisition No. : </label>
+                            <?php echo set_value('requisition_no', (((isset($master_detail->requisition_no)) && $master_detail->requisition_no != '') ? $master_detail->requisition_no : '')); ?>
+                        </div>
+                    </div>
+                <?php } else if ($master_detail->request_type == "MRN") { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>MRN No. : </label>
+                            <?php echo set_value('mrn_no', (((isset($master_detail->mrn_no)) && $master_detail->mrn_no != '') ? $master_detail->mrn_no : '')); ?>
+                        </div>
+                    </div>
+                <?php } elseif ($master_detail->request_type == "PR") { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Purchase Request No. : </label>
+                            <?php echo set_value('purchase_request_no', (((isset($master_detail->purchase_request_no)) && $master_detail->purchase_request_no != '') ? $master_detail->purchase_request_no : '')); ?>
+                        </div>
+                    </div>
+                <?php    }
+                ?>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Print Date : </label>
+                        <?php echo date("F j, Y"); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <?php if ($master_detail->request_type   == "REQ") { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Department : </label>
+                            <?php $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $master_detail->department_id), 'id', 'DESC');
+                            echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : ''));
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Staff : </label>
+                            <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $master_detail->staff_id), 'id', 'DESC');
+                            echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>
+                        </div>
+                    </div>
+                <?php } elseif ($master_detail->request_type   == "PR") { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Department : </label>
+                            <?php $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $master_detail->department_id), 'id', 'DESC');
+                            echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : ''));
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Staff : </label>
+                            <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $master_detail->staff_id), 'id', 'DESC');
+                            echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>
+                        </div>
+                    </div>
+                <?php  } else if ($master_detail->request_type   == "MRN") { ?>
+
+                <?php    } else { ?>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Department : </label>
+                            <?php $depart_detail = $this->crud_model->get_where_single_order_by('department_para', array('id' => $master_detail->department_id), 'id', 'DESC');
+                            echo set_value('department_name', (((isset($depart_detail->department_name)) && $depart_detail->department_name != '') ? $depart_detail->department_name : ''));
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Staff : </label>
+                            <?php $staff_detail = $this->crud_model->get_where_single_order_by('staff_infos', array('id' => $master_detail->staff_id), 'id', 'DESC');
+                            echo set_value('staff_name', (((isset($staff_detail->full_name)) && $staff_detail->full_name != '') ? $staff_detail->full_name : '')); ?>
+                        </div>
+                    </div>
+                <?php   }
+                ?>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Order Date : </label>
+                        <?php echo set_value('requested_on', (((isset($master_detail->requested_on)) && $master_detail->requested_on != '') ? $master_detail->requested_on : date('Y-m-d'))); ?>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Order By : </label>
+                        <?php echo set_value('requested_by', (((isset($master_detail->requested_by)) && $master_detail->requested_by != '') ? $master_detail->requested_by : '')); ?>
+                    </div>
+                </div>
+                <div class=" col-md-4">
+                    <div class="form-group">
+                        <label>Remarks : </label>
+                        <?php echo (((isset($master_detail->remarks)) && $master_detail->remarks != '') ? $master_detail->remarks : '') ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="req_item" id="items">
+                                <div class=" row">
+                                    <div class="col-md-2">
+                                        <label>SN</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Product</label>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>Order Quantity</label>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <label>Remarks</label>
+                                    </div>
+
+                                </div>
+                                <?php
+                                if (isset($master_detail->purchase_order_no)) {
+                                    $childs = $this->crud_model->get_where('purchase_order_details', array('purchase_order_no' => $master_detail->purchase_order_no));
+                                    if ($childs) {
+                                        foreach ($childs as $key => $value) {
+                                            $where_stock = array(
+                                                'item_code' => $value->item_code,
+                                            );
+                                            $total_item_stock_before_issue_slip_date = $this->crud_model->get_total_item_stock('stock_ledger', $where_stock);
+
+                                            $item_detail = $this->crud_model->get_where_single('item_infos', array('item_code' => $value->item_code));
+
+                                ?>
+                                            <div class="row" style="margin-bottom: 15px;">
+                                                <div class="col-md-2">
+                                                    <?php echo ($key + 1) . '.'; ?>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <?php echo $item_detail->item_name; ?>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <?php echo $value->requested_qty; ?>
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <?php echo $value->remarks; ?>
+                                                </div>
+                                            </div>
+                                <?php }
+                                    }
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-sm-9 text-sm-end">
+                <br>
+                <br>
+                ...................................
+                <br>
+                <b> Receiver's Signature </b>
+                <br>
+            </div>
+            <div class="col-sm-3">
+                <br>
+                <br>
+                ...................................
+                <br>
+                <b> Authorized Signature </b>
+                <br>
+            </div>
+        </div>
+
+    </footer>
+
+</div>
+
+
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>

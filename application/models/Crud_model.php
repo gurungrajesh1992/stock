@@ -21,6 +21,46 @@ class Crud_model extends CI_Model
         return $this->db->get('')->row();
     }
 
+    public function get_module_function_for_role($module_name, $function_name)
+    {
+        $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
+        if (isset($check_module_dissable->status) && $check_module_dissable->status == '1') {
+            $current_user = $this->auth->current_user();
+            // var_dump($current_user->role_id);
+            // exit;
+            $sql = "SELECT a.* FROM module_function_role a LEFT JOIN module_function b ON a.module_function_id = b.id LEFT JOIN module c on c.id=b.module_id WHERE c.module_name = '$module_name' AND b.function_name = '$function_name' AND role_id = $current_user->role_id ";
+            $query = $this->db->query($sql);
+            $data = $query->row();
+            if ($data) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public function get_module_for_role($module_name)
+    {
+        $check_module_dissable = $this->db->get_where('module', array('module_name' => $module_name))->row();
+        if (isset($check_module_dissable->status) && $check_module_dissable->status == '1') {
+            $current_user = $this->auth->current_user();
+            // var_dump($current_user->role_id);
+            // exit;
+            $sql = "SELECT a.* FROM module_function_role a LEFT JOIN module_function b ON a.module_function_id = b.id LEFT JOIN module c on c.id=b.module_id WHERE c.module_name = '$module_name' AND role_id = $current_user->role_id ";
+            $query = $this->db->query($sql);
+            $data = $query->row();
+            if ($data) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     public function count_all_data($table, $data)
     {
         $this->db->select('count(id) as total')->from($table);
@@ -368,10 +408,37 @@ class Crud_model extends CI_Model
 
     public function getItems($table, $where, $group_by)
     {
-        $this->db->select('sum(rem_qty) total_stock, item_code, location_id', false);
+        $this->db->select('sum(rem_qty) as total_stock, item_code, location_id', false);
         $this->db->from($table);
         $this->db->where($where);
         $this->db->group_by($group_by);
+        $result = $this->db->get('')->result();
+
+        return $result;
+    }
+
+    public function geStocktItems($where)
+    {
+        $this->db->select('sum(s.in_qty - s.out_qty) as total_stock, sum(s.rem_qty) as total_stock_check, s.item_code, i.item_name, i.item_type, i.model_no, i.item_image, sum(s.in_unit_price + s.out_unit_price) as total_unit_price, count(s.id) as total_row_count', false);
+        $this->db->join('item_infos i', 'i.item_code = s.item_code', 'left');
+        $this->db->from('stock_ledger s');
+        $this->db->where($where);
+        $this->db->group_by('s.item_code');
+        $this->db->order_by('i.id', 'ASC');
+        $result = $this->db->get('')->result();
+
+        return count($result);
+    }
+
+    public function geStocktItemsLimitOrder($where, $limit, $offset)
+    {
+        $this->db->select('sum(s.in_qty - s.out_qty) as total_stock, sum(s.rem_qty) as total_stock_check, s.item_code, i.item_name, i.item_type, i.model_no, i.item_image, sum(s.in_unit_price + s.out_unit_price) as total_unit_price, count(s.id) as total_row_count', false);
+        $this->db->join('item_infos i', 'i.item_code = s.item_code', 'left');
+        $this->db->from('stock_ledger s');
+        $this->db->where($where);
+        $this->db->group_by('s.item_code');
+        $this->db->order_by('i.id', 'ASC');
+        $this->db->limit($limit, $offset);
         $result = $this->db->get('')->result();
 
         return $result;

@@ -298,6 +298,7 @@ class Admin extends Auth_controller
 			$this->session->set_flashdata('error', 'Record Not Found!!!');
 			redirect($this->redirect . '/admin/all');
 		}
+		$data['setting_details'] = $this->crud_model->get_where_single('site_settings', array('status', '1'));
 
 		$data['master_detail'] = $master_detail;
 		$data['requisition_detail'] = $requisition_detail;
@@ -419,6 +420,7 @@ class Admin extends Auth_controller
 
 		$data['items'] = $this->crud_model->get_where('item_infos', array('status' => '1'));
 		$data['departments'] = $this->crud_model->get_where('department_para', array('status' => '1'));
+		$data['setting_details'] = $this->crud_model->get_where_single('site_settings', array('status', '1'));
 		$data['title'] = 'View ' . $this->title;
 		$data['page'] = 'direct_view';
 		$this->load->view('layouts/admin/index', $data);

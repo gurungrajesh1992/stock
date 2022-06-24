@@ -1,6 +1,6 @@
 <style>
   span.rmv_btn_mdl {
-    float: right;
+    /* float: right; */
     background: red;
     border-radius: 50%;
     padding: 1px 0px 0px 8px;
@@ -9,6 +9,15 @@
     font-size: 17px;
     color: #fff;
     font-weight: bold;
+    position: absolute;
+    right: -2px;
+    top: 0;
+  }
+
+  .rmv_modle {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 15px;
   }
 </style>
 <section class="content">
@@ -35,6 +44,13 @@
                 <label>Module Name<span class="req">*</span></label>
                 <input type="text" name="module_name" class="form-control" id="module_name" placeholder="Module Name" value="<?php echo set_value('module_name', (((isset($detail->module_name)) && $detail->module_name != '') ? $detail->module_name : '')); ?>" <?php echo (((isset($detail->module_name)) && $detail->module_name != '') ? 'readonly' : ''); ?>>
                 <?php echo form_error('module_name', '<div class="error_message">', '</div>'); ?>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Module Display Name<span class="req">*</span></label>
+                <input type="text" name="display_name" class="form-control" id="display_name" placeholder="Display Name" value="<?php echo set_value('display_name', (((isset($detail->display_name)) && $detail->display_name != '') ? $detail->display_name : '')); ?>">
+                <?php echo form_error('display_name', '<div class="error_message">', '</div>'); ?>
               </div>
             </div>
           </div>
@@ -67,10 +83,21 @@
                   foreach ($childs as $key => $val) {
               ?>
                     <div class="col-md-4 rmv_modle">
-                      <div class="form-group">
-                        <label>Function name<span class="req">*</span></label><span class="rmv_btn_mdl rmv">X</span>
-                        <input type="text" name="function_name[]" class="form-control" placeholder="Function Name" value="<?php echo (((isset($val->function_name)) && $val->function_name != '') ? $val->function_name : ''); ?>">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Function name<span class="req">*</span></label>
+                            <input type="text" name="function_name[]" class="form-control" placeholder="Function Name" value="<?php echo (((isset($val->function_name)) && $val->function_name != '') ? $val->function_name : ''); ?>">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Display name<span class="req">*</span></label>
+                            <input type="text" name="display_name_function[]" class="form-control" placeholder="Display Name" value="<?php echo (((isset($val->display_name)) && $val->display_name != '') ? $val->display_name : ''); ?>">
+                          </div>
+                        </div>
                       </div>
+                      <span class="rmv_btn_mdl rmv_functns">X</span>
                     </div>
               <?php
                   }

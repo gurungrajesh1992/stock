@@ -113,7 +113,12 @@ class Admin extends Auth_controller
 				}
 			}
 		}
-		$data['roles'] = $this->crud_model->get_where('user_role', array('status' => '1'));
+		// $data['roles'] = $this->crud_model->get_where('user_role', array('status' => '1'));
+		if ($this->auth->current_user()->role_id == 1) {
+			$data['roles'] = $this->crud_model->get_where_order_by('user_role', array('status' => '1'), 'id', 'ASC');
+		} else {
+			$data['roles'] = $this->crud_model->get_where_order_by('user_role', array('status' => '1', 'id !=' => 1), 'id', 'ASC');
+		}
 		$data['staffs'] = $this->crud_model->get_where('staff_infos', array('status' => '1'));
 		$data['title'] = 'Add/Edit User';
 		$data['page'] = 'form';
